@@ -1,0 +1,37 @@
+{
+    "titles": {
+        "home": "Интернет словарь",
+        "profile": "Личный кабинет",
+        "about": "О проекте",
+        "contacts": "Обратная связь"
+    },
+    "header": {
+        "authors": "Авторы",
+        "works": "Произведения",
+        "articles": "Реалии",
+        "search_placeholder": "Поиск"
+    },
+    "footer": {
+        "links": {
+            "about": "О проекте",
+            "information": "Информация",
+            "contacts": "Обратная связь"
+        },
+        "information": "Открытый словарь культурно-маркированной лексики русского языка с переводом на арабский",
+        "rights": "Все права защищены"
+    },
+    "account": {
+        "login_title": "Вход",
+        "register_title": "Регистрация",
+        "name_input": "Имя пользователя",
+        "password_input": "Пароль",
+        "login_button_text": "Войти",
+        "register_button_text": "Зарегистрироваться",
+        "not_registered_yet": "Еще не зарегистрированы?",
+        "register_redirect": "Сделайте это здесь",
+        "already_registered": "Уже зарегистрированы?",
+        "login_redirect": "Войдите здесь",
+        "error_required": "Пожалуйста, заполните все поля",
+        "error_email": "Введите, пожалуйста, корректный e-mail"
+    }
+}

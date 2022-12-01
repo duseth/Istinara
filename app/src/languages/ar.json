@@ -1,0 +1,37 @@
+{
+    "titles": {
+        "home": "قاموس الإنترنت",
+        "profile": "استجابة",
+        "about": "حول المشروع",
+        "contacts": "استجابة"
+    },
+    "header": {
+        "authors": "المؤلفون",
+        "works": "اعمال فنية",
+        "articles": "الحقائق",
+        "search_placeholder": "يبحث"
+    },
+    "footer": {
+        "links": {
+            "about": "حول المشروع",
+            "information": "معلومة",
+            "contacts": "استجابة"
+        },
+        "information": "قاموس مفتوح لمفردات اللغة الروسية الموسومة ثقافيًا مع الترجمة العربية",
+        "rights": "كل الحقوق محفوظة"
+    },
+    "account": {
+        "login_title": "مدخل",
+        "register_title": "تسجيل",
+        "name_input": "اسم المستخدم",
+        "password_input": "كلمة المرور",
+        "login_button_text": "ليأتي",
+        "register_button_text": "يسجل",
+        "not_registered_yet": "لم يتم تسجيلة بعد؟",
+        "register_redirect": "افعلها هنا",
+        "already_registered": "مسجل بالفعل؟",
+        "login_redirect": "تسجيل الدخول من هنا",
+        "error_required": "يرجى تعبئة جميع الحقول",
+        "error_email": "يرجى إدخال البريد الإلكتروني الصحيح"
+    }
+}

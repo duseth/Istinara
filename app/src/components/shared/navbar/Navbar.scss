@@ -1,0 +1,23 @@
+.navbar-header {
+  background-color: black;
+  overflow: hidden;
+}
+
+.nav-link {
+  transform: scale(1, 0.9);
+  font-weight: bold;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+  text-decoration-color: white;
+  text-underline-offset: 3px;
+}
+
+.navbar-vertical-separator {
+  width: 1px;
+  height: 32px;
+  display: block;
+  background: rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+}
