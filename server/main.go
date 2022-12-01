@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/duseth/istinara/server/middlewares"
 	"github.com/duseth/istinara/server/models"
 	"github.com/duseth/istinara/server/routes"
@@ -9,35 +11,40 @@ import (
 )
 
 func main() {
-	router := gin.Default()
-
-	// Global Middlewares
-	router.Use(cors.Default())
-
 	// Initialise Database
 	models.DatabaseConnect()
 
 	// Public API
-	public := router.Group("/api")
+	router := gin.Default()
+	api := router.Group("/api")
 	{
-		routes.Auth(public)
-		routes.ArticlesPublic(public)
-		routes.AuthorPublic(public)
-		routes.WorkPublic(public)
+		// Global Middlewares
+		api.Use(cors.Default())
+
+		routes.AuthorPublic(api)
+		routes.WorkPublic(api)
+		routes.ArticlesPublic(api)
+
+		auth := api.Group("/auth")
+		{
+			routes.Auth(auth)
+		}
+
+		// Protected API
+		private := api.Group("/api/private")
+		{
+			// Protected Middlewares
+			private.Use(middlewares.JwtAuthMiddleware())
+
+			routes.AuthorPrivate(private)
+			routes.WorkPrivate(private)
+			routes.ArticlesPrivate(private)
+		}
 	}
 
-	// Protected API
-	private := router.Group("/api/private")
-	{
-		routes.Users(private)
-		routes.ArticlesPrivate(private)
-		routes.AuthorPrivate(private)
-		routes.WorkPrivate(private)
-	}
-	private.Use(middlewares.JwtAuthMiddleware())
-
+	// Run server
 	err := router.Run()
 	if err != nil {
-		return
+		log.Fatal(err.Error())
 	}
 }

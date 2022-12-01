@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CurrentUser(ctx *gin.Context) {
+func GetCurrentUser(ctx *gin.Context) {
 	userUUID, err := token.ExtractTokenID(ctx)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -25,20 +25,21 @@ func CurrentUser(ctx *gin.Context) {
 }
 
 func Login(ctx *gin.Context) {
-	var user models.User
+	var input models.User
 
-	if err := ctx.Bind(&user); err != nil {
+	if err := ctx.Bind(&input); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	loginToken, err := models.GetAuthorizationToken(user.Username, user.Password)
+	var user models.User
+	accessToken, err := token.GetAuthorizationToken(&user, input.Email, input.Password)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "username or password is incorrect."})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"token": loginToken})
+	ctx.JSON(http.StatusOK, gin.H{"user": user, "token": accessToken})
 }
 
 func Register(ctx *gin.Context) {

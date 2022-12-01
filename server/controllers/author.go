@@ -14,7 +14,7 @@ import (
 // ListAuthors get all authors records
 func ListAuthors(ctx *gin.Context) {
 	var authors []models.Author
-	if err := models.DB.Model(&models.Author{}).Preload("Works").Find(&authors).Error; err != nil {
+	if err := models.DB.Find(&authors).Error; err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -26,7 +26,7 @@ func ListAuthors(ctx *gin.Context) {
 func GetAuthor(ctx *gin.Context) {
 	var author models.Author
 
-	if err := models.DB.Model(&models.Author{}).Preload("Works").Where("id = ?", ctx.Param("id")).First(&author).Error; err != nil {
+	if err := models.DB.Where("id = ?", ctx.Param("id")).First(&author).Error; err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}

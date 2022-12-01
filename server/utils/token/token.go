@@ -8,8 +8,10 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/duseth/istinara/server/models"
 	"github.com/gin-gonic/gin"
 	"github.com/gofrs/uuid"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func GenerateToken(userId uuid.UUID) (string, error) {
@@ -81,4 +83,22 @@ func ExtractTokenID(ctx *gin.Context) (uuid.UUID, error) {
 	}
 
 	return uuid.UUID{}, nil
+}
+
+func GetAuthorizationToken(user *models.User, email string, password string) (string, error) {
+	if err := models.DB.Where("email = ?", email).Take(&user).Error; err != nil {
+		return "", err
+	}
+
+	err := bcrypt.CompareHashAndPassword([]byte(password), []byte(user.Password))
+	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
+		return "", err
+	}
+
+	generatedToken, err := GenerateToken(user.ID)
+	if err != nil {
+		return "", err
+	}
+
+	return generatedToken, nil
 }

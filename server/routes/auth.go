@@ -9,7 +9,3 @@ func Auth(router *gin.RouterGroup) {
 	router.POST("/login", controllers.Login)
 	router.POST("/register", controllers.Register)
 }
-
-func Users(router *gin.RouterGroup) {
-	router.GET("/user", controllers.CurrentUser)
-}
