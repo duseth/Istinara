@@ -38,3 +38,8 @@ export function Account({tid}) {
     const languageContext = useContext(LanguageContext);
     return languageContext.dictionary["account"][tid] || tid;
 }
+
+export function About({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["about"][tid] || tid;
+}

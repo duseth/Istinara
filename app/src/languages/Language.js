@@ -4,8 +4,8 @@ import {createContext} from "react";
 
 export const dictionaryList = {ru, ar};
 export const languageOptions = {
-    ru: "Русский",
-    ar: "عرب"
+    ru: "RU",
+    ar: "AR"
 }
 
 export const LanguageContext = createContext({

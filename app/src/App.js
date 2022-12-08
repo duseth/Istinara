@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 
 // Import styles
@@ -15,26 +15,10 @@ import About from './components/about/About';
 import Contacts from './components/contacts/Contacts';
 import Footer from './components/shared/footer/Footer';
 import Navbar from './components/shared/navbar/Navbar';
+import Contribution from "./components/contribution/Contribution";
 import {LanguageProvider} from "./containers/Language";
 
 function App() {
-    const [windowDimension, setWindowDimension] = useState(null);
-
-    useEffect(() => {
-        setWindowDimension(window.innerWidth);
-    }, []);
-
-    useEffect(() => {
-        function handleResize() {
-            setWindowDimension(window.innerWidth);
-        }
-
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
-
-    const isMobile = windowDimension <= 640;
-
     return (
         <Router>
             <LanguageProvider>
@@ -44,6 +28,7 @@ function App() {
                     <Route path='/about' element={<About/>}/>
                     <Route path='/contacts' element={<Contacts/>}/>
                     <Route path="/account" element={<Auth/>}/>
+                    <Route path="/contribution" element={<Contribution/>}/>
                 </Routes>
                 <Footer/>
             </LanguageProvider>
