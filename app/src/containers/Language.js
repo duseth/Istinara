@@ -19,11 +19,13 @@ export function LanguageProvider({children}) {
     );
 }
 
+// Header
 export function Header({tid}) {
     const languageContext = useContext(LanguageContext);
     return languageContext.dictionary["header"][tid] || tid;
 }
 
+// Footer
 export function FooterLink({tid}) {
     const languageContext = useContext(LanguageContext);
     return languageContext.dictionary["footer"]["links"][tid] || tid;
@@ -34,12 +36,30 @@ export function FooterText({tid}) {
     return languageContext.dictionary["footer"][tid] || tid;
 }
 
+// Account
 export function Account({tid}) {
     const languageContext = useContext(LanguageContext);
     return languageContext.dictionary["account"][tid] || tid;
 }
 
-export function About({tid}) {
+export function Login({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["account"]["login"][tid] || tid;
+}
+
+export function Register({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["account"]["register"][tid] || tid;
+}
+
+// Contacts
+export function ContactsText({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["contacts"][tid] || tid;
+}
+
+// About
+export function AboutText({tid}) {
     const languageContext = useContext(LanguageContext);
     return languageContext.dictionary["about"][tid] || tid;
 }

@@ -33,6 +33,9 @@ const Footer = () => {
                         <a href="/contacts" className="nav-link upper-text px-2"><FooterLink tid="contacts"/></a>
                     </li>
                 </ul>
+                <p className="float-end p-0">
+                    <a href="#" className="nav-link upper-text"><FooterText tid="back-to-top"/></a>
+                </p>
                 <p className="copyright-text"><FooterText tid="information"/></p>
                 <p className="copyright-text">&copy; Istinara, 2023 <FooterText tid="rights"/></p>
             </div>

@@ -1,13 +1,18 @@
 .upper-text {
   font-size: 13px;
   text-transform: uppercase;
-  letter-spacing: 0.01px;
-  transform: scale(1, 1.1);
 }
 
 .footer-link-text {
   font-size: 15px;
   margin: 0 25px 0 25px;
+}
+
+.float-end {
+  transform: scale(1, 0.9);
+  font-weight: bold;
+  color: white;
+  letter-spacing: 0.01px;
 }
 
 .footer-svg {

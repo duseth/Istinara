@@ -4,7 +4,7 @@ import {useForm} from "react-hook-form";
 import './Auth.scss'
 import AuthService from "../../services/AuthService";
 import {LanguageContext} from "../../languages/Language";
-import {Account} from "../../containers/Language";
+import {Account, Login, Register} from "../../containers/Language";
 
 const Auth = () => {
     const languageContext = useContext(LanguageContext);
@@ -28,7 +28,7 @@ const Auth = () => {
                         <form onSubmit={handleSubmit((data) => AuthService.Login(data, setError))}
                               className="auth-form" {...register("required")}>
                             <div className="auth-form-content">
-                                <h3 className="auth-form-title"><Account tid="login_title"/></h3>
+                                <h3 className="auth-form-title"><Login tid="title"/></h3>
                                 <div className="form-group mt-3">
                                     <label htmlFor="email">E-mail</label>
                                     <input
@@ -49,7 +49,7 @@ const Auth = () => {
                                 </div>
                                 <div className="d-grid gap-2 mt-3">
                                     <button type="submit" className="auth-form-button">
-                                        <Account tid="login_button_text"/>
+                                        <Login tid="button_text"/>
                                     </button>
                                 </div>
                             </div>
@@ -57,9 +57,9 @@ const Auth = () => {
                                 className="auth-form-error">{errors?.required?.message || errors?.email?.message}</div>
                             <div className="text-center">
                                 <p className="link-text">
-                                    <Account tid="not_registered_yet"/>{" "}
+                                    <Login tid="not_registered_yet"/>{" "}
                                     <a className="link" onClick={changeAuthMode} href="#">
-                                        <Account tid="register_redirect"/>
+                                        <Login tid="register_redirect"/>
                                     </a>
                                 </p>
                             </div>
@@ -77,7 +77,7 @@ const Auth = () => {
                     <form onSubmit={handleSubmit((data) => AuthService.Register(data, setError))}
                           className="auth-form" {...register("required")}>
                         <div className="auth-form-content">
-                            <h3 className="auth-form-title"><Account tid="register_title"/></h3>
+                            <h3 className="auth-form-title"><Register tid="title"/></h3>
                             <div className="form-group mt-3">
                                 <label htmlFor="username"><Account tid="name_input"/></label>
                                 <input
@@ -107,16 +107,16 @@ const Auth = () => {
                             </div>
                             <div className="d-grid gap-2 mt-3">
                                 <button type="submit" className="auth-form-button">
-                                    <Account tid="register_button_text"/>
+                                    <Register tid="button_text"/>
                                 </button>
                             </div>
                         </div>
                         <div className="auth-form-error">{errors?.required?.message || errors?.email?.message}</div>
                         <div className="text-center">
                             <p className="link-text">
-                                <Account tid="already_registered"/>{" "}
+                                <Register tid="already_registered"/>{" "}
                                 <a className="link" onClick={changeAuthMode} href="#">
-                                    <Account tid="login_redirect"/>
+                                    <Register tid="login_redirect"/>
                                 </a>
                             </p>
                         </div>
