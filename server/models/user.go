@@ -12,9 +12,11 @@ import (
 
 type User struct {
 	Base
-	Username string `gorm:"size:255;not null;unique" json:"username" form:"username" binding:"required"`
-	Email    string `gorm:"size:255;not null;unique" json:"email" form:"email" binding:"required"`
-	Password string `gorm:"size:255;not null;" json:"password" form:"password" binding:"required"`
+
+	Username     string `gorm:"column:username;not null"`
+	Email        string `gorm:"column:email;not null"`
+	Password     string `gorm:"column:username;not null;"`
+	IsPrivileged bool   `gorm:"column:is_privileged;not null;default:false"`
 }
 
 func (user *User) BeforeSave(_ *gorm.DB) error {
@@ -22,23 +24,19 @@ func (user *User) BeforeSave(_ *gorm.DB) error {
 	if err != nil {
 		return err
 	}
+
 	user.Password = string(hash)
 	user.Username = html.EscapeString(strings.TrimSpace(user.Username))
 
 	return nil
 }
 
-func GetUserByID(uid uuid.UUID) (User, error) {
+func CheckIfUserIsPrivileged(uid uuid.UUID) (bool, error) {
 	var user User
 
 	if err := DB.First(&user, uid).Error; err != nil {
-		return user, errors.New("user not found")
+		return false, errors.New("user not found")
 	}
 
-	user.PrepareGive()
-	return user, nil
-}
-
-func (user *User) PrepareGive() {
-	user.Password = ""
+	return user.IsPrivileged, nil
 }
