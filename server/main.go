@@ -24,8 +24,14 @@ import (
 //	@license.name	MIT License
 //	@license.url	https://spdx.org/licenses/MIT.html
 
-// @host		localhost:8080
-// @BasePath	/api
+//	@host		localhost:8080
+//	@BasePath	/api
+
+//	@schemes	http https
+
+// @securityDefinitions.apikey	token
+// @in							header
+// @name						Authorization
 func main() {
 	// Initialise database
 	models.DatabaseConnect()

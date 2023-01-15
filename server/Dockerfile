@@ -1,7 +1,7 @@
 # Start from golang base image
 FROM golang:alpine
 
-# Install git.
+# Install git
 RUN apk update && apk add --no-cache git && apk add --no-cach bash && apk add build-base
 
 # Copy the source from the current directory to the working Directory inside the container

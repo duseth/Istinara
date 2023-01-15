@@ -14,7 +14,7 @@ func JwtAuthMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		err := token.Validate(ctx)
 		if err != nil {
-			httputil.SendErrorResponseWithAbort(ctx, http.StatusUnauthorized, err)
+			httputil.ResponseErrorWithAbort(ctx, http.StatusUnauthorized, err)
 			return
 		}
 		ctx.Next()
@@ -25,18 +25,18 @@ func DataManipulationMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		uid, err := token.ExtractTokenID(ctx)
 		if err != nil {
-			httputil.SendErrorResponseWithAbort(ctx, http.StatusBadRequest, err)
+			httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 			return
 		}
 
 		isPrivileged, err := models.CheckIfUserIsPrivileged(uid)
 		if err != nil {
-			httputil.SendErrorResponseWithAbort(ctx, http.StatusBadRequest, err)
+			httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 			return
 		}
 
 		if !isPrivileged {
-			httputil.SendErrorResponseWithAbort(ctx, http.StatusForbidden, err)
+			httputil.ResponseErrorWithAbort(ctx, http.StatusForbidden, err)
 			return
 		}
 
