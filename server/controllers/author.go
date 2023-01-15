@@ -6,77 +6,138 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/duseth/istinara/server/dto"
 	"github.com/duseth/istinara/server/models"
+	httputil "github.com/duseth/istinara/server/utils/http"
+	"github.com/duseth/istinara/server/utils/mapper"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
-// ListAuthors get all authors records
+// ListAuthors   		godoc
+//
+//	@Summary		Get all authors
+//	@Description	Returns list of all authors
+//	@Tags			authors
+//	@Produce		json
+//	@Response		200	{object}	dto.AuthorListResult
+//	@Failure		500	{object}	http.InternalServerErrorResponse
+//	@Router			/authors [get]
 func ListAuthors(ctx *gin.Context) {
 	var authors []models.Author
 	if err := models.DB.Find(&authors).Error; err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"data": authors})
+	httputil.ResponseSuccess(ctx, mapper.MapAuthors(authors))
 }
 
-// GetAuthor get author record
+// GetAuthor   		godoc
+//
+//	@Summary		Get author by ID
+//	@Description	Returns a single author
+//	@Tags			authors
+//	@Produce		json
+//	@Param			id	path		string	true	"Author ID"
+//	@Response		200	{object}	dto.AuthorSingleResult
+//	@Failure		400	{object}	http.BadRequestResponse
+//	@Router			/authors/{id} [get]
 func GetAuthor(ctx *gin.Context) {
 	var author models.Author
 
 	if err := models.DB.Where("id = ?", ctx.Param("id")).First(&author).Error; err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"data": author})
+	httputil.ResponseSuccess(ctx, mapper.MapAuthor(author))
 }
 
-// GetWorksByAuthor get works records by author
+// GetWorksByAuthor   		godoc
+//
+//	@Summary		Get all works by author ID
+//	@Description	Returns list of all works
+//	@Tags			authors
+//	@Produce		json
+//	@Param			id	path		string	true	"Author ID"
+//	@Response		200	{object}	dto.WorkListResult
+//	@Failure		400	{object}	http.BadRequestResponse
+//	@Router			/authors/{id}/works [get]
 func GetWorksByAuthor(ctx *gin.Context) {
 	var works []models.Work
 
 	if err := models.DB.Where("author_id = ?", ctx.Param("id")).Find(&works).Error; err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"data": works})
+	httputil.ResponseSuccess(ctx, mapper.MapWorks(works))
 }
 
-// CreateAuthor create new author record
+// CreateAuthor   		godoc
+//
+//	@Summary	Add a new author
+//	@Tags		authors
+//	@Accept		multipart/form-data
+//	@Produce	json
+//	@Param		body	formData	dto.AuthorInputForm	true	"Author object that needs to be added"
+//	@Param		file	formData	file				true	"Author image"
+//	@Response	200		{object}	dto.AuthorSingleResult
+//	@Failure	400		{object}	http.BadRequestResponse
+//	@Failure	500		{object}	http.InternalServerErrorResponse
+//
+//	@Security	token
+//
+//	@Router		/authors/{id} [post]
 func CreateAuthor(ctx *gin.Context) {
-	var author models.Author
-	if err := ctx.Bind(&author); err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	var authorForm dto.AuthorInputForm
+	if err := ctx.Bind(&authorForm); err != nil {
+		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}
 
 	file, err := ctx.FormFile("file")
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "No file is received"})
+		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}
 
 	pictureName := uuid.New().String() + filepath.Ext(file.Filename)
-	picturePath := filepath.Join("/server", "assets", "pictures", "authors", pictureName)
+	picturePath := filepath.Join("/app", "public", "assets", "images", "authors", pictureName)
 	if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
 	}
 
+	var author models.Author
+	mapper.ParseAuthor(authorForm, &author)
 	author.PicturePath = picturePath
+
 	if err = models.DB.Create(&author).Error; err != nil {
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"data": author})
+	httputil.ResponseSuccess(ctx, mapper.MapAuthor(author))
 }
 
-// UpdateAuthor update author record
+// UpdateAuthor   		godoc
+//
+//	@Summary	Update existence author
+//	@Tags		authors
+//	@Accept		multipart/form-data
+//	@Produce	json
+//	@Param		id		path		string				true	"Author ID"
+//	@Param		body	formData	dto.AuthorInputForm	true	"Author fields that needs to update"
+//	@Param		file	formData	file				true	"Author image that needs update"
+//	@Response	200		{object}	dto.AuthorSingleResult
+//	@Failure	400		{object}	http.BadRequestResponse
+//	@Failure	500		{object}	http.InternalServerErrorResponse
+//
+//	@Security	token
+//
+//	@Router		/authors/{id} [patch]
 func UpdateAuthor(ctx *gin.Context) {
 	var author models.Author
 	if err := models.DB.Where("id = ?", ctx.Param("id")).First(&author).Error; err != nil {
@@ -84,12 +145,13 @@ func UpdateAuthor(ctx *gin.Context) {
 		return
 	}
 
-	var input models.Author
-	if err := ctx.Bind(&input); err != nil {
+	var authorForm dto.AuthorInputForm
+	if err := ctx.Bind(&authorForm); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
+	var picturePath string
 	if _, received := ctx.Keys["file"]; received {
 		file, err := ctx.FormFile("file")
 		if err != nil {
@@ -98,7 +160,7 @@ func UpdateAuthor(ctx *gin.Context) {
 		}
 
 		pictureName := uuid.New().String() + filepath.Ext(file.Filename)
-		picturePath := filepath.Join("/server", "assets", "pictures", "authors", pictureName)
+		picturePath = filepath.Join("/server", "assets", "pictures", "authors", pictureName)
 		if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
 			ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
@@ -108,29 +170,45 @@ func UpdateAuthor(ctx *gin.Context) {
 		if err != nil {
 			log.Println(err.Error())
 		}
-		input.PicturePath = picturePath
 	}
 
-	if err := models.DB.Model(&author).Updates(&input).Error; err != nil {
+	if err := models.DB.Model(&author).Updates(&authorForm).Error; err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"data": author})
+	if err := models.DB.Model(&author).Update("picture_path", picturePath).Error; err != nil {
+		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	httputil.ResponseSuccess(ctx, mapper.MapAuthor(author))
 }
 
-// DeleteAuthor delete author record
+// DeleteAuthor   		godoc
+//
+//	@Summary	Delete existence author
+//	@Tags		authors
+//	@Produce	json
+//	@Param		id	path		string	true	"Author ID"
+//	@Response	200	{object}	http.SuccessResponse
+//	@Failure	400	{object}	http.BadRequestResponse
+//	@Failure	500	{object}	http.InternalServerErrorResponse
+//
+//	@Security	token
+//
+//	@Router		/authors/{id} [delete]
 func DeleteAuthor(ctx *gin.Context) {
 	var author models.Author
 	if err := models.DB.Where("id = ?", ctx.Param("id")).First(&author).Error; err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}
 
 	if err := models.DB.Delete(&author).Error; err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"data": true})
+	httputil.ResponseSuccess(ctx, true)
 }

@@ -3,57 +3,65 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/duseth/istinara/server/dto"
 	"github.com/duseth/istinara/server/models"
+	httputil "github.com/duseth/istinara/server/utils/http"
+	"github.com/duseth/istinara/server/utils/mapper"
 	"github.com/duseth/istinara/server/utils/token"
 	"github.com/gin-gonic/gin"
 )
 
-func GetCurrentUser(ctx *gin.Context) {
-	userUUID, err := token.ExtractTokenID(ctx)
-	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	user, err := models.GetUserByID(userUUID)
-	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	ctx.JSON(http.StatusOK, gin.H{"message": "success", "data": user})
-}
-
+// Login   		godoc
+//
+//	@Summary	Get JWT token for authorization requests
+//	@Tags		auth
+//	@Produce	json
+//	@Param		body	formData	dto.LoginInputForm	true	"User credentials for login"
+//	@Response	200		{object}	dto.LoginResult
+//	@Failure	400		{object}	http.BadRequestResponse
+//	@Router		/auth/login [post]
 func Login(ctx *gin.Context) {
-	var input models.User
+	var input dto.LoginInputForm
 
 	if err := ctx.Bind(&input); err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}
 
 	var user models.User
 	accessToken, err := token.GetAuthorizationToken(&user, input.Email, input.Password)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "username or password is incorrect."})
+		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"user": user, "token": accessToken})
+	httputil.ResponseSuccess(ctx, gin.H{"user": mapper.MapUser(user), "token": accessToken})
 }
 
+// Register   		godoc
+//
+//	@Summary	Registration new user in the system
+//	@Tags		auth
+//	@Produce	json
+//	@Param		body	formData	dto.RegisterInputForm	true	"User credentials for register"
+//	@Response	200		{object}	http.SuccessResponse
+//	@Failure	400		{object}	http.BadRequestResponse
+//	@Router		/auth/register [post]
 func Register(ctx *gin.Context) {
-	var user models.User
+	var userForm dto.RegisterInputForm
 
-	if err := ctx.Bind(&user); err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := ctx.Bind(&userForm); err != nil {
+		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}
+
+	var user models.User
+	mapper.ParseUser(userForm, &user)
 
 	if err := models.DB.Create(&user).Error; err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "registration success"})
+	httputil.ResponseSuccess(ctx, true)
 }
