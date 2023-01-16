@@ -24,5 +24,5 @@ func ResponseErrorWithAbort(ctx *gin.Context, status int, err error) {
 
 // ResponseSuccess send 200 OK status with success result as JSON response
 func ResponseSuccess(ctx *gin.Context, data interface{}) {
-	ctx.JSON(http.StatusOK, gin.H{"data": data})
+	ctx.JSON(http.StatusOK, data)
 }

@@ -15,7 +15,7 @@ type User struct {
 
 	Username     string `gorm:"column:username;not null"`
 	Email        string `gorm:"column:email;not null;unique"`
-	Password     string `gorm:"column:username;not null;"`
+	Password     string `gorm:"column:password;not null"`
 	IsPrivileged bool   `gorm:"column:is_privileged;not null;default:false"`
 }
 

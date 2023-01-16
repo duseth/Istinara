@@ -17,9 +17,9 @@ import (
 //	@version		1.0
 //	@description	Open Dictionary of Culturally Marked Vocabulary of the Russian Language with Arabic Translation
 
-//	@contact.name	Ilyas Salimov
-//	@contact.url	https://t.me/duseth
-//	@contact.email	ilyas.salimov.07@gmail.com
+//	@contact.name	Istinara
+//	@contact.url	https://istinara.ru
+//	@contact.email	istinara@site.ru
 
 //	@license.name	MIT License
 //	@license.url	https://spdx.org/licenses/MIT.html
