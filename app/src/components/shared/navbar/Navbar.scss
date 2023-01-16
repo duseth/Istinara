@@ -1,6 +1,13 @@
 .logo-icon {
-  font-size: 32px;
+  font-size: 28px;
   color: white;
+}
+
+.icon-hover {
+  &:hover {
+    color: #a6a6a6;
+    transition: 0.2s;
+  }
 }
 
 .nav-link {
@@ -9,6 +16,15 @@
   color: white;
   margin: 0 10px 0 10px;
   letter-spacing: 0.01px;
+}
+
+.nav-header-link {
+  font-size: 15px;
+  line-height: 18px;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid transparent;
+  margin: 0 5px 0 5px;
+  white-space: nowrap;
 }
 
 .nav-icon {

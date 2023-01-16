@@ -17,6 +17,8 @@ import Footer from './components/shared/footer/Footer';
 import Navbar from './components/shared/navbar/Navbar';
 import Contribution from "./components/contribution/Contribution";
 import {LanguageProvider} from "./containers/Language";
+import AuthService from "./services/AuthService";
+import AuthVerify from "./components/auth/AuthVerify";
 
 function App() {
     return (
@@ -32,6 +34,7 @@ function App() {
                 </Routes>
                 <Footer/>
             </LanguageProvider>
+            <AuthVerify logout={AuthService.Logout}/>
         </Router>
     );
 }

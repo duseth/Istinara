@@ -28,6 +28,10 @@
         "main_text": ""
     },
     "account": {
+        "profile": {
+            "logout": "Выйти",
+            "registration_date": "Дата регистрации"
+        },
         "login": {
             "title": "Вход",
             "button_text": "Войти",

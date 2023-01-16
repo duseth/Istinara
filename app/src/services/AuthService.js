@@ -1,12 +1,17 @@
-import axios from "axios";
 import {Account} from "../containers/Language";
+import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/auth/";
+const AUTH_API = "http://localhost:8080/api/auth";
 
 class AuthService {
     emailValidation = new RegExp(".+@.+\\.[A-Za-z]+$");
+    formDataHeaders = {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    };
 
-    Register(data, setError) {
+    async Register(data, setError) {
         if (data.username.trim().length === 0 || data.email.trim().length === 0 || data.username.trim().length === 0) {
             setError("required", {message: <Account tid="error_required"/>});
             return;
@@ -17,14 +22,19 @@ class AuthService {
             return;
         }
 
-        return axios.post(API_URL + "register", {
-            username: data.username, email: data.email, password: data.password
-        }).then(response => {
+        let formData = new FormData();
+        formData.append("username", data.username)
+        formData.append("email", data.email)
+        formData.append("password", data.password)
+
+        await axios.post(`${AUTH_API}/register`, formData, this.formDataHeaders).then(response => {
             return response.data;
-        });
+        }).catch(error => {
+            console.log(error)
+        })
     }
 
-    Login(data, setError) {
+    async Login(data, setError) {
         if (data.password.trim().length === 0 || data.email.trim().length === 0) {
             setError("required", {message: <Account tid="error_required"/>});
             return;
@@ -35,28 +45,30 @@ class AuthService {
             return;
         }
 
-        return axios.post(API_URL + "login", {email: data.email, password: data.password})
-            .then(response => {
-                if (response.data.token) {
-                    localStorage.setItem("user", JSON.stringify(response.data.user));
-                    localStorage.setItem("token", response.data.token);
-                }
+        let formData = new FormData();
+        formData.append("email", data.email)
+        formData.append("password", data.password)
 
-                return response.data;
-            });
+        let response = await axios.post(`${AUTH_API}/login`, formData, this.formDataHeaders);
+
+        if (response !== undefined && response.data.token) {
+            localStorage.setItem("user", JSON.stringify(response.data.user));
+            localStorage.setItem("token", response.data.token);
+        }
     }
 
     GetAuthHeader() {
-        const token = localStorage.getItem('token');
-        return {Authorization: 'Bearer ' + token} ? token : {};
+        const token = localStorage.getItem("token");
+        return {Authorization: "Bearer " + token} ? token : {};
     }
 
     Logout() {
         localStorage.removeItem("user");
+        localStorage.removeItem("token");
     }
 
     GetCurrentUser() {
-        return JSON.parse(localStorage.getItem('user'));
+        return JSON.parse(localStorage.getItem("user"));
     }
 }
 

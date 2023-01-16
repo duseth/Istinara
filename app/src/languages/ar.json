@@ -28,6 +28,10 @@
         "main_text": ""
     },
     "account": {
+        "profile": {
+            "logout": "إطفاء",
+            "registration_date": "تاريخ التسجيل"
+        },
         "login": {
             "title": "مدخل",
             "button_text": "ليأتي",

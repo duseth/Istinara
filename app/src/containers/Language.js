@@ -42,6 +42,11 @@ export function Account({tid}) {
     return languageContext.dictionary["account"][tid] || tid;
 }
 
+export function Profile({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["account"]["profile"][tid] || tid;
+}
+
 export function Login({tid}) {
     const languageContext = useContext(LanguageContext);
     return languageContext.dictionary["account"]["login"][tid] || tid;

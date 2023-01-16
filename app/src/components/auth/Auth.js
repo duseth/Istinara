@@ -4,10 +4,12 @@ import {useForm} from "react-hook-form";
 import './Auth.scss'
 import AuthService from "../../services/AuthService";
 import {LanguageContext} from "../../languages/Language";
-import {Account, Login, Register} from "../../containers/Language";
+import {Account, Login, Profile, Register} from "../../containers/Language";
 
 const Auth = () => {
     const languageContext = useContext(LanguageContext);
+
+    const [rerender, setRerender] = useState(false);
 
     useEffect(() => {
         document.title = languageContext.dictionary["titles"]["profile"] + " • Istinara"
@@ -18,7 +20,47 @@ const Auth = () => {
         setAuthMode(authMode === "sign-in" ? "sign-up" : "sign-in")
     };
 
+    const getRegistrationDate = (user) => {
+        let date = new Date(user.created_at);
+        const locale = localStorage.getItem("lang") === "ru" ? "ru-RU" : "ar-AE";
+        const options = {day: "numeric", month: "long", year: 'numeric'};
+
+        return date.toLocaleDateString(locale, options)
+    }
+
+    const logout = () => {
+        AuthService.Logout();
+        setRerender(!rerender);
+    };
+
     const {register, setError, handleSubmit, formState: {errors}} = useForm();
+
+    let user = AuthService.GetCurrentUser();
+    if (user != null) {
+        return (
+            <section className="auth-container">
+                <div className="container py-5">
+                    <div className="row d-flex justify-content-center align-items-center m-1 profile-header">
+                        <div className="col-1">
+                            <i className="bi bi-person-circle profile-bi-icon"/>
+                        </div>
+                        <div className="col-5">
+                            <div className="profile-name">{user.username}</div>
+                            <div className="profile-registration">
+                                <Profile tid="registration_date"/>: {getRegistrationDate(user)}
+                            </div>
+                        </div>
+                        <div className="col-2">
+                            <button type="button" className="btn btn-outline-dark logout-button"
+                                    onClick={logout}>
+                                <i className="bi bi-box-arrow-right logout-bi-icon"/> <Profile tid="logout"/>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        )
+    }
 
     if (authMode === "sign-in") {
         return (
