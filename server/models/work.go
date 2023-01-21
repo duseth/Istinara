@@ -11,4 +11,5 @@ type Work struct {
 
 	PicturePath string `gorm:"column:picture_path"`
 	AuthorID    string `gorm:"column:author_id"`
+	Author      Author
 }
