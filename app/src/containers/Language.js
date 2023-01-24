@@ -68,3 +68,9 @@ export function AboutText({tid}) {
     const languageContext = useContext(LanguageContext);
     return languageContext.dictionary["about"][tid] || tid;
 }
+
+// Authors
+export function AuthorsText({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["authors"][tid] || tid;
+}

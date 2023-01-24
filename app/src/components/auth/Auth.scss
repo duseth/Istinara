@@ -4,8 +4,6 @@
 }
 
 input {
-  -webkit-box-shadow: inset 0 2px 2px rgb(0 0 0 / 10%);
-  -moz-box-shadow: inset 0 2px 2px rgb(0 0 0 / 10%);
   box-shadow: inset 0 2px 2px rgb(0 0 0 / 10%);
   background: transparent;
 }
@@ -68,18 +66,19 @@ button {
   font-weight: bold;
 }
 
-.profile-header {
+.account-header {
   border-bottom: 1px solid #e5e5e5;
+  margin: 10px;
 }
 
-.profile-name {
+.account-name {
   font-size: 27px;
   font-weight: 700;
   line-height: 30px;
   margin-bottom: 5px;
 }
 
-.profile-registration {
+.account-registration {
   color: #999999;
   font-size: 13px;
   line-height: 18px;
@@ -90,7 +89,7 @@ button {
   align-items: center;
   justify-content: center;
   line-height: 15px;
-  margin: 5px;
+  margin: 0 15px 0 0;
   font-size: 15px;
 }
 
@@ -99,6 +98,12 @@ button {
   margin-right: 7px;
 }
 
-.profile-bi-icon {
-  font-size: 64px;
+@media (max-width: 1100px) {
+  .account-image {
+    margin-right: 50px;
+  }
+}
+
+.account-bi-icon {
+  font-size: 60px;
 }

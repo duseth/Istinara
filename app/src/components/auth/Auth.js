@@ -41,13 +41,13 @@ const Auth = () => {
         return (
             <section className="auth-container">
                 <div className="container py-5">
-                    <div className="row d-flex justify-content-center align-items-center m-1 profile-header">
-                        <div className="col-1">
-                            <i className="bi bi-person-circle profile-bi-icon"/>
+                    <div className="row justify-content-center align-items-center account-header">
+                        <div className="col-1 account-image">
+                            <i className="bi bi-person-circle account-bi-icon"/>
                         </div>
                         <div className="col-5">
-                            <div className="profile-name">{user.username}</div>
-                            <div className="profile-registration">
+                            <div className="account-name">{user.username}</div>
+                            <div className="account-registration">
                                 <Profile tid="registration_date"/>: {getRegistrationDate(user)}
                             </div>
                         </div>
