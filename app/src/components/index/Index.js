@@ -1,15 +1,10 @@
-import React, {useContext, useEffect} from 'react';
+import React from 'react';
 
 import './Index.scss'
-import {LanguageContext} from "../../languages/Language";
+
+document.title = "Istinara";
 
 const Home = () => {
-    const languageContext = useContext(LanguageContext);
-
-    useEffect(() => {
-        document.title = "Istinara";
-    }, [languageContext]);
-
     return (
         <main>
             <section className="py-5 text-center container">
@@ -27,11 +22,11 @@ const Home = () => {
                     <div className="row row-cols-1 rows-cols-sm-2 row-cols-md-3 g-3">
 
                         <div className="col">
-                            <div className="card">
-                                <a className="card-link" href="#"/>
-                                <div className="card-image"
+                            <div className="article-card">
+                                <a className="article-card-link" href="#"/>
+                                <div className="article-card-image"
                                      style={{backgroundImage: "url(https://cdn-s-static.arzamas.academy/storage/course/333/rectangular_preview_detail_picture-d9909237-1eb6-4353-af82-0fc53b421f20.jpg)"}}></div>
-                                <div className="card-text">
+                                <div className="article-card-text">
                                     This is a wider card with supporting text below as a natural lead-in to additional
                                     content. This content is a little bit longer.
                                 </div>
@@ -39,11 +34,11 @@ const Home = () => {
                         </div>
 
                         <div className="col">
-                            <div className="card">
-                                <a className="card-link" href="#"/>
-                                <div className="card-image"
+                            <div className="article-card">
+                                <a className="article-card-link" href="#"/>
+                                <div className="article-card-image"
                                      style={{backgroundImage: "url(https://cdn-s-static.arzamas.academy/storage/course/333/rectangular_preview_detail_picture-d9909237-1eb6-4353-af82-0fc53b421f20.jpg)"}}></div>
-                                <div className="card-text">
+                                <div className="article-card-text">
                                     This is a wider card with supporting text below as a natural lead-in to additional
                                     content. This content is a little bit longer.
                                 </div>
@@ -51,11 +46,11 @@ const Home = () => {
                         </div>
 
                         <div className="col">
-                            <div className="card">
-                                <a className="card-link" href="#"/>
-                                <div className="card-image"
+                            <div className="article-card">
+                                <a className="article-card-link" href="#"/>
+                                <div className="article-card-image"
                                      style={{backgroundImage: "url(https://cdn-s-static.arzamas.academy/storage/course/333/rectangular_preview_detail_picture-d9909237-1eb6-4353-af82-0fc53b421f20.jpg)"}}></div>
-                                <div className="card-text">
+                                <div className="article-card-text">
                                     This is a wider card with supporting text below as a natural lead-in to additional
                                     content. This content is a little bit longer.
                                 </div>
@@ -63,11 +58,11 @@ const Home = () => {
                         </div>
 
                         <div className="col">
-                            <div className="card">
-                                <a className="card-link" href="#"/>
-                                <div className="card-image"
+                            <div className="article-card">
+                                <a className="article-card-link" href="#"/>
+                                <div className="article-card-image"
                                      style={{backgroundImage: "url(https://cdn-s-static.arzamas.academy/storage/course/333/rectangular_preview_detail_picture-d9909237-1eb6-4353-af82-0fc53b421f20.jpg)"}}></div>
-                                <div className="card-text">
+                                <div className="article-card-text">
                                     This is a wider card with supporting text below as a natural lead-in to additional
                                     content. This content is a little bit longer.
                                 </div>

@@ -37,7 +37,7 @@ const Navbar = () => {
 
                 <div className="collapse navbar-collapse" id="navbarCollapse">
                     <a className="me-3 ms-3" href="/">
-                        <i className="bi bi-easel logo-icon icon-hover"></i>
+                        <i className="bi bi bi-globe-europe-africa logo-icon icon-hover"></i>
                     </a>
                     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                         <li className="nav-item">

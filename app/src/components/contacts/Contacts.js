@@ -8,7 +8,7 @@ const Contacts = () => {
     const languageContext = useContext(LanguageContext);
 
     useEffect(() => {
-        document.title = languageContext.dictionary["titles"]["contacts"] + " • Istinara"
+        document.title = languageContext.dictionary["titles"]["contacts"] + " • Istinara";
     }, [languageContext]);
 
     return (

@@ -10,6 +10,7 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 
 // Import ReactJS components
 import Auth from "./components/auth/Auth";
+import Authors from "./components/authors/Authors";
 import Home from './components/index/Index';
 import About from './components/about/About';
 import Contacts from './components/contacts/Contacts';
@@ -28,6 +29,7 @@ function App() {
                 <Routes>
                     <Route exact path='/' element={<Home/>}/>
                     <Route path='/about' element={<About/>}/>
+                    <Route path='/authors' element={<Authors/>}/>
                     <Route path='/contacts' element={<Contacts/>}/>
                     <Route path="/account" element={<Auth/>}/>
                     <Route path="/contribution" element={<Contribution/>}/>

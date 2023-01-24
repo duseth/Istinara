@@ -7,7 +7,7 @@ const Contribution = () => {
     const languageContext = useContext(LanguageContext);
 
     useEffect(() => {
-        document.title = languageContext.dictionary["titles"]["contribution"] + " • Istinara"
+        document.title = languageContext.dictionary["titles"]["contribution"] + " • Istinara";
     }, [languageContext]);
 
     return (

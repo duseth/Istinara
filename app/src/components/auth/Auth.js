@@ -3,6 +3,7 @@ import {useForm} from "react-hook-form";
 
 import './Auth.scss'
 import AuthService from "../../services/AuthService";
+import User from "../../models/User";
 import {LanguageContext} from "../../languages/Language";
 import {Account, Login, Profile, Register} from "../../containers/Language";
 
@@ -12,7 +13,7 @@ const Auth = () => {
     const [rerender, setRerender] = useState(false);
 
     useEffect(() => {
-        document.title = languageContext.dictionary["titles"]["profile"] + " • Istinara"
+        document.title = languageContext.dictionary["titles"]["profile"] + " • Istinara";
     }, [languageContext]);
 
     let [authMode, setAuthMode] = useState("sign-in")
@@ -20,7 +21,7 @@ const Auth = () => {
         setAuthMode(authMode === "sign-in" ? "sign-up" : "sign-in")
     };
 
-    const getRegistrationDate = (user) => {
+    const getRegistrationDate = (user: User) => {
         let date = new Date(user.created_at);
         const locale = localStorage.getItem("lang") === "ru" ? "ru-RU" : "ar-AE";
         const options = {day: "numeric", month: "long", year: 'numeric'};

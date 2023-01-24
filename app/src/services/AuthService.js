@@ -1,7 +1,5 @@
 import {Account} from "../containers/Language";
-import axios from "axios";
-
-const AUTH_API = "http://localhost:8080/api/auth";
+import api from "../services/API"
 
 class AuthService {
     emailValidation = new RegExp(".+@.+\\.[A-Za-z]+$");
@@ -27,7 +25,7 @@ class AuthService {
         formData.append("email", data.email)
         formData.append("password", data.password)
 
-        await axios.post(`${AUTH_API}/register`, formData, this.formDataHeaders).then(response => {
+        await api.post("/auth/register", formData, this.formDataHeaders).then(response => {
             return response.data;
         }).catch(error => {
             console.log(error)
@@ -49,7 +47,7 @@ class AuthService {
         formData.append("email", data.email)
         formData.append("password", data.password)
 
-        let response = await axios.post(`${AUTH_API}/login`, formData, this.formDataHeaders);
+        let response = await api.post("/auth/login", formData, this.formDataHeaders);
 
         if (response !== undefined && response.data.token) {
             localStorage.setItem("user", JSON.stringify(response.data.user));
