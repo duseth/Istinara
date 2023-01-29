@@ -10,6 +10,7 @@ type Work struct {
 	DescriptionAr string `gorm:"column:description_ar"`
 
 	PicturePath string `gorm:"column:picture_path"`
+	Link        string `gorm:"column:link"`
 	AuthorID    string `gorm:"column:author_id"`
 	Author      Author
 }

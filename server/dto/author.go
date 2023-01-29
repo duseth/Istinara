@@ -1,17 +1,11 @@
 package dto
 
 import (
-	"time"
-
 	"github.com/gofrs/uuid"
 )
 
 type AuthorDTO struct {
 	ID uuid.UUID `json:"id"`
-
-	CreatedAt time.Time  `json:"created_at"`
-	UpdatedAt time.Time  `json:"updated_at"`
-	DeletedAt *time.Time `json:"deleted_at"`
 
 	NameRu string `json:"name_ru"`
 	NameAr string `json:"name_ar"`
@@ -23,6 +17,7 @@ type AuthorDTO struct {
 	BiographyAr string `json:"biography_ar"`
 
 	PicturePath string `json:"picture_path"`
+	Link        string `json:"link"`
 }
 
 type AuthorInputForm struct {

@@ -13,4 +13,5 @@ type Author struct {
 	BiographyAr string `gorm:"column:biography_ar"`
 
 	PicturePath string `gorm:"column:picture_path"`
+	Link        string `gorm:"column:link"`
 }

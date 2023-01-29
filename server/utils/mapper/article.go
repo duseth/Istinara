@@ -9,9 +9,6 @@ import (
 func MapArticle(article models.Article) dto.ArticleDTO {
 	return dto.ArticleDTO{
 		ID:            article.ID,
-		CreatedAt:     article.CreatedAt,
-		UpdatedAt:     article.UpdatedAt,
-		DeletedAt:     article.DeletedAt,
 		TitleRu:       article.TitleRu,
 		TitleAr:       article.TitleAr,
 		QuoteRu:       article.QuoteRu,
@@ -20,6 +17,7 @@ func MapArticle(article models.Article) dto.ArticleDTO {
 		DescriptionAr: article.DescriptionAr,
 		PicturePath:   article.PicturePath,
 		Transcription: article.Transcription,
+		Link:          article.Link,
 		WorkID:        article.WorkID,
 	}
 }

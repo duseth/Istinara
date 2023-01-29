@@ -9,9 +9,6 @@ import (
 func MapAuthor(author models.Author) dto.AuthorDTO {
 	return dto.AuthorDTO{
 		ID:          author.ID,
-		CreatedAt:   author.CreatedAt,
-		UpdatedAt:   author.UpdatedAt,
-		DeletedAt:   author.DeletedAt,
 		NameRu:      author.NameRu,
 		NameAr:      author.NameAr,
 		ShortNameRu: author.ShortNameRu,
@@ -19,6 +16,7 @@ func MapAuthor(author models.Author) dto.AuthorDTO {
 		BiographyRu: author.BiographyRu,
 		BiographyAr: author.BiographyAr,
 		PicturePath: author.PicturePath,
+		Link:        author.Link,
 	}
 }
 

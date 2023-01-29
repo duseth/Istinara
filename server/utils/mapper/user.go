@@ -10,8 +10,6 @@ func MapUser(user models.User) dto.UserDTO {
 	return dto.UserDTO{
 		ID:           user.ID,
 		CreatedAt:    user.CreatedAt,
-		UpdatedAt:    user.UpdatedAt,
-		DeletedAt:    user.DeletedAt,
 		Username:     user.Username,
 		Email:        user.Email,
 		IsPrivileged: user.IsPrivileged,

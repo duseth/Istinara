@@ -10,6 +10,7 @@ import (
 	"github.com/duseth/istinara/server/models"
 	httputil "github.com/duseth/istinara/server/utils/http"
 	"github.com/duseth/istinara/server/utils/mapper"
+	"github.com/duseth/istinara/server/utils/translit"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
@@ -113,6 +114,7 @@ func CreateAuthor(ctx *gin.Context) {
 	var author models.Author
 	mapper.ParseAuthor(authorForm, &author)
 	author.PicturePath = picturePath
+	author.Link = translit.GenerateLinkFromText(author.NameRu)
 
 	if err = models.DB.Create(&author).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
@@ -180,6 +182,14 @@ func UpdateAuthor(ctx *gin.Context) {
 	if err := models.DB.Model(&author).Update("picture_path", picturePath).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
+	}
+
+	if authorForm.NameRu != "" {
+		link := translit.GenerateLinkFromText(authorForm.NameRu)
+		if err := models.DB.Model(&author).Update("link", link).Error; err != nil {
+			httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
+			return
+		}
 	}
 
 	httputil.ResponseSuccess(ctx, mapper.MapAuthor(author))

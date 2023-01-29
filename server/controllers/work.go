@@ -10,6 +10,7 @@ import (
 	"github.com/duseth/istinara/server/models"
 	httputil "github.com/duseth/istinara/server/utils/http"
 	"github.com/duseth/istinara/server/utils/mapper"
+	"github.com/duseth/istinara/server/utils/translit"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
@@ -113,6 +114,7 @@ func CreateWork(ctx *gin.Context) {
 	var work models.Work
 	mapper.ParseWork(workForm, &work)
 	work.PicturePath = picturePath
+	work.Link = translit.GenerateLinkFromText(work.TitleRu)
 
 	if err = models.DB.Create(&work).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
@@ -180,6 +182,14 @@ func UpdateWork(ctx *gin.Context) {
 	if err := models.DB.Model(&work).Update("picture_path", picturePath).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
+	}
+
+	if workForm.TitleRu != "" {
+		link := translit.GenerateLinkFromText(workForm.TitleRu)
+		if err := models.DB.Model(&work).Update("link", link).Error; err != nil {
+			httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
+			return
+		}
 	}
 
 	httputil.ResponseSuccess(ctx, mapper.MapWork(work))

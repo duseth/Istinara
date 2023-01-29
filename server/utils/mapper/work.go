@@ -9,15 +9,13 @@ import (
 func MapWork(work models.Work) dto.WorkDTO {
 	return dto.WorkDTO{
 		ID:            work.ID,
-		CreatedAt:     work.CreatedAt,
-		UpdatedAt:     work.UpdatedAt,
-		DeletedAt:     work.DeletedAt,
 		TitleRu:       work.TitleRu,
 		TitleAr:       work.TitleAr,
 		DescriptionRu: work.DescriptionRu,
 		DescriptionAr: work.DescriptionAr,
 		PicturePath:   work.PicturePath,
 		AuthorID:      work.AuthorID,
+		Link:          work.Link,
 	}
 }
 

@@ -10,6 +10,7 @@ import (
 	"github.com/duseth/istinara/server/models"
 	httputil "github.com/duseth/istinara/server/utils/http"
 	"github.com/duseth/istinara/server/utils/mapper"
+	"github.com/duseth/istinara/server/utils/translit"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
@@ -92,6 +93,7 @@ func CreateArticle(ctx *gin.Context) {
 	var article models.Article
 	mapper.ParseArticle(articleForm, &article)
 	article.PicturePath = picturePath
+	article.Link = translit.GenerateLinkFromText(article.TitleRu)
 
 	if err = models.DB.Create(&article).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
@@ -159,6 +161,14 @@ func UpdateArticle(ctx *gin.Context) {
 	if err := models.DB.Model(&article).Update("picture_path", picturePath).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
+	}
+
+	if articleForm.TitleRu != "" {
+		link := translit.GenerateLinkFromText(articleForm.TitleRu)
+		if err := models.DB.Model(&article).Update("link", link).Error; err != nil {
+			httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
+			return
+		}
 	}
 
 	httputil.ResponseSuccess(ctx, mapper.MapArticle(article))
