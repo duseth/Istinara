@@ -11,6 +11,7 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 // Import ReactJS components
 import Auth from "./components/auth/Auth";
 import Authors from "./components/authors/Authors";
+import Works from "./components/works/Works";
 import Home from './components/index/Index';
 import About from './components/about/About';
 import Contacts from './components/contacts/Contacts';
@@ -20,6 +21,7 @@ import Contribution from "./components/contribution/Contribution";
 import {LanguageProvider} from "./containers/Language";
 import AuthService from "./services/AuthService";
 import AuthVerify from "./components/auth/AuthVerify";
+import Articles from "./components/articles/Articles";
 
 function App() {
     return (
@@ -30,6 +32,8 @@ function App() {
                     <Route exact path='/' element={<Home/>}/>
                     <Route path='/about' element={<About/>}/>
                     <Route path='/authors' element={<Authors/>}/>
+                    <Route path='/works' element={<Works/>}/>
+                    <Route path='/articles' element={<Articles/>}/>
                     <Route path='/contacts' element={<Contacts/>}/>
                     <Route path="/account" element={<Auth/>}/>
                     <Route path="/contribution" element={<Contribution/>}/>

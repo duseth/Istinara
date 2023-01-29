@@ -78,3 +78,17 @@ label {
     transform: scaleX(1);
   }
 }
+
+.no-data {
+  margin: 100px 10px 100px 10px !important;
+  text-align: center;
+}
+
+.no-data-message {
+  font-size: 24px;
+
+}
+
+.no-data-icon {
+  font-size: 64px;
+}

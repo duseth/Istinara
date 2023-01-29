@@ -27,7 +27,7 @@ const Footer = () => {
                         <a href="/about" className="nav-link upper-text px-2"><FooterLink tid="about"/></a>
                     </li>
                     <li className="nav-item nav-link p-0">
-                        <a href="/license" className="nav-link upper-text px-2"><FooterLink tid="license"/></a>
+                        <a href="//api.istinara.ru" className="nav-link upper-text px-2"><FooterLink tid="docs"/></a>
                     </li>
                     <li className="nav-item nav-link p-0">
                         <a href="/contacts" className="nav-link upper-text px-2"><FooterLink tid="contacts"/></a>

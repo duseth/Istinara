@@ -33,7 +33,7 @@ const Authors = () => {
         if (languageContext.userLanguage === "ru") {
             return (
                 <div className="author-card" key={author.id}>
-                    <a className="author-link" href={"/authors/" + author.id}/>
+                    <a className="author-link" href={"/authors/" + author.link}/>
                     <div className="w-50">
                         <img className="author-image" src={author.picture_path} alt={author.short_name_ru}/>
                         <p className="text-center mb-3 ms-4">{author.short_name_ru}</p>
@@ -47,7 +47,7 @@ const Authors = () => {
         } else if (languageContext.userLanguage === "ar") {
             return (
                 <div className="author-card" key={author.id}>
-                    <a className="author-link" href={"/authors/" + author.id}/>
+                    <a className="author-link" href={"/authors/" + author.link}/>
                     <div className="w-50">
                         <img className="author-image" src={author.picture_path} alt={author.short_name_ar}/>
                         <p className="text-center mb-3 ms-4">{author.short_name_ar}</p>
@@ -66,7 +66,14 @@ const Authors = () => {
             <div className="container">
                 <div className="row justify-content-center align-items-center m-3">
                     {
-                        data?.slice(0, next)?.map((author) => getAuthorCard(author))
+                        data.length > 0 ? (
+                            data.slice(0, next).map((author) => getAuthorCard(author))
+                        ) : (
+                            <div className="no-data">
+                                <i className="bi bi-folder-x no-data-icon"></i>
+                                <p className="no-data-message"><AuthorsText tid="no_data"/></p>
+                            </div>
+                        )
                     }
                     {
                         next < data?.length &&

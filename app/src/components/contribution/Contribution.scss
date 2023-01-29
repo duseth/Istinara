@@ -1,0 +1,27 @@
+.contribution-container {
+  display: block;
+  background-color: #f7f7f7;
+}
+
+.contribution-header {
+  text-align: center;
+  max-width: 700px;
+  font-size: 24px;
+}
+
+.contribution-icon {
+  font-size: 64px;
+}
+
+.contribution-form {
+  max-width: 800px;
+  box-shadow: 0 2px 3px rgb(0 0 0 / 5%);
+  border-radius: 3px;
+  background-color: white;
+  padding: 55px 60px 34px;
+}
+
+.contribution-form-button {
+  text-align: center;
+  max-width: 200px;
+}

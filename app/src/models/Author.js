@@ -8,6 +8,7 @@ class Author extends BaseModel {
     biography_ru: string;
     biography_ar: string;
     picture_path: string;
+    link: string;
 }
 
 export default Author;

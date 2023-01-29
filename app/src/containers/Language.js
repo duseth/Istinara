@@ -74,3 +74,26 @@ export function AuthorsText({tid}) {
     const languageContext = useContext(LanguageContext);
     return languageContext.dictionary["authors"][tid] || tid;
 }
+
+// Works
+export function WorksText({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["works"][tid] || tid;
+}
+
+// Articles
+export function ArticlesText({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["articles"][tid] || tid;
+}
+
+// Contribution
+export function ContributionText({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["contribution"][tid] || tid;
+}
+
+export function ContributionForm({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["contribution"]["form"][tid] || tid;
+}
