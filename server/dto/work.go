@@ -15,7 +15,7 @@ type WorkDTO struct {
 
 	PicturePath string `json:"picture_path"`
 	Link        string `json:"link"`
-	AuthorID    string `json:"author_id"`
+	AuthorLink  string `json:"author_link"`
 }
 
 type WorkInputForm struct {

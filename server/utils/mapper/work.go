@@ -14,8 +14,8 @@ func MapWork(work models.Work) dto.WorkDTO {
 		DescriptionRu: work.DescriptionRu,
 		DescriptionAr: work.DescriptionAr,
 		PicturePath:   work.PicturePath,
-		AuthorID:      work.AuthorID,
 		Link:          work.Link,
+		AuthorLink:    work.Author.Link,
 	}
 }
 
