@@ -57,6 +57,7 @@ func main() {
 		routes.AuthorPublic(api)
 		routes.WorkPublic(api)
 		routes.ArticlesPublic(api)
+		routes.RequestPublic(api)
 
 		// User API
 		user := api.Group("/user")
@@ -76,6 +77,7 @@ func main() {
 			routes.AuthorPrivate(private)
 			routes.WorkPrivate(private)
 			routes.ArticlesPrivate(private)
+			routes.RequestPrivate(private)
 		}
 	}
 
