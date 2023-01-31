@@ -21,7 +21,23 @@
   padding: 55px 60px 34px;
 }
 
+.contribution-form-header {
+  font-size: 14px;
+  text-align: center;
+  color: #999999;
+}
+
 .contribution-form-button {
   text-align: center;
   max-width: 200px;
+}
+
+.form-control:focus {
+  border-color: #28a745;
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.3);
+}
+
+.form-select:focus {
+  border-color: #28a745;
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.3);
 }

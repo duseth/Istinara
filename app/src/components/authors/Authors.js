@@ -10,6 +10,7 @@ const authors_per_page = 5;
 
 const Authors = () => {
     const languageContext = useContext(LanguageContext);
+
     useEffect(() => {
         document.title = languageContext.dictionary["titles"]["authors"] + " • Istinara";
     }, [languageContext]);
