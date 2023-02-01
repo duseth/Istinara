@@ -6,7 +6,7 @@ import api from "../../services/API";
 
 import './Authors.scss'
 
-const authors_per_page = 5;
+const authors_per_page = 6;
 
 const Authors = () => {
     const languageContext = useContext(LanguageContext);
@@ -23,7 +23,18 @@ const Authors = () => {
     }, []);
 
     if (!data) {
-        return <div>Loading...</div>;
+        return (
+            <div className="album">
+                <div className="container">
+                    <div className="row justify-content-center align-items-center m-3">
+                        <div className="information">
+                            <div className="spinner-border" role="status"/>
+                            <p className="mt-3"><AuthorsText tid="loading"/></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     const loadMore = () => {
@@ -33,9 +44,9 @@ const Authors = () => {
     const getAuthorCard = (author: Author) => {
         if (languageContext.userLanguage === "ru") {
             return (
-                <div className="author-card" key={author.id}>
+                <div className="author-card col-md" key={author.id}>
                     <a className="author-link" href={"/authors/" + author.link}/>
-                    <div className="w-50">
+                    <div className="w-50 mb-3">
                         <img className="author-image" src={author.picture_path} alt={author.short_name_ru}/>
                         <p className="text-center mb-3 ms-4">{author.short_name_ru}</p>
                     </div>
@@ -47,7 +58,7 @@ const Authors = () => {
             )
         } else if (languageContext.userLanguage === "ar") {
             return (
-                <div className="author-card" key={author.id}>
+                <div className="author-card col" key={author.id}>
                     <a className="author-link" href={"/authors/" + author.link}/>
                     <div className="w-50">
                         <img className="author-image" src={author.picture_path} alt={author.short_name_ar}/>
@@ -65,14 +76,14 @@ const Authors = () => {
     return (
         <div className="album">
             <div className="container">
-                <div className="row justify-content-center align-items-center m-3">
+                <div className="justify-content-center align-items-center row row-cols-md-3 g-3 m-3">
                     {
                         data.length > 0 ? (
                             data.slice(0, next).map((author) => getAuthorCard(author))
                         ) : (
-                            <div className="no-data">
-                                <i className="bi bi-folder-x no-data-icon"></i>
-                                <p className="no-data-message"><AuthorsText tid="no_data"/></p>
+                            <div className="information">
+                                <i className="bi bi-folder-x information-icon"></i>
+                                <p className="mt-3"><AuthorsText tid="no_data"/></p>
                             </div>
                         )
                     }

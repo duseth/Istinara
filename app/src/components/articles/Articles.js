@@ -22,7 +22,18 @@ const Authors = () => {
     }, []);
 
     if (!data) {
-        return <div>Loading...</div>;
+        return (
+            <div className="album">
+                <div className="container">
+                    <div className="row justify-content-center align-items-center m-3">
+                        <div className="information">
+                            <div className="spinner-border" role="status"/>
+                            <p className="mt-3"><ArticlesText tid="loading"/></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     const loadMore = () => {
@@ -51,9 +62,9 @@ const Authors = () => {
                         data.length > 0 ? (
                             data.slice(0, next).map((article) => getArticleCard(article))
                         ) : (
-                            <div className="no-data">
-                                <i className="bi bi-folder-x no-data-icon"></i>
-                                <p className="no-data-message"><ArticlesText tid="no_data"/></p>
+                            <div className="information">
+                                <i className="bi bi-folder-x information-icon"></i>
+                                <p className="mt-3"><ArticlesText tid="no_data"/></p>
                             </div>
                         )
                     }
