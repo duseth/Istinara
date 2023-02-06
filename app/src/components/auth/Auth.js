@@ -23,7 +23,7 @@ const Auth = () => {
 
     const getRegistrationDate = (user: User) => {
         let date = new Date(user.created_at);
-        const locale = localStorage.getItem("lang") === "ru" ? "ru-RU" : "ar-AE";
+        const locale = languageContext.userLanguage === "ru" ? "ru-RU" : "ar-AE";
         const options = {day: "numeric", month: "long", year: 'numeric'};
 
         return date.toLocaleDateString(locale, options)
@@ -154,7 +154,7 @@ const Auth = () => {
                                 </button>
                             </div>
                         </div>
-                        <div className="auth-form-error">{errors?.required?.message || errors?.email?.message}</div>
+                        <div className="form-error">{errors?.required?.message || errors?.email?.message}</div>
                         <div className="text-center">
                             <p className="link-text">
                                 <Register tid="already_registered"/>{" "}

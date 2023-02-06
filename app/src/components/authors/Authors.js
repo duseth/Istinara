@@ -51,21 +51,21 @@ const Authors = () => {
                         <p className="text-center mb-3 ms-4">{author.short_name_ru}</p>
                     </div>
                     <div className="author-body">
-                        <div className="author-name">{author.name_ru}<br/>•</div>
+                        <div className="author-name">{author.name_ru}<br/><hr/></div>
                         <div className="author-biography">{author.biography_ru}</div>
                     </div>
                 </div>
             )
         } else if (languageContext.userLanguage === "ar") {
             return (
-                <div className="author-card col" key={author.id}>
+                <div className="author-card col-md" key={author.id}>
                     <a className="author-link" href={"/authors/" + author.link}/>
                     <div className="w-50">
                         <img className="author-image" src={author.picture_path} alt={author.short_name_ar}/>
-                        <p className="text-center mb-3 ms-4">{author.short_name_ar}</p>
+                        <p className="text-center mb-4 ms-4">{author.short_name_ar}</p>
                     </div>
                     <div className="author-body">
-                        <div className="author-name">{author.name_ar}<br/>•</div>
+                        <div className="author-name">{author.name_ar}<br/><hr/></div>
                         <div className="author-biography">{author.biography_ar}</div>
                     </div>
                 </div>

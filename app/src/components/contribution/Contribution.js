@@ -1,11 +1,12 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import './Contribution.scss'
 import {LanguageContext} from "../../languages/Language";
-import {ContributionForm, ContributionText} from "../../containers/Language";
+import {ContributionForm, ContributionText, GeneralForm} from "../../containers/Language";
 import Author from "../../models/Author";
 import api from "../../services/API";
 import Work from "../../models/Work";
+import {useForm} from "react-hook-form";
 
 const Contribution = () => {
     const languageContext = useContext(LanguageContext);
@@ -14,26 +15,74 @@ const Contribution = () => {
         document.title = languageContext.dictionary["titles"]["contribution"] + " • Istinara";
     }, [languageContext]);
 
-    const [authors: Array<Author>, setAuthors] = useState()
+    const [authors: Array<Author>, setAuthors] = useState();
 
     useEffect(() => {
         api.get("/authors").then((response) => setAuthors(response.data));
     }, []);
 
-    const [works: Array<Work>, setWorks] = useState()
-    const worksInput = useRef(null)
+    const [works: Array<Work>, setWorks] = useState();
 
     const unlockWorks = (author) => {
         const uuid = author.target.value;
         api.get(`/authors/${uuid}/works`).then((response) => setWorks(response.data));
-        worksInput.current.disabled = false;
+        document.getElementById("work_id").disabled = false;
     };
 
-    const submitForm = (form) => {
-        console.log(form);
-    }
+    const submitForm = async (data, setError) => {
+        const fields = ["name", "email", "title", "quote", "description"];
+
+        if (data.author_id === "null") {
+            setError("required", {message: <GeneralForm tid="error_required"/>});
+            return;
+        }
+
+        if (data.work_id === undefined || data.work_id === "null") {
+            setError("required", {message: <GeneralForm tid="error_required"/>});
+            return;
+        }
+
+        let success = true;
+        fields.map((field) => {
+            if (data[field].trim().length === 0) {
+                setError("required", {message: <GeneralForm tid="error_required"/>});
+                success = false;
+            }
+        });
+
+        if (!success) {
+            return;
+        }
+
+        let emailValidation = new RegExp(".+@.+\\.[A-Za-z]+$");
+        if (!emailValidation.test(data.email)) {
+            setError("email", {message: <GeneralForm tid="error_email"/>});
+            return;
+        }
+
+        let formData = new FormData();
+        formData.append("author_id", data.author_id);
+        formData.append("work_id", data.work_id);
+
+        fields.map((field) => {
+            formData.append(field, data[field])
+        });
+
+        let formDataHeaders = {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        };
+
+        await api.post("/requests", formData, formDataHeaders).then(response => {
+            return response.data;
+        }).catch(error => {
+            console.log(error)
+        })
+    };
 
     let lang = languageContext.userLanguage;
+    const {register, setError, handleSubmit, formState: {errors}} = useForm();
 
     return (
         <section className="contribution-container">
@@ -43,11 +92,12 @@ const Contribution = () => {
                         <i className="bi bi-send-plus contribution-icon"></i>
                         <p><ContributionText tid="header"/></p>
                     </div>
-                    <form className="contribution-form row g-3" onSubmit={submitForm}>
+                    <form className="contribution-form row g-3"
+                          onSubmit={handleSubmit((data) => submitForm(data, setError))}>
                         <p className="contribution-form-header"><ContributionForm tid="header"/></p>
                         <div className="col-12">
-                            <select className="form-select" id={"author_" + lang} defaultValue="null" name="author_id"
-                                    onChange={unlockWorks}>
+                            <select className="form-select" id="author_id" defaultValue="null" name="author_id"
+                                    {...register("author_id")} onChange={unlockWorks}>
                                 <option value="null" disabled><ContributionForm tid="choose-author"/></option>
                                 {
                                     authors?.map((author) =>
@@ -59,11 +109,9 @@ const Contribution = () => {
                             </select>
                         </div>
                         <div className="col-12">
-                            <select className="form-select" id={"work_" + lang} defaultValue="null"
-                                    disabled ref={worksInput}>
-                                <option value="null" disabled>
-                                    <ContributionForm tid="choose-work"/>
-                                </option>
+                            <select className="form-select" id="work_id" defaultValue="null" name="work_id"
+                                    {...register("work_id")} disabled>
+                                <option value="null" disabled><ContributionForm tid="choose-work"/></option>
                                 {
                                     works?.map((work) =>
                                         <option key={work.id} value={work.id}>
@@ -74,31 +122,34 @@ const Contribution = () => {
                             </select>
                         </div>
                         <div className="col-12">
-                            <label htmlFor={"title_" + lang} className="form-label">
+                            <label htmlFor="title" className="form-label">
                                 <ContributionForm tid="title"/>
                             </label>
-                            <input type="text" className="form-control" id={"title_" + lang}/>
+                            <input type="text" className="form-control" id="title" {...register("title")}/>
                         </div>
                         <div className="col-12">
-                            <label htmlFor={"quote_" + lang} className="form-label">
+                            <label htmlFor="quote" className="form-label">
                                 <ContributionForm tid="quote"/>
                             </label>
-                            <input type="text" className="form-control" id={"quote_" + lang}/>
+                            <input type="text" className="form-control" id="quote" {...register("quote")}/>
                         </div>
                         <div className="col-12">
-                            <label htmlFor={"description_" + lang} className="form-label">
+                            <label htmlFor="description" className="form-label">
                                 <ContributionForm tid="description"/>
                             </label>
-                            <textarea rows="5" className="form-control" id={"description_" + lang}/>
+                            <textarea rows="5" className="form-control" id="description" {...register("description")}/>
                         </div>
                         <hr/>
                         <div className="col-md-6">
                             <label htmlFor="name" className="form-label"><ContributionForm tid="name"/></label>
-                            <input type="text" className="form-control" id="name"/>
+                            <input type="text" className="form-control" id="name" {...register("name")}/>
                         </div>
                         <div className="col-md-6">
                             <label htmlFor="email" className="form-label">Email</label>
-                            <input type="email" className="form-control" id="email"/>
+                            <input type="email" className="form-control" id="email" {...register("email")}/>
+                        </div>
+                        <div className="form-error mt-4 mb-0">
+                            {errors?.required?.message || errors?.email?.message}
                         </div>
                         <div className="col-12 row justify-content-center align-items-center mt-4 m-auto">
                             <button type="submit" className="btn btn-outline-dark w-25">

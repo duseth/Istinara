@@ -6,14 +6,9 @@ type Request struct {
 	Name  string `gorm:"column:name;not null"`
 	Email string `gorm:"column:email;not null;unique"`
 
-	TitleRu string `gorm:"column:title_ru"`
-	TitleAr string `gorm:"column:title_ar"`
-
-	QuoteRu string `gorm:"column:quote_ru"`
-	QuoteAr string `gorm:"column:quote_ar"`
-
-	DescriptionRu string `gorm:"column:description_ru"`
-	DescriptionAr string `gorm:"column:description_ar"`
+	Title       string `gorm:"column:title"`
+	Quote       string `gorm:"column:quote"`
+	Description string `gorm:"column:description"`
 
 	WorkID string `gorm:"column:work_id"`
 	Work   Work

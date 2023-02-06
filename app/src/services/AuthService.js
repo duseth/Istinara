@@ -1,4 +1,4 @@
-import {Account} from "../containers/Language";
+import {GeneralForm} from "../containers/Language";
 import api from "../services/API"
 
 class AuthService {
@@ -10,13 +10,13 @@ class AuthService {
     };
 
     async Register(data, setError) {
-        if (data.username.trim().length === 0 || data.email.trim().length === 0 || data.username.trim().length === 0) {
-            setError("required", {message: <Account tid="error_required"/>});
+        if (data.username.trim().length === 0 || data.email.trim().length === 0 || data.password.trim().length === 0) {
+            setError("required", {message: <GeneralForm tid="error_required"/>});
             return;
         }
 
         if (!this.emailValidation.test(data.email)) {
-            setError("email", {message: <Account tid="error_email"/>});
+            setError("email", {message: <GeneralForm tid="error_email"/>});
             return;
         }
 
@@ -34,12 +34,12 @@ class AuthService {
 
     async Login(data, setError) {
         if (data.password.trim().length === 0 || data.email.trim().length === 0) {
-            setError("required", {message: <Account tid="error_required"/>});
+            setError("required", {message: <GeneralForm tid="error_required"/>});
             return;
         }
 
         if (!this.emailValidation.test(data.email)) {
-            setError("email", {message: <Account tid="error_email"/>});
+            setError("email", {message: <GeneralForm tid="error_email"/>});
             return;
         }
 

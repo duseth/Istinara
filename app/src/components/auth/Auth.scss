@@ -35,17 +35,6 @@ button {
   transform: scale(1, .9);
 }
 
-.auth-form-error {
-  text-align: center;
-  box-sizing: border-box;
-  padding: 0 25px;
-  color: #f00;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 18px;
-  margin: -7px auto 36px;
-}
-
 .auth-form-content {
   display: flex;
   flex-direction: column;

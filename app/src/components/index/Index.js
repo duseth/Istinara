@@ -69,6 +69,30 @@ const Home = () => {
                             </div>
                         </div>
 
+                        <div className="col">
+                            <div className="article-card">
+                                <a className="article-card-link" href="#"/>
+                                <div className="article-card-image"
+                                     style={{backgroundImage: "url(https://cdn-s-static.arzamas.academy/storage/course/333/rectangular_preview_detail_picture-d9909237-1eb6-4353-af82-0fc53b421f20.jpg)"}}></div>
+                                <div className="article-card-text">
+                                    This is a wider card with supporting text below as a natural lead-in to additional
+                                    content. This content is a little bit longer.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="col">
+                            <div className="article-card">
+                                <a className="article-card-link" href="#"/>
+                                <div className="article-card-image"
+                                     style={{backgroundImage: "url(https://cdn-s-static.arzamas.academy/storage/course/333/rectangular_preview_detail_picture-d9909237-1eb6-4353-af82-0fc53b421f20.jpg)"}}></div>
+                                <div className="article-card-text">
+                                    This is a wider card with supporting text below as a natural lead-in to additional
+                                    content. This content is a little bit longer.
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>

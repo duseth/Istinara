@@ -10,14 +10,9 @@ type RequestDTO struct {
 	Name  string `json:"name"`
 	Email string `json:"email"`
 
-	TitleRu string `json:"title_ru"`
-	TitleAr string `json:"title_ar"`
-
-	QuoteRu string `json:"quote_ru"`
-	QuoteAr string `json:"quote_ar"`
-
-	DescriptionRu string `json:"description_ru"`
-	DescriptionAr string `json:"description_ar"`
+	Title       string `json:"title"`
+	Quote       string `json:"quote"`
+	Description string `json:"description"`
 
 	WorkID   string `json:"work_id"`
 	AuthorID string `json:"author_id"`
@@ -27,15 +22,10 @@ type RequestInputForm struct {
 	Name  string `json:"name" form:"name"`
 	Email string `json:"email" form:"name"`
 
-	TitleRu string `json:"title_ru" form:"title_ru"`
-	TitleAr string `json:"title_ar" form:"title_ar"`
+	Title       string `json:"title" form:"title"`
+	Quote       string `json:"quote" form:"quote"`
+	Description string `json:"description" form:"description"`
 
-	QuoteRu string `json:"quote_ru" form:"quote_ru"`
-	QuoteAr string `json:"quote_ar" form:"quote_ar"`
-
-	DescriptionRu string `json:"description_ru" form:"description_ru"`
-	DescriptionAr string `json:"description_ar" form:"description_ar"`
-
-	WorkID   string `json:"work_id" binding:"uuid"`
-	AuthorID string `json:"author_id" binding:"uuid"`
+	WorkID   string `json:"work_id" form:"work_id" binding:"uuid"`
+	AuthorID string `json:"author_id" form:"author_id" binding:"uuid"`
 }

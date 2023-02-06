@@ -12,7 +12,7 @@
         "authors": "Авторы",
         "works": "Произведения",
         "articles": "Реалии",
-        "search_placeholder": "Поиск"
+        "search_placeholder": "Поиск реалий"
     },
     "footer": {
         "links": {
@@ -24,6 +24,12 @@
         "information": "Открытый словарь культурно-маркированной лексики русского языка с переводом на арабский",
         "rights": "Все права защищены",
         "back-to-top": "Наверх"
+    },
+    "general": {
+        "form": {
+            "error_required": "Пожалуйста, заполните все поля",
+            "error_email": "Введите, пожалуйста, корректный e-mail"
+        }
     },
     "home": {
         "header": "",
@@ -47,9 +53,7 @@
             "login_redirect": "Войдите здесь"
         },
         "name_input": "Имя пользователя",
-        "password_input": "Пароль",
-        "error_required": "Пожалуйста, заполните все поля",
-        "error_email": "Введите, пожалуйста, корректный e-mail"
+        "password_input": "Пароль"
     },
     "contacts": {
         "header": "Связь с нами",

@@ -8,17 +8,14 @@ import (
 // MapRequest map models.Request to dto.RequestDTO
 func MapRequest(request models.Request) dto.RequestDTO {
 	return dto.RequestDTO{
-		ID:            request.ID,
-		Name:          request.Name,
-		Email:         request.Email,
-		TitleRu:       request.TitleRu,
-		TitleAr:       request.TitleAr,
-		QuoteRu:       request.QuoteRu,
-		QuoteAr:       request.QuoteAr,
-		DescriptionRu: request.DescriptionRu,
-		DescriptionAr: request.DescriptionAr,
-		AuthorID:      request.AuthorID,
-		WorkID:        request.WorkID,
+		ID:          request.ID,
+		Name:        request.Name,
+		Email:       request.Email,
+		Title:       request.Title,
+		Quote:       request.Quote,
+		Description: request.Description,
+		AuthorID:    request.AuthorID,
+		WorkID:      request.WorkID,
 	}
 }
 
@@ -37,12 +34,9 @@ func MapRequests(requests []models.Request) []dto.RequestDTO {
 func ParseRequest(requestForm dto.RequestInputForm, request *models.Request) {
 	request.Name = requestForm.Name
 	request.Email = requestForm.Email
-	request.TitleRu = requestForm.TitleRu
-	request.TitleAr = requestForm.TitleAr
-	request.QuoteRu = requestForm.QuoteRu
-	request.QuoteAr = requestForm.QuoteAr
-	request.DescriptionRu = requestForm.DescriptionRu
-	request.DescriptionAr = requestForm.DescriptionAr
+	request.Title = requestForm.Title
+	request.Quote = requestForm.Quote
+	request.Description = requestForm.Description
 	request.WorkID = requestForm.WorkID
 	request.AuthorID = requestForm.AuthorID
 }

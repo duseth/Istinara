@@ -36,6 +36,12 @@ export function FooterText({tid}) {
     return languageContext.dictionary["footer"][tid] || tid;
 }
 
+// General
+export function GeneralForm({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["general"]["form"][tid] || tid;
+}
+
 // Account
 export function Account({tid}) {
     const languageContext = useContext(LanguageContext);
