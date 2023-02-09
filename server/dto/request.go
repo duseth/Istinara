@@ -20,7 +20,7 @@ type RequestDTO struct {
 
 type RequestInputForm struct {
 	Name  string `json:"name" form:"name"`
-	Email string `json:"email" form:"name"`
+	Email string `json:"email" form:"email"`
 
 	Title       string `json:"title" form:"title"`
 	Quote       string `json:"quote" form:"quote"`

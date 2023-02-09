@@ -90,7 +90,7 @@ func GetAuthorizationToken(user *models.User, email string, password string) (st
 		return "", err
 	}
 
-	err := bcrypt.CompareHashAndPassword([]byte(password), []byte(user.Password))
+	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
 		return "", err
 	}

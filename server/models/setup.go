@@ -26,6 +26,7 @@ func DatabaseConnect() {
 		&Author{},
 		&Work{},
 		&Article{},
+		&Request{},
 	)
 	if err != nil {
 		return
