@@ -8,9 +8,9 @@
         "description": "Open Dictionary of Culturally Marked Vocabulary of the Russian Language with Arabic Translation",
         "title": "Istinara API",
         "contact": {
-            "name": "Ilyas Salimov",
-            "url": "https://t.me/duseth",
-            "email": "ilyas.salimov.07@gmail.com"
+            "name": "Istinara",
+            "url": "https://istinara.ru",
+            "email": "istinara@site.ru"
         },
         "license": {
             "name": "MIT License",
@@ -979,12 +979,6 @@
         "dto.ArticleDTO": {
             "type": "object",
             "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "type": "string"
-                },
                 "description_ar": {
                     "type": "string"
                 },
@@ -992,6 +986,9 @@
                     "type": "string"
                 },
                 "id": {
+                    "type": "string"
+                },
+                "link": {
                     "type": "string"
                 },
                 "picture_path": {
@@ -1012,10 +1009,7 @@
                 "transcription": {
                     "type": "string"
                 },
-                "updated_at": {
-                    "type": "string"
-                },
-                "work_id": {
+                "work_link": {
                     "type": "string"
                 }
             }
@@ -1048,13 +1042,10 @@
                 "biography_ru": {
                     "type": "string"
                 },
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "type": "string"
-                },
                 "id": {
+                    "type": "string"
+                },
+                "link": {
                     "type": "string"
                 },
                 "name_ar": {
@@ -1070,9 +1061,6 @@
                     "type": "string"
                 },
                 "short_name_ru": {
-                    "type": "string"
-                },
-                "updated_at": {
                     "type": "string"
                 }
             }
@@ -1121,9 +1109,6 @@
                 "created_at": {
                     "type": "string"
                 },
-                "deleted_at": {
-                    "type": "string"
-                },
                 "email": {
                     "type": "string"
                 },
@@ -1133,9 +1118,6 @@
                 "is_privileged": {
                     "type": "boolean"
                 },
-                "updated_at": {
-                    "type": "string"
-                },
                 "username": {
                     "type": "string"
                 }
@@ -1144,13 +1126,7 @@
         "dto.WorkDTO": {
             "type": "object",
             "properties": {
-                "author_id": {
-                    "type": "string"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
+                "author_link": {
                     "type": "string"
                 },
                 "description_ar": {
@@ -1162,6 +1138,9 @@
                 "id": {
                     "type": "string"
                 },
+                "link": {
+                    "type": "string"
+                },
                 "picture_path": {
                     "type": "string"
                 },
@@ -1169,9 +1148,6 @@
                     "type": "string"
                 },
                 "title_ru": {
-                    "type": "string"
-                },
-                "updated_at": {
                     "type": "string"
                 }
             }

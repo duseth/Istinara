@@ -2,15 +2,13 @@ basePath: /api
 definitions:
   dto.ArticleDTO:
     properties:
-      created_at:
-        type: string
-      deleted_at:
-        type: string
       description_ar:
         type: string
       description_ru:
         type: string
       id:
+        type: string
+      link:
         type: string
       picture_path:
         type: string
@@ -24,9 +22,7 @@ definitions:
         type: string
       transcription:
         type: string
-      updated_at:
-        type: string
-      work_id:
+      work_link:
         type: string
     type: object
   dto.ArticleListResult:
@@ -47,11 +43,9 @@ definitions:
         type: string
       biography_ru:
         type: string
-      created_at:
-        type: string
-      deleted_at:
-        type: string
       id:
+        type: string
+      link:
         type: string
       name_ar:
         type: string
@@ -62,8 +56,6 @@ definitions:
       short_name_ar:
         type: string
       short_name_ru:
-        type: string
-      updated_at:
         type: string
     type: object
   dto.AuthorListResult:
@@ -94,26 +86,18 @@ definitions:
     properties:
       created_at:
         type: string
-      deleted_at:
-        type: string
       email:
         type: string
       id:
         type: string
       is_privileged:
         type: boolean
-      updated_at:
-        type: string
       username:
         type: string
     type: object
   dto.WorkDTO:
     properties:
-      author_id:
-        type: string
-      created_at:
-        type: string
-      deleted_at:
+      author_link:
         type: string
       description_ar:
         type: string
@@ -121,13 +105,13 @@ definitions:
         type: string
       id:
         type: string
+      link:
+        type: string
       picture_path:
         type: string
       title_ar:
         type: string
       title_ru:
-        type: string
-      updated_at:
         type: string
     type: object
   dto.WorkListResult:
@@ -172,9 +156,9 @@ definitions:
 host: localhost:8080
 info:
   contact:
-    email: ilyas.salimov.07@gmail.com
-    name: Ilyas Salimov
-    url: https://t.me/duseth
+    email: istinara@site.ru
+    name: Istinara
+    url: https://istinara.ru
   description: Open Dictionary of Culturally Marked Vocabulary of the Russian Language
     with Arabic Translation
   license:
