@@ -7,21 +7,22 @@ import Author from "../../models/Author";
 import api from "../../services/API";
 import Work from "../../models/Work";
 import {useForm} from "react-hook-form";
+import toast from "react-hot-toast";
 
 const Contribution = () => {
-    const languageContext = useContext(LanguageContext);
+    let languageContext = useContext(LanguageContext);
 
     useEffect(() => {
         document.title = languageContext.dictionary["titles"]["contribution"] + " • Istinara";
     }, [languageContext]);
 
-    const [authors: Array<Author>, setAuthors] = useState();
+    let [authors: Array<Author>, setAuthors] = useState();
 
     useEffect(() => {
         api.get("/authors").then((response) => setAuthors(response.data));
     }, []);
 
-    const [works: Array<Work>, setWorks] = useState();
+    let [works: Array<Work>, setWorks] = useState();
 
     const unlockWorks = (author) => {
         const uuid = author.target.value;
@@ -29,7 +30,10 @@ const Contribution = () => {
         document.getElementById("work_id").disabled = false;
     };
 
-    const submitForm = async (data, setError) => {
+    let lang = languageContext.userLanguage;
+    let {register, reset, setError, handleSubmit, formState: {errors}} = useForm();
+
+    const sendRequest = async (data) => {
         const fields = ["name", "email", "title", "quote", "description"];
 
         if (data.author_id === "null") {
@@ -74,15 +78,13 @@ const Contribution = () => {
             }
         };
 
-        await api.post("/requests", formData, formDataHeaders).then(response => {
-            return response.data;
-        }).catch(error => {
-            console.log(error)
-        })
-    };
-
-    let lang = languageContext.userLanguage;
-    const {register, setError, handleSubmit, formState: {errors}} = useForm();
+        await api.post("/requests", formData, formDataHeaders)
+            .then(() => {
+                toast.success(<ContributionForm tid="success_notify"/>);
+                reset();
+            })
+            .catch(() => toast.error(<ContributionForm tid="error_notify"/>))
+    }
 
     return (
         <section className="contribution-container">
@@ -92,8 +94,8 @@ const Contribution = () => {
                         <i className="bi bi-send-plus contribution-icon"></i>
                         <p><ContributionText tid="header"/></p>
                     </div>
-                    <form className="contribution-form row g-3"
-                          onSubmit={handleSubmit((data) => submitForm(data, setError))}>
+                    <form onSubmit={handleSubmit((data) => sendRequest(data))}
+                          className="contribution-form row g-3" id="request-form" {...register("required")}>
                         <p className="contribution-form-header"><ContributionForm tid="header"/></p>
                         <div className="col-12">
                             <select className="form-select" id="author_id" defaultValue="null" name="author_id"

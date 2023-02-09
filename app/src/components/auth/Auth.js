@@ -8,9 +8,8 @@ import {LanguageContext} from "../../languages/Language";
 import {Account, Login, Profile, Register} from "../../containers/Language";
 
 const Auth = () => {
-    const languageContext = useContext(LanguageContext);
-
-    const [rerender, setRerender] = useState(false);
+    let languageContext = useContext(LanguageContext);
+    let [rerender, setRerender] = useState(false);
 
     useEffect(() => {
         document.title = languageContext.dictionary["titles"]["profile"] + " • Istinara";
@@ -18,15 +17,15 @@ const Auth = () => {
 
     let [authMode, setAuthMode] = useState("sign-in")
     const changeAuthMode = () => {
-        setAuthMode(authMode === "sign-in" ? "sign-up" : "sign-in")
+        setAuthMode(authMode === "sign-in" ? "sign-up" : "sign-in");
+        reset();
     };
 
     const getRegistrationDate = (user: User) => {
-        let date = new Date(user.created_at);
-        const locale = languageContext.userLanguage === "ru" ? "ru-RU" : "ar-AE";
-        const options = {day: "numeric", month: "long", year: 'numeric'};
+        const date = new Date(user.created_at),
+            locale = languageContext.userLanguage === "ru" ? "ru-RU" : "ar-AE";
 
-        return date.toLocaleDateString(locale, options)
+        return date.toLocaleDateString(locale, {day: "numeric", month: "long", year: 'numeric'})
     }
 
     const logout = () => {
@@ -34,7 +33,7 @@ const Auth = () => {
         setRerender(!rerender);
     };
 
-    const {register, setError, handleSubmit, formState: {errors}} = useForm();
+    const {register, reset, setError, handleSubmit, formState: {errors}} = useForm();
 
     let user = AuthService.GetCurrentUser();
     if (user != null) {
@@ -97,7 +96,7 @@ const Auth = () => {
                                 </div>
                             </div>
                             <div
-                                className="auth-form-error">{errors?.required?.message || errors?.email?.message}</div>
+                                className="form-error">{errors?.required?.message || errors?.email?.message}</div>
                             <div className="text-center">
                                 <p className="link-text">
                                     <Login tid="not_registered_yet"/>{" "}
@@ -117,7 +116,7 @@ const Auth = () => {
         <section className="auth-container">
             <div className="container py-5">
                 <div className="row d-flex justify-content-center align-items-center m-1">
-                    <form onSubmit={handleSubmit((data) => AuthService.Register(data, setError))}
+                    <form onSubmit={handleSubmit((data) => AuthService.Register(data, setError, changeAuthMode))}
                           className="auth-form" {...register("required")}>
                         <div className="auth-form-content">
                             <h3 className="auth-form-title"><Register tid="title"/></h3>

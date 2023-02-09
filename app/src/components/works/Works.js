@@ -57,26 +57,26 @@ const Works = () => {
     return (
         <div className="album">
             <div className="container">
-                <div className="row justify-content-center align-items-center m-3">
-                    {
-                        data.length > 0 ? (
-                            data.slice(0, next).map((work) => getWorkCard(work))
-                        ) : (
-                            <div className="information">
-                                <i className="bi bi-folder-x information-icon"></i>
-                                <p className="mt-3"><WorksText tid="no_data"/></p>
-                            </div>
-                        )
-                    }
-                    {
-                        next < data?.length &&
-                        <div className="text-center">
-                            <button className="btn btn-outline-dark" onClick={loadMore}>
-                                <WorksText tid="show_more"/>
-                            </button>
+                {
+                    data.length > 0 ? (
+                        <div className="row justify-content-center align-items-center m-3">
+                            {data.slice(0, next).map((work) => getWorkCard(work))}
                         </div>
-                    }
-                </div>
+                    ) : (
+                        <div className="information">
+                            <i className="bi bi-folder-x information-icon"></i>
+                            <p className="mt-3"><WorksText tid="no_data"/></p>
+                        </div>
+                    )
+                }
+                {
+                    next < data?.length &&
+                    <div className="text-center">
+                        <button className="btn btn-outline-dark" onClick={loadMore}>
+                            <WorksText tid="show_more"/>
+                        </button>
+                    </div>
+                }
             </div>
         </div>
     );

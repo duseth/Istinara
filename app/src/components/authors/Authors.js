@@ -51,7 +51,9 @@ const Authors = () => {
                         <p className="text-center mb-3 ms-4">{author.short_name_ru}</p>
                     </div>
                     <div className="author-body">
-                        <div className="author-name">{author.name_ru}<br/><hr/></div>
+                        <div className="author-name">{author.name_ru}<br/>
+                            <hr/>
+                        </div>
                         <div className="author-biography">{author.biography_ru}</div>
                     </div>
                 </div>
@@ -65,7 +67,9 @@ const Authors = () => {
                         <p className="text-center mb-4 ms-4">{author.short_name_ar}</p>
                     </div>
                     <div className="author-body">
-                        <div className="author-name">{author.name_ar}<br/><hr/></div>
+                        <div className="author-name">{author.name_ar}<br/>
+                            <hr/>
+                        </div>
                         <div className="author-biography">{author.biography_ar}</div>
                     </div>
                 </div>
@@ -76,26 +80,26 @@ const Authors = () => {
     return (
         <div className="album">
             <div className="container">
-                <div className="justify-content-center align-items-center row row-cols-md-3 g-3 m-3">
-                    {
-                        data.length > 0 ? (
-                            data.slice(0, next).map((author) => getAuthorCard(author))
-                        ) : (
-                            <div className="information">
-                                <i className="bi bi-folder-x information-icon"></i>
-                                <p className="mt-3"><AuthorsText tid="no_data"/></p>
-                            </div>
-                        )
-                    }
-                    {
-                        next < data?.length &&
-                        <div className="text-center">
-                            <button className="btn btn-outline-dark" onClick={loadMore}>
-                                <AuthorsText tid="show_more"/>
-                            </button>
+                {
+                    data.length > 0 ? (
+                        <div className="justify-content-center align-items-center row row-cols-md-3 g-3 m-3">
+                            {data.slice(0, next).map((author) => getAuthorCard(author))}
                         </div>
-                    }
-                </div>
+                    ) : (
+                        <div className="information">
+                            <i className="bi bi-folder-x information-icon"></i>
+                            <p className="mt-3"><AuthorsText tid="no_data"/></p>
+                        </div>
+                    )
+                }
+                {
+                    next < data?.length &&
+                    <div className="text-center m-3">
+                        <button className="btn btn-outline-dark" onClick={loadMore}>
+                            <AuthorsText tid="show_more"/>
+                        </button>
+                    </div>
+                }
             </div>
         </div>
     );
