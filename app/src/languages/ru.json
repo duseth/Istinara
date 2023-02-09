@@ -38,19 +38,24 @@
     "account": {
         "profile": {
             "logout": "Выйти",
-            "registration_date": "Дата регистрации"
+            "registration_date": "Дата регистрации",
+            "logout_notify": "Вы успешно вышли!"
         },
         "login": {
             "title": "Вход",
             "button_text": "Войти",
             "not_registered_yet": "Еще не зарегистрированы?",
-            "register_redirect": "Сделайте это здесь"
+            "register_redirect": "Сделайте это здесь",
+            "success_notify": "Вы успешно вошли!",
+            "error_notify": "E-mail или пароль неверный"
         },
         "register": {
             "title": "Регистрация",
             "button_text": "Зарегистрироваться",
             "already_registered": "Уже зарегистрированы?",
-            "login_redirect": "Войдите здесь"
+            "login_redirect": "Войдите здесь",
+            "success_notify": "Вы успешно зарегистрированы!",
+            "error_notify": "Данный e-mail уже зарегистрирован"
         },
         "name_input": "Имя пользователя",
         "password_input": "Пароль"
@@ -88,7 +93,9 @@
             "title": "Название статьи",
             "quote": "Цитата из произведения",
             "description": "Описание",
-            "button_text": "Отправить"
+            "button_text": "Отправить",
+            "success_notify": "Ваше предложение успешно отправлено. Спасибо за ваш вклад!",
+            "error_notify": "При отправке формы произошла ошибка"
         }
     }
 }

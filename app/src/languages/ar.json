@@ -25,6 +25,12 @@
         "rights": "كل الحقوق محفوظة",
         "back-to-top": "المشوع"
     },
+    "general": {
+        "form": {
+            "error_required": "مع الترجمة العربية",
+            "error_email": "لمفردات اللغة الروسية"
+        }
+    },
     "home": {
         "header": "",
         "main_text": ""
@@ -32,19 +38,24 @@
     "account": {
         "profile": {
             "logout": "إطفاء",
-            "registration_date": "تاريخ التسجيل"
+            "registration_date": "تاريخ التسجيل",
+            "logout_notify": "كل التسجيل!"
         },
         "login": {
             "title": "مدخل",
             "button_text": "ليأتي",
             "not_registered_yet": "لم يتم تسجيلة بعد؟",
-            "register_redirect": "افعلها هنا"
+            "register_redirect": "افعلها هنا",
+            "success_notify": "يتم تسجيلة!",
+            "error_notify": "تاريخ التسجيل"
         },
         "register": {
             "title": "تسجيل",
             "button_text": "يسجل",
             "already_registered": "مسجل بالفعل؟",
-            "login_redirect": "تسجيل الدخول من هنا"
+            "login_redirect": "تسجيل الدخول من هنا",
+            "success_notify": "الدخول من هنا!",
+            "error_notify": "مسجل افعلها بالفعل"
         },
         "name_input": "اسم المستخدم",
         "password_input": "كلمة المرور",
@@ -85,7 +96,9 @@
             "quote": "المثقافيًاالروسية",
             "description": "المثقافيًاالروسية",
             "button_text": "الموس",
-            "error_required": "يرجى تعبئة جميع الحقول"
+            "error_required": "يرجى تعبئة جميع الحقول",
+            "success_notify": "ثقافيًااللغة الروسية مع الترللغةوسومة",
+            "error_notify": "الموسومة لترللغةوسومة"
         }
     }
 }

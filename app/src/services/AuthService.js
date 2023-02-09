@@ -1,5 +1,6 @@
-import {GeneralForm} from "../containers/Language";
+import {GeneralForm, Login, Profile, Register} from "../containers/Language";
 import api from "../services/API"
+import toast from "react-hot-toast";
 
 class AuthService {
     emailValidation = new RegExp(".+@.+\\.[A-Za-z]+$");
@@ -9,7 +10,7 @@ class AuthService {
         }
     };
 
-    async Register(data, setError) {
+    async Register(data, setError, changeAuthMode) {
         if (data.username.trim().length === 0 || data.email.trim().length === 0 || data.password.trim().length === 0) {
             setError("required", {message: <GeneralForm tid="error_required"/>});
             return;
@@ -25,11 +26,14 @@ class AuthService {
         formData.append("email", data.email)
         formData.append("password", data.password)
 
-        await api.post("/auth/register", formData, this.formDataHeaders).then(response => {
-            return response.data;
-        }).catch(error => {
-            console.log(error)
-        })
+        await api.post("/auth/register", formData, this.formDataHeaders)
+            .then(() => {
+                toast.success(<Register tid="success_notify"/>);
+                changeAuthMode();
+            })
+            .catch(() => {
+                toast.error(<Register tid="error_notify"/>);
+            })
     }
 
     async Login(data, setError) {
@@ -47,12 +51,15 @@ class AuthService {
         formData.append("email", data.email)
         formData.append("password", data.password)
 
-        let response = await api.post("/auth/login", formData, this.formDataHeaders);
-
-        if (response !== undefined && response.data.token) {
-            localStorage.setItem("user", JSON.stringify(response.data.user));
-            localStorage.setItem("token", response.data.token);
-        }
+        await api.post("/auth/login", formData, this.formDataHeaders)
+            .then(response => {
+                localStorage.setItem("user", JSON.stringify(response.data.user));
+                localStorage.setItem("token", response.data.token);
+                toast.success(<Login tid="success_notify"/>);
+            })
+            .catch(() => {
+                toast.error(<Login tid="error_notify"/>);
+            });
     }
 
     GetAuthHeader() {
@@ -63,6 +70,7 @@ class AuthService {
     Logout() {
         localStorage.removeItem("user");
         localStorage.removeItem("token");
+        toast(<Profile tid="logout_notify"/>, {icon: "👋"});
     }
 
     GetCurrentUser() {

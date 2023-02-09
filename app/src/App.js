@@ -22,11 +22,13 @@ import {LanguageProvider} from "./containers/Language";
 import AuthService from "./services/AuthService";
 import AuthVerify from "./components/auth/AuthVerify";
 import Articles from "./components/articles/Articles";
+import {Toaster} from "react-hot-toast";
 
 function App() {
     return (
         <Router>
             <LanguageProvider>
+                <Toaster/>
                 <Navbar/>
                 <Routes>
                     <Route exact path='/' element={<Home/>}/>
