@@ -154,7 +154,7 @@ const Contribution = () => {
                             {errors?.required?.message || errors?.email?.message}
                         </div>
                         <div className="col-12 row justify-content-center align-items-center mt-4 m-auto">
-                            <button type="submit" className="btn btn-outline-dark w-25">
+                            <button type="submit" className="btn btn-outline-dark w-auto">
                                 <ContributionForm tid="button_text"/>
                             </button>
                         </div>

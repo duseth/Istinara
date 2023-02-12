@@ -156,7 +156,6 @@ definitions:
 host: localhost:8080
 info:
   contact:
-    email: istinara@site.ru
     name: Istinara
     url: https://istinara.ru
   description: Open Dictionary of Culturally Marked Vocabulary of the Russian Language

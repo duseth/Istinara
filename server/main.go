@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"time"
 
 	_ "github.com/duseth/istinara/server/docs"
 	"github.com/duseth/istinara/server/middlewares"
@@ -19,7 +20,6 @@ import (
 
 //	@contact.name	Istinara
 //	@contact.url	https://istinara.ru
-//	@contact.email	istinara@site.ru
 
 //	@license.name	MIT License
 //	@license.url	https://spdx.org/licenses/MIT.html
@@ -39,14 +39,21 @@ func main() {
 	// Initialise router
 	router := gin.Default()
 
+	// CORS Middleware
+	corsConfig := cors.Config{
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"GET", "POST", "DELETE", "PUT", "PATCH", "HEAD", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"},
+		MaxAge:           24 * time.Hour,
+		AllowCredentials: true,
+	}
+	router.Use(cors.New(corsConfig))
+
 	// Public API
 	api := router.Group("/api")
 	{
 		// Initialise Swagger docs
 		api.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
-		// Global Middlewares
-		api.Use(cors.Default())
 
 		// Authentication
 		auth := api.Group("/auth")
@@ -59,25 +66,28 @@ func main() {
 		routes.ArticlesPublic(api)
 		routes.RequestPublic(api)
 
-		// User API
-		user := api.Group("/user")
+		// Protected API
+		protected := api.Group("")
 		{
-			// Protected Middlewares
-			user.Use(middlewares.JwtAuthMiddleware())
+			protected.Use(middlewares.JwtAuthMiddleware())
 
-			// TODO: user defined routes (e.g. favourites articles)
-		}
+			// User API
+			user := protected.Group("/user")
+			{
+				routes.User(user)
+			}
 
-		// Administration API
-		private := api.Group("/private")
-		{
-			// Private Middlewares
-			private.Use(middlewares.DataManipulationMiddleware())
+			// Administration API
+			private := protected.Group("")
+			{
+				// Private Middlewares
+				private.Use(middlewares.DataManipulationMiddleware())
 
-			routes.AuthorPrivate(private)
-			routes.WorkPrivate(private)
-			routes.ArticlesPrivate(private)
-			routes.RequestPrivate(private)
+				routes.AuthorPrivate(private)
+				routes.WorkPrivate(private)
+				routes.ArticlesPrivate(private)
+				routes.RequestPrivate(private)
+			}
 		}
 	}
 

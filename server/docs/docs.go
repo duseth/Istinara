@@ -11,8 +11,7 @@ const docTemplate = `{
         "title": "{{.Title}}",
         "contact": {
             "name": "Istinara",
-            "url": "https://istinara.ru",
-            "email": "istinara@site.ru"
+            "url": "https://istinara.ru"
         },
         "license": {
             "name": "MIT License",

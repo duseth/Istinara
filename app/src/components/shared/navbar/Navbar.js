@@ -2,7 +2,7 @@ import React, {useContext, useRef, useState} from "react";
 
 import './Navbar.scss'
 import {LanguageContext} from "../../../languages/Language";
-import {Header} from "../../../containers/Language";
+import {HeaderLink} from "../../../containers/Language";
 import LanguageSelector from "../LanguageSelector";
 
 const Navbar = () => {
@@ -41,13 +41,13 @@ const Navbar = () => {
                     </a>
                     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                         <li className="nav-item">
-                            <a className="nav-link nav-header-link" href="/authors"><Header tid="authors"/></a>
+                            <a className="nav-link nav-header-link" href="/authors"><HeaderLink tid="authors"/></a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link nav-header-link" href="/works"><Header tid="works"/></a>
+                            <a className="nav-link nav-header-link" href="/works"><HeaderLink tid="works"/></a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link nav-header-link" href="/articles"><Header tid="articles"/></a>
+                            <a className="nav-link nav-header-link" href="/articles"><HeaderLink tid="articles"/></a>
                         </li>
                     </ul>
                 </div>
