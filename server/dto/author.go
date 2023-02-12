@@ -13,6 +13,9 @@ type AuthorDTO struct {
 	ShortNameRu string `json:"short_name_ru"`
 	ShortNameAr string `json:"short_name_ar"`
 
+	AboutRu string `json:"about_ru"`
+	AboutAr string `json:"about_ar"`
+
 	BiographyRu string `json:"biography_ru"`
 	BiographyAr string `json:"biography_ar"`
 
@@ -26,6 +29,9 @@ type AuthorInputForm struct {
 
 	ShortNameRu string `json:"short_name_ru" form:"short_name_ru"`
 	ShortNameAr string `json:"short_name_ar" form:"short_name_ar"`
+
+	AboutRu string `json:"about_ru"`
+	AboutAr string `json:"about_ar"`
 
 	BiographyRu string `json:"biography_ru" form:"biography_ru"`
 	BiographyAr string `json:"biography_ar" form:"biography_ar"`

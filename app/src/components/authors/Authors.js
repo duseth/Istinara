@@ -46,15 +46,14 @@ const Authors = () => {
             return (
                 <div className="author-card col-md" key={author.id}>
                     <a className="author-link" href={"/authors/" + author.link}/>
-                    <div className="w-50 mb-3">
+                    <div className="w-50 h-100 mb-3">
                         <img className="author-image" src={author.picture_path} alt={author.short_name_ru}/>
-                        <p className="text-center mb-3 ms-4">{author.short_name_ru}</p>
                     </div>
                     <div className="author-body">
                         <div className="author-name">{author.name_ru}<br/>
                             <hr/>
                         </div>
-                        <div className="author-biography">{author.biography_ru}</div>
+                        <div className="author-biography">{author.about_ru}</div>
                     </div>
                 </div>
             )
@@ -62,15 +61,14 @@ const Authors = () => {
             return (
                 <div className="author-card col-md" key={author.id}>
                     <a className="author-link" href={"/authors/" + author.link}/>
-                    <div className="w-50">
+                    <div className="w-50 h-100 mb-3">
                         <img className="author-image" src={author.picture_path} alt={author.short_name_ar}/>
-                        <p className="text-center mb-4 ms-4">{author.short_name_ar}</p>
                     </div>
                     <div className="author-body">
                         <div className="author-name">{author.name_ar}<br/>
                             <hr/>
                         </div>
-                        <div className="author-biography">{author.biography_ar}</div>
+                        <div className="author-biography">{author.about_ar}</div>
                     </div>
                 </div>
             )
