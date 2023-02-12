@@ -26,7 +26,7 @@ import (
 //	@Router			/works [get]
 func ListWorks(ctx *gin.Context) {
 	var works []models.Work
-	if err := models.DB.Find(&works).Error; err != nil {
+	if err := models.DB.Preload("Author").Find(&works).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
 	}

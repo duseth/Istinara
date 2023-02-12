@@ -8,14 +8,17 @@ import (
 // MapWork map models.Work to dto.WorkDTO
 func MapWork(work models.Work) dto.WorkDTO {
 	return dto.WorkDTO{
-		ID:            work.ID,
-		TitleRu:       work.TitleRu,
-		TitleAr:       work.TitleAr,
-		DescriptionRu: work.DescriptionRu,
-		DescriptionAr: work.DescriptionAr,
-		PicturePath:   work.PicturePath,
-		Link:          work.Link,
-		AuthorLink:    work.Author.Link,
+		ID:              work.ID,
+		TitleRu:         work.TitleRu,
+		TitleAr:         work.TitleAr,
+		GenreRu:         work.GenreRu,
+		GenreAr:         work.GenreAr,
+		DescriptionRu:   work.DescriptionRu,
+		DescriptionAr:   work.DescriptionAr,
+		PublicationYear: work.PublicationYear,
+		PicturePath:     work.PicturePath,
+		Link:            work.Link,
+		Author:          MapAuthor(work.Author),
 	}
 }
 
@@ -34,7 +37,10 @@ func MapWorks(works []models.Work) []dto.WorkDTO {
 func ParseWork(workForm dto.WorkInputForm, work *models.Work) {
 	work.TitleRu = workForm.TitleRu
 	work.TitleAr = workForm.TitleAr
+	work.GenreRu = workForm.GenreRu
+	work.GenreAr = workForm.GenreAr
 	work.DescriptionRu = workForm.DescriptionRu
 	work.DescriptionAr = workForm.DescriptionAr
+	work.PublicationYear = workForm.PublicationYear
 	work.AuthorID = workForm.AuthorID
 }

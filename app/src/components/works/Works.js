@@ -6,7 +6,7 @@ import api from "../../services/API";
 import './Works.scss'
 import {WorksText} from "../../containers/Language";
 
-const works_per_page = 5;
+const works_per_page = 6;
 
 const Works = () => {
     const languageContext = useContext(LanguageContext);
@@ -15,7 +15,7 @@ const Works = () => {
     }, [languageContext]);
 
     const [next, setNext] = useState(works_per_page);
-    const [data: Array<Work>, setData] = useState()
+    const [data: Array<Work>, setData] = useState();
 
     useEffect(() => {
         api.get("/works").then((response) => setData(response.data));
@@ -38,12 +38,22 @@ const Works = () => {
 
     const loadMore = () => {
         setNext(next + works_per_page)
-    }
+    };
 
     const getWorkCard = (work: Work) => {
         if (languageContext.userLanguage === "ru") {
             return (
-                <div className="work-card" key={work.id}>
+                <div className="author-card col-md" key={work.id}>
+                    <a className="author-link" href={"/works/" + work.link}/>
+                    <div className="w-50 h-100 mb-3">
+                        <img className="author-image" src={work.picture_path} alt={work.title_ru}/>
+                    </div>
+                    <div className="author-body">
+                        <div className="author-name">{work.title_ru}<br/>
+                            <hr/>
+                        </div>
+                        <div className="author-biography">{work.description_ru}</div>
+                    </div>
                 </div>
             )
         } else if (languageContext.userLanguage === "ar") {
@@ -59,7 +69,7 @@ const Works = () => {
             <div className="container">
                 {
                     data.length > 0 ? (
-                        <div className="row justify-content-center align-items-center m-3">
+                        <div className="justify-content-center align-items-center row row-cols-md-3 g-3 m-3">
                             {data.slice(0, next).map((work) => getWorkCard(work))}
                         </div>
                     ) : (
@@ -80,6 +90,6 @@ const Works = () => {
             </div>
         </div>
     );
-}
+};
 
-export default Works
+export default Works;

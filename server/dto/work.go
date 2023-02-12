@@ -13,9 +13,14 @@ type WorkDTO struct {
 	DescriptionRu string `json:"description_ru"`
 	DescriptionAr string `json:"description_ar"`
 
-	PicturePath string `json:"picture_path"`
-	Link        string `json:"link"`
-	AuthorLink  string `json:"author_link"`
+	GenreRu string `json:"genre_ru"`
+	GenreAr string `json:"genre_ar"`
+
+	Link            string `json:"link"`
+	PicturePath     string `json:"picture_path"`
+	PublicationYear int    `json:"publication_year"`
+
+	Author AuthorDTO `json:"author"`
 }
 
 type WorkInputForm struct {
@@ -25,7 +30,11 @@ type WorkInputForm struct {
 	DescriptionRu string `json:"description_ru" form:"description_ru"`
 	DescriptionAr string `json:"description_ar" form:"description_ar"`
 
-	AuthorID string `json:"author_id" form:"author_id" binding:"omitempty,uuid"`
+	GenreRu string `form:"genre_ru"`
+	GenreAr string `form:"genre_ar"`
+
+	PublicationYear int    `form:"publication_year"`
+	AuthorID        string `json:"author_id" form:"author_id" binding:"omitempty,uuid"`
 }
 
 type WorkSingleResult struct {

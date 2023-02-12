@@ -84,7 +84,7 @@ const Contribution = () => {
                 reset();
             })
             .catch(() => toast.error(<ContributionForm tid="error_notify"/>))
-    }
+    };
 
     return (
         <section className="contribution-container">
