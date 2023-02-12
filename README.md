@@ -19,6 +19,8 @@
     API_SECRET="secret"
     TOKEN_HOUR_LIFESPAN="24"
     CONNECTION_STRING="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres_db:5432/${POSTGRES_DB}"
+    LOAD_DUMP="false"
+    DUMP_FILE_NAME="initial_dump.json"
     ```
 
 3. In terminal run ```docker-compose up --build```

@@ -1,8 +1,10 @@
 package models
 
 import (
+	"encoding/json"
 	"log"
 	"os"
+	"strconv"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -31,4 +33,35 @@ func DatabaseConnect() {
 	if err != nil {
 		return
 	}
+
+	if isLoad, err := strconv.ParseBool(os.Getenv("LOAD_DUMP")); err == nil && isLoad {
+		LoadInitialDump()
+	}
+}
+
+func LoadInitialDump() {
+	dumpName := os.Getenv("DUMP_FILE_NAME")
+
+	loadEntities := LoadEntities{}
+	file, err := os.ReadFile(dumpName)
+	if err != nil {
+		log.Printf("The file \"%s\" was not uploaded, recordings could not be uploaded\n%s", dumpName, err.Error())
+		return
+	}
+
+	err = json.Unmarshal(file, &loadEntities)
+	if err != nil {
+		log.Printf("JSON from file \"%s\" cannot properly deserialize\n%s", dumpName, err.Error())
+		return
+	}
+
+	DB.Create(&loadEntities.Authors)
+	DB.Create(&loadEntities.Works)
+	DB.Create(&loadEntities.Articles)
+}
+
+type LoadEntities struct {
+	Authors  []Author  `json:"authors"`
+	Works    []Work    `json:"works"`
+	Articles []Article `json:"articles"`
 }
