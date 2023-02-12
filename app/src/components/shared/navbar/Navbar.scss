@@ -16,6 +16,10 @@
   color: white;
   margin: 0 5px 0 5px;
   letter-spacing: 0.01px;
+
+  &:focus {
+    color: white;
+  }
 }
 
 .nav-header-link {
