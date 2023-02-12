@@ -20,7 +20,7 @@ export function LanguageProvider({children}) {
 }
 
 // Header
-export function Header({tid}) {
+export function HeaderLink({tid}) {
     const languageContext = useContext(LanguageContext);
     return languageContext.dictionary["header"][tid] || tid;
 }
@@ -43,22 +43,32 @@ export function GeneralForm({tid}) {
 }
 
 // Account
-export function Account({tid}) {
+export function AccountText({tid}) {
     const languageContext = useContext(LanguageContext);
     return languageContext.dictionary["account"][tid] || tid;
 }
 
-export function Profile({tid}) {
+export function ProfileText({tid}) {
     const languageContext = useContext(LanguageContext);
     return languageContext.dictionary["account"]["profile"][tid] || tid;
 }
 
-export function Login({tid}) {
+export function ProfileEditForm({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["account"]["profile"]["edit_form"][tid] || tid;
+}
+
+export function ProfilePasswordForm({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["account"]["profile"]["password_form"][tid] || tid;
+}
+
+export function LoginText({tid}) {
     const languageContext = useContext(LanguageContext);
     return languageContext.dictionary["account"]["login"][tid] || tid;
 }
 
-export function Register({tid}) {
+export function RegisterText({tid}) {
     const languageContext = useContext(LanguageContext);
     return languageContext.dictionary["account"]["register"][tid] || tid;
 }

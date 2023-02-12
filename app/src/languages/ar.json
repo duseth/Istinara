@@ -28,7 +28,9 @@
     "general": {
         "form": {
             "error_required": "مع الترجمة العربية",
-            "error_email": "لمفردات اللغة الروسية"
+            "error_email": "لمفردات اللغة الروسية",
+            "error_username": "مفتوح لمفردات اللغة الروسية (الموسومة ثقافيًا)",
+            "error_password": "لمفردات اللغة الروسية الموسومة ثقافيًا"
         }
     },
     "home": {
@@ -38,8 +40,26 @@
     "account": {
         "profile": {
             "logout": "إطفاء",
-            "registration_date": "تاريخ التسجيل",
-            "logout_notify": "كل التسجيل!"
+            "registration_date": "تاريخ التسجيل:",
+            "logout_notify": "كل التسجيل!",
+            "nav_profile": "إطفاء",
+            "nav_favourite": "التسجيل",
+            "edit_form": {
+                "title": "كل التسجيل",
+                "button_text": "تاريخ التسجيل",
+                "success_notify": "الروسية الموسومة ثقافيًا!",
+                "error_notify": "الروسية الموسومة ثقافيًا"
+            },
+            "password_form": {
+                "title": "التسجيل",
+                "current_password": "تاريخ التسجيل",
+                "new_password": "اللغة الروسية",
+                "accept_new_password": "الترجمة العربية",
+                "button_text": "ثقافيًا",
+                "success_notify": "الروسية الموسومة ثقافيًا!",
+                "error_notify": "الروسية الموسومة ثقافيًا",
+                "error_same_password": "مفتوح لمفردات اللغة الروسية. الموسومة ثقافيًا"
+            }
         },
         "login": {
             "title": "مدخل",
@@ -59,8 +79,7 @@
         },
         "name_input": "اسم المستخدم",
         "password_input": "كلمة المرور",
-        "error_required": "يرجى تعبئة جميع الحقول",
-        "error_email": "يرجى إدخال البريد الإلكتروني الصحيح"
+        "show_password": "افعلها بالفعل"
     },
     "contacts": {
         "header": "الإلكتروني",

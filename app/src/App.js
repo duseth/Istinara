@@ -19,7 +19,7 @@ import Footer from './components/shared/footer/Footer';
 import Navbar from './components/shared/navbar/Navbar';
 import Contribution from "./components/contribution/Contribution";
 import {LanguageProvider} from "./containers/Language";
-import AuthService from "./services/AuthService";
+import AuthService from "./services/AccountService";
 import AuthVerify from "./components/auth/AuthVerify";
 import Articles from "./components/articles/Articles";
 import {Toaster} from "react-hot-toast";

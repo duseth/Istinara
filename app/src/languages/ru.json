@@ -28,7 +28,9 @@
     "general": {
         "form": {
             "error_required": "Пожалуйста, заполните все поля",
-            "error_email": "Введите, пожалуйста, корректный e-mail"
+            "error_email": "Введите, пожалуйста, корректный e-mail",
+            "error_username": "Введите, пожалуйста, корректное имя (используйте только буквы и цифры)",
+            "error_password": "Пароли не совпадают. Попробуйте, пожалуйста, еще раз"
         }
     },
     "home": {
@@ -38,8 +40,26 @@
     "account": {
         "profile": {
             "logout": "Выйти",
-            "registration_date": "Дата регистрации",
-            "logout_notify": "Вы успешно вышли!"
+            "registration_date": "Дата регистрации:",
+            "logout_notify": "До скорой встречи!",
+            "nav_profile": "Профиль",
+            "nav_favourite": "Избранное",
+            "edit_form": {
+                "title": "Личные данные",
+                "button_text": "Сохранить изменения",
+                "success_notify": "Ваши данные успешно обновлены!",
+                "error_notify": "Произошла ошибка при изменении данных"
+            },
+            "password_form": {
+                "title": "Пароль",
+                "current_password": "Текущий пароль",
+                "new_password": "Новый пароль",
+                "accept_new_password": "Подтвердите новый пароль",
+                "button_text": "Изменить пароль",
+                "success_notify": "Пароль успешно изменен!",
+                "error_notify": "Текущий пароль не совпадает. Пожалуйста, попробуйте еще раз",
+                "error_same_password": "Новый пароль совпадает с текущим. Пожалуйста, проверьте правильность ввода"
+            }
         },
         "login": {
             "title": "Вход",
@@ -57,8 +77,10 @@
             "success_notify": "Вы успешно зарегистрированы!",
             "error_notify": "Данный e-mail уже зарегистрирован"
         },
-        "name_input": "Имя пользователя",
-        "password_input": "Пароль"
+        "name_input": "Ваше имя",
+        "password_input": "Пароль",
+        "accept_password": "Подтвердите пароль",
+        "show_password": "Показать пароль"
     },
     "contacts": {
         "header": "Связь с нами",
