@@ -15,8 +15,8 @@ func MapAuthor(author models.Author) dto.AuthorDTO {
 		ShortNameAr: author.ShortNameAr,
 		AboutRu:     author.AboutRu,
 		AboutAr:     author.AboutAr,
-		BiographyRu: author.BiographyRu,
-		BiographyAr: author.BiographyAr,
+		BirthDate:   author.BirthDate,
+		DeathDate:   author.DeathDate,
 		PicturePath: author.PicturePath,
 		Link:        author.Link,
 	}
@@ -41,6 +41,6 @@ func ParseAuthor(authorForm dto.AuthorInputForm, author *models.Author) {
 	author.ShortNameAr = authorForm.ShortNameAr
 	author.AboutRu = authorForm.AboutRu
 	author.AboutAr = authorForm.AboutAr
-	author.BiographyRu = authorForm.BiographyRu
-	author.BiographyAr = authorForm.BiographyAr
+	author.BirthDate = authorForm.BirthDate
+	author.DeathDate = authorForm.DeathDate
 }

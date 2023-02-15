@@ -1,5 +1,13 @@
 basePath: /api
 definitions:
+  datatypes.Date:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
   dto.ArticleDTO:
     properties:
       description_ar:
@@ -22,8 +30,8 @@ definitions:
         type: string
       transcription:
         type: string
-      work_link:
-        type: string
+      work:
+        $ref: '#/definitions/dto.WorkDTO'
     type: object
   dto.ArticleListResult:
     properties:
@@ -39,10 +47,14 @@ definitions:
     type: object
   dto.AuthorDTO:
     properties:
-      biography_ar:
+      about_ar:
         type: string
-      biography_ru:
+      about_ru:
         type: string
+      birth_date:
+        $ref: '#/definitions/datatypes.Date'
+      death_date:
+        $ref: '#/definitions/datatypes.Date'
       id:
         type: string
       link:
@@ -97,11 +109,15 @@ definitions:
     type: object
   dto.WorkDTO:
     properties:
-      author_link:
+      about_ar:
         type: string
-      description_ar:
+      about_ru:
         type: string
-      description_ru:
+      author:
+        $ref: '#/definitions/dto.AuthorDTO'
+      genre_ar:
+        type: string
+      genre_ru:
         type: string
       id:
         type: string
@@ -109,6 +125,8 @@ definitions:
         type: string
       picture_path:
         type: string
+      publication_date:
+        $ref: '#/definitions/datatypes.Date'
       title_ar:
         type: string
       title_ru:
@@ -166,6 +184,60 @@ info:
   title: Istinara API
   version: "1.0"
 paths:
+  /account/login:
+    post:
+      parameters:
+      - in: formData
+        name: email
+        required: true
+        type: string
+      - in: formData
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.LoginResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.BadRequestResponse'
+      summary: Get JWT token for authorization requests
+      tags:
+      - account
+  /account/register:
+    post:
+      parameters:
+      - in: formData
+        name: email
+        required: true
+        type: string
+      - in: formData
+        name: password
+        required: true
+        type: string
+      - in: formData
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.BadRequestResponse'
+      summary: Registration new user in the system
+      tags:
+      - account
   /articles:
     get:
       description: Returns list of all articles
@@ -344,60 +416,6 @@ paths:
       summary: Add a new article
       tags:
       - articles
-  /auth/login:
-    post:
-      parameters:
-      - in: formData
-        name: email
-        required: true
-        type: string
-      - in: formData
-        name: password
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.LoginResult'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/http.BadRequestResponse'
-      summary: Get JWT token for authorization requests
-      tags:
-      - auth
-  /auth/register:
-    post:
-      parameters:
-      - in: formData
-        name: email
-        required: true
-        type: string
-      - in: formData
-        name: password
-        required: true
-        type: string
-      - in: formData
-        name: username
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/http.SuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/http.BadRequestResponse'
-      summary: Registration new user in the system
-      tags:
-      - auth
   /authors:
     get:
       description: Returns list of all authors
@@ -475,10 +493,10 @@ paths:
         required: true
         type: string
       - in: formData
-        name: biography_ar
+        name: about_ar
         type: string
       - in: formData
-        name: biography_ru
+        name: about_ru
         type: string
       - in: formData
         name: name_ar
@@ -522,10 +540,10 @@ paths:
       - multipart/form-data
       parameters:
       - in: formData
-        name: biography_ar
+        name: about_ar
         type: string
       - in: formData
-        name: biography_ru
+        name: about_ru
         type: string
       - in: formData
         name: name_ar
@@ -664,19 +682,25 @@ paths:
         required: true
         type: string
       - in: formData
-        name: author_id
+        name: aboutAr
         type: string
       - in: formData
-        name: description_ar
+        name: aboutRu
         type: string
       - in: formData
-        name: description_ru
+        name: authorID
         type: string
       - in: formData
-        name: title_ar
+        name: genreAr
         type: string
       - in: formData
-        name: title_ru
+        name: genreRu
+        type: string
+      - in: formData
+        name: titleAr
+        type: string
+      - in: formData
+        name: titleRu
         type: string
       - description: Work image that needs update
         in: formData
@@ -708,19 +732,25 @@ paths:
       - multipart/form-data
       parameters:
       - in: formData
-        name: author_id
+        name: aboutAr
         type: string
       - in: formData
-        name: description_ar
+        name: aboutRu
         type: string
       - in: formData
-        name: description_ru
+        name: authorID
         type: string
       - in: formData
-        name: title_ar
+        name: genreAr
         type: string
       - in: formData
-        name: title_ru
+        name: genreRu
+        type: string
+      - in: formData
+        name: titleAr
+        type: string
+      - in: formData
+        name: titleRu
         type: string
       - description: Work image
         in: formData

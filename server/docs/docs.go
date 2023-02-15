@@ -22,6 +22,90 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/account/login": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "account"
+                ],
+                "summary": "Get JWT token for authorization requests",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "email",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.LoginResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http.BadRequestResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/register": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "account"
+                ],
+                "summary": "Registration new user in the system",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "email",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "username",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http.BadRequestResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/articles": {
             "get": {
                 "description": "Returns list of all articles",
@@ -305,90 +389,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/auth/login": {
-            "post": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Get JWT token for authorization requests",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "name": "email",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "name": "password",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.LoginResult"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/http.BadRequestResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/auth/register": {
-            "post": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Registration new user in the system",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "name": "email",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "name": "password",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "name": "username",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/http.SuccessResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/http.BadRequestResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/authors": {
             "get": {
                 "description": "Returns list of all authors",
@@ -468,12 +468,12 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "name": "biography_ar",
+                        "name": "about_ar",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "biography_ru",
+                        "name": "about_ru",
                         "in": "formData"
                     },
                     {
@@ -594,12 +594,12 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "name": "biography_ar",
+                        "name": "about_ar",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "biography_ru",
+                        "name": "about_ru",
                         "in": "formData"
                     },
                     {
@@ -766,27 +766,37 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "name": "author_id",
+                        "name": "aboutAr",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "description_ar",
+                        "name": "aboutRu",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "description_ru",
+                        "name": "authorID",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "title_ar",
+                        "name": "genreAr",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "title_ru",
+                        "name": "genreRu",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "titleAr",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "titleRu",
                         "in": "formData"
                     },
                     {
@@ -887,27 +897,37 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "name": "author_id",
+                        "name": "aboutAr",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "description_ar",
+                        "name": "aboutRu",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "description_ru",
+                        "name": "authorID",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "title_ar",
+                        "name": "genreAr",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "title_ru",
+                        "name": "genreRu",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "titleAr",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "titleRu",
                         "in": "formData"
                     },
                     {
@@ -977,6 +997,18 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "datatypes.Date": {
+            "type": "object",
+            "properties": {
+                "time": {
+                    "type": "string"
+                },
+                "valid": {
+                    "description": "Valid is true if Time is not NULL",
+                    "type": "boolean"
+                }
+            }
+        },
         "dto.ArticleDTO": {
             "type": "object",
             "properties": {
@@ -1010,8 +1042,8 @@ const docTemplate = `{
                 "transcription": {
                     "type": "string"
                 },
-                "work_link": {
-                    "type": "string"
+                "work": {
+                    "$ref": "#/definitions/dto.WorkDTO"
                 }
             }
         },
@@ -1037,11 +1069,17 @@ const docTemplate = `{
         "dto.AuthorDTO": {
             "type": "object",
             "properties": {
-                "biography_ar": {
+                "about_ar": {
                     "type": "string"
                 },
-                "biography_ru": {
+                "about_ru": {
                     "type": "string"
+                },
+                "birth_date": {
+                    "$ref": "#/definitions/datatypes.Date"
+                },
+                "death_date": {
+                    "$ref": "#/definitions/datatypes.Date"
                 },
                 "id": {
                     "type": "string"
@@ -1127,13 +1165,19 @@ const docTemplate = `{
         "dto.WorkDTO": {
             "type": "object",
             "properties": {
-                "author_link": {
+                "about_ar": {
                     "type": "string"
                 },
-                "description_ar": {
+                "about_ru": {
                     "type": "string"
                 },
-                "description_ru": {
+                "author": {
+                    "$ref": "#/definitions/dto.AuthorDTO"
+                },
+                "genre_ar": {
+                    "type": "string"
+                },
+                "genre_ru": {
                     "type": "string"
                 },
                 "id": {
@@ -1144,6 +1188,9 @@ const docTemplate = `{
                 },
                 "picture_path": {
                     "type": "string"
+                },
+                "publication_date": {
+                    "$ref": "#/definitions/datatypes.Date"
                 },
                 "title_ar": {
                     "type": "string"

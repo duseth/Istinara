@@ -15,6 +15,7 @@ type Article struct {
 	Transcription string `gorm:"column:transcription"`
 	PicturePath   string `gorm:"column:picture_path"`
 	Link          string `gorm:"column:link"`
-	WorkID        string `gorm:"column:work_id"`
-	Work          Work
+
+	WorkID string `gorm:"column:work_id"`
+	Work   Work
 }

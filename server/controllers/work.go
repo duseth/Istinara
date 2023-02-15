@@ -47,7 +47,7 @@ func ListWorks(ctx *gin.Context) {
 func GetWork(ctx *gin.Context) {
 	var work models.Work
 
-	if err := models.DB.Where("id = ?", ctx.Param("id")).First(&work).Error; err != nil {
+	if err := models.DB.Preload("Author").Where("id = ?", ctx.Param("id")).First(&work).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}

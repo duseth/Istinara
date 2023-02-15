@@ -18,7 +18,7 @@ func MapArticle(article models.Article) dto.ArticleDTO {
 		PicturePath:   article.PicturePath,
 		Transcription: article.Transcription,
 		Link:          article.Link,
-		WorkLink:      article.Work.Link,
+		Work:          MapWork(article.Work),
 	}
 }
 

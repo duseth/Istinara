@@ -1,6 +1,7 @@
 package dto
 
 import (
+	"github.com/duseth/istinara/server/utils/datatypes"
 	"github.com/gofrs/uuid"
 )
 
@@ -16,8 +17,8 @@ type AuthorDTO struct {
 	AboutRu string `json:"about_ru"`
 	AboutAr string `json:"about_ar"`
 
-	BiographyRu string `json:"biography_ru"`
-	BiographyAr string `json:"biography_ar"`
+	BirthDate datatypes.Date `json:"birth_date"`
+	DeathDate datatypes.Date `json:"death_date"`
 
 	PicturePath string `json:"picture_path"`
 	Link        string `json:"link"`
@@ -33,8 +34,8 @@ type AuthorInputForm struct {
 	AboutRu string `json:"about_ru"`
 	AboutAr string `json:"about_ar"`
 
-	BiographyRu string `json:"biography_ru" form:"biography_ru"`
-	BiographyAr string `json:"biography_ar" form:"biography_ar"`
+	BirthDate datatypes.Date `json:"birth_date" form:"birth_date"`
+	DeathDate datatypes.Date `json:"death_date" form:"death_date"`
 }
 
 type AuthorSingleResult struct {

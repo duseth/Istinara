@@ -14,12 +14,12 @@ import (
 // Login   		godoc
 //
 //	@Summary	Get JWT token for authorization requests
-//	@Tags		auth
+//	@Tags		account
 //	@Produce	json
 //	@Param		body	formData	dto.LoginInputForm	true	"User credentials for login"
 //	@Response	200		{object}	dto.LoginResult
 //	@Failure	400		{object}	http.BadRequestResponse
-//	@Router		/auth/login [post]
+//	@Router		/account/login [post]
 func Login(ctx *gin.Context) {
 	var input dto.LoginInputForm
 
@@ -41,12 +41,12 @@ func Login(ctx *gin.Context) {
 // Register   		godoc
 //
 //	@Summary	Registration new user in the system
-//	@Tags		auth
+//	@Tags		account
 //	@Produce	json
 //	@Param		body	formData	dto.RegisterInputForm	true	"User credentials for register"
 //	@Response	200		{object}	http.SuccessResponse
 //	@Failure	400		{object}	http.BadRequestResponse
-//	@Router		/auth/register [post]
+//	@Router		/account/register [post]
 func Register(ctx *gin.Context) {
 	var userForm dto.RegisterInputForm
 

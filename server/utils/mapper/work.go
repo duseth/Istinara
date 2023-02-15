@@ -13,9 +13,9 @@ func MapWork(work models.Work) dto.WorkDTO {
 		TitleAr:         work.TitleAr,
 		GenreRu:         work.GenreRu,
 		GenreAr:         work.GenreAr,
-		DescriptionRu:   work.DescriptionRu,
-		DescriptionAr:   work.DescriptionAr,
-		PublicationYear: work.PublicationYear,
+		AboutRu:         work.AboutRu,
+		AboutAr:         work.AboutAr,
+		PublicationDate: work.PublicationDate,
 		PicturePath:     work.PicturePath,
 		Link:            work.Link,
 		Author:          MapAuthor(work.Author),
@@ -39,8 +39,8 @@ func ParseWork(workForm dto.WorkInputForm, work *models.Work) {
 	work.TitleAr = workForm.TitleAr
 	work.GenreRu = workForm.GenreRu
 	work.GenreAr = workForm.GenreAr
-	work.DescriptionRu = workForm.DescriptionRu
-	work.DescriptionAr = workForm.DescriptionAr
-	work.PublicationYear = workForm.PublicationYear
+	work.AboutRu = workForm.AboutRu
+	work.AboutAr = workForm.AboutAr
+	work.PublicationDate = workForm.PublicationDate
 	work.AuthorID = workForm.AuthorID
 }

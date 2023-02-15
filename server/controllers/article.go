@@ -26,7 +26,7 @@ import (
 //	@Router			/articles [get]
 func ListArticles(ctx *gin.Context) {
 	var articles []models.Article
-	if err := models.DB.Find(&articles).Error; err != nil {
+	if err := models.DB.Preload("Work").Find(&articles).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
 	}
@@ -47,7 +47,7 @@ func ListArticles(ctx *gin.Context) {
 func GetArticle(ctx *gin.Context) {
 	var article models.Article
 
-	if err := models.DB.Where("id = ?", ctx.Param("id")).First(&article).Error; err != nil {
+	if err := models.DB.Preload("Work").Where("id = ?", ctx.Param("id")).First(&article).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}
