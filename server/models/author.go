@@ -16,8 +16,8 @@ type Author struct {
 	AboutRu string `gorm:"column:about_ru" json:"about_ru"`
 	AboutAr string `gorm:"column:about_ar" json:"about_ar"`
 
-	BirthDate datatypes.Date `gorm:"column:birth_date" json:"birth_date"`
-	DeathDate datatypes.Date `gorm:"column:death_date" json:"death_date"`
+	BirthDate datatypes.Date  `gorm:"column:birth_date" json:"birth_date"`
+	DeathDate *datatypes.Date `gorm:"column:death_date" json:"death_date,omitempty"`
 
 	PicturePath string `gorm:"column:picture_path" json:"picture_path"`
 	Link        string `gorm:"column:link" json:"link"`

@@ -17,8 +17,8 @@ type AuthorDTO struct {
 	AboutRu string `json:"about_ru"`
 	AboutAr string `json:"about_ar"`
 
-	BirthDate datatypes.Date `json:"birth_date"`
-	DeathDate datatypes.Date `json:"death_date"`
+	BirthDate datatypes.Date  `json:"birth_date"`
+	DeathDate *datatypes.Date `json:"death_date,omitempty"`
 
 	PicturePath string `json:"picture_path"`
 	Link        string `json:"link"`
@@ -34,8 +34,8 @@ type AuthorInputForm struct {
 	AboutRu string `json:"about_ru"`
 	AboutAr string `json:"about_ar"`
 
-	BirthDate datatypes.Date `json:"birth_date" form:"birth_date"`
-	DeathDate datatypes.Date `json:"death_date" form:"death_date"`
+	BirthDate datatypes.Date  `json:"birth_date" form:"birth_date"`
+	DeathDate *datatypes.Date `json:"death_date,omitempty" form:"death_date"`
 }
 
 type AuthorSingleResult struct {

@@ -35,6 +35,9 @@ func (date Date) GormDataType() string {
 
 //goland:noinspection GoMixedReceiverTypes
 func (date Date) MarshalJSON() ([]byte, error) {
+	if !date.Valid {
+		return nil, nil
+	}
 	return date.Time.MarshalJSON()
 }
 

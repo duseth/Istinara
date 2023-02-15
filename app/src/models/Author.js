@@ -7,8 +7,8 @@ class Author extends BaseModel {
     short_name_ar: string;
     about_ru: string;
     about_ar: string;
-    biography_ru: string;
-    biography_ar: string;
+    birth_date: Date;
+    death_date: Date;
     picture_path: string;
     link: string;
 }

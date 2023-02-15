@@ -39,7 +39,24 @@ const Authors = () => {
 
     const loadMore = () => {
         setNext(next + authors_per_page)
-    }
+    };
+
+    const truncateString = (text) => text?.length > 100 ? `${text.substring(0, 95)}...` : text;
+
+    const getAuthorLifeDates = (birth: Date, death: Date) => {
+        const options = {year: 'numeric'};
+        const locale = languageContext.userLanguage === "ru" ? "ru-RU" : "ar-AE";
+
+        const birth_date = new Date(birth).toLocaleDateString(locale, options);
+
+        return (
+            <p>
+                {birth_date} ― {death !== undefined
+                ? new Date(death).toLocaleDateString(locale, options)
+                : <AuthorsText tid="not_death"/>}
+            </p>
+        )
+    };
 
     const getAuthorCard = (author: Author) => {
         if (languageContext.userLanguage === "ru") {
@@ -53,7 +70,10 @@ const Authors = () => {
                         <div className="author-name">{author.name_ru}<br/>
                             <hr/>
                         </div>
-                        <div className="author-biography">{author.about_ru}</div>
+                        <div className="author-life">
+                            {getAuthorLifeDates(author.birth_date, author.death_date)}
+                        </div>
+                        <div className="author-biography">{truncateString(author.about_ru)}</div>
                     </div>
                 </div>
             )
@@ -68,7 +88,10 @@ const Authors = () => {
                         <div className="author-name">{author.name_ar}<br/>
                             <hr/>
                         </div>
-                        <div className="author-biography">{author.about_ar}</div>
+                        <div className="author-life">
+                            {getAuthorLifeDates(author.birth_date, author.death_date)}
+                        </div>
+                        <div className="author-biography">{truncateString(author.about_ar)}</div>
                     </div>
                 </div>
             )

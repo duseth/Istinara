@@ -4,12 +4,12 @@ import Author from "./Author";
 class Work extends BaseModel {
     title_ru: string;
     title_ar: string;
-    description_ru: string;
-    description_ar: string;
+    about_ru: string;
+    about_ar: string;
     genre_ru: string;
     genre_ar: string;
     picture_path: string;
-    publication_year: string;
+    publication_date: Date;
     link: string;
     author: Author;
 }
