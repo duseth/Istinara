@@ -9,8 +9,10 @@ import {
 import api from "../services/API"
 import toast from "react-hot-toast";
 import User from "../models/User";
+import Cookies from 'universal-cookie';
 
 class AccountService {
+    cookies = new Cookies();
     validation = {
         email: new RegExp(".+@.+\\.[A-Za-z]+$"),
         username: new RegExp("^[а-яА-Яa-zA-Z0-9\\s]*$")
@@ -75,7 +77,10 @@ class AccountService {
         await api.post("/auth/login", formData, this.headerConfig)
             .then(response => {
                 localStorage.setItem("user", JSON.stringify(response.data.user));
-                localStorage.setItem("token", response.data.token);
+
+                const token = JSON.parse(atob(response.data.token.split(".")[1]));
+                this.cookies.set("token", response.data.token, {path: "/", expires: new Date(token.exp * 1000)});
+
                 toast.success(<LoginText tid="success_notify"/>);
             })
             .catch(() => {
@@ -161,20 +166,18 @@ class AccountService {
 
     GetAuthHeaders() {
         let config = this.headerConfig;
-        const token = localStorage.getItem("token");
+        const token = this.cookies.get("token");
         config.headers.Authorization = token ? "Bearer " + token : "";
         return config
     }
 
     Logout() {
         localStorage.removeItem("user");
-        localStorage.removeItem("token");
+        this.cookies.remove("token");
         toast(<ProfileText tid="logout_notify"/>, {icon: "👋"});
     }
 
-    GetCurrentUser() {
-        return JSON.parse(localStorage.getItem("user"));
-    }
+    GetCurrentUser = () => JSON.parse(localStorage.getItem("user"));
 }
 
 let service = new AccountService();

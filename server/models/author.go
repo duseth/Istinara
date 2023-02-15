@@ -1,5 +1,9 @@
 package models
 
+import (
+	"github.com/duseth/istinara/server/utils/datatypes"
+)
+
 type Author struct {
 	Base
 
@@ -12,8 +16,8 @@ type Author struct {
 	AboutRu string `gorm:"column:about_ru" json:"about_ru"`
 	AboutAr string `gorm:"column:about_ar" json:"about_ar"`
 
-	BiographyRu string `gorm:"column:biography_ru" json:"biography_ru"`
-	BiographyAr string `gorm:"column:biography_ar" json:"biography_ar"`
+	BirthDate datatypes.Date `gorm:"column:birth_date" json:"birth_date"`
+	DeathDate datatypes.Date `gorm:"column:death_date" json:"death_date"`
 
 	PicturePath string `gorm:"column:picture_path" json:"picture_path"`
 	Link        string `gorm:"column:link" json:"link"`

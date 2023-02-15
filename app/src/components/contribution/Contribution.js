@@ -8,6 +8,8 @@ import api from "../../services/API";
 import Work from "../../models/Work";
 import {useForm} from "react-hook-form";
 import toast from "react-hot-toast";
+import AccountService from "../../services/AccountService";
+import User from "../../models/User";
 
 const Contribution = () => {
     let languageContext = useContext(LanguageContext);
@@ -86,6 +88,7 @@ const Contribution = () => {
             .catch(() => toast.error(<ContributionForm tid="error_notify"/>))
     };
 
+    const user: User = AccountService.GetCurrentUser();
     return (
         <section className="contribution-container">
             <div className="container py-5 bg-light">
@@ -144,11 +147,13 @@ const Contribution = () => {
                         <hr/>
                         <div className="col-md-6">
                             <label htmlFor="name" className="form-label"><ContributionForm tid="name"/></label>
-                            <input type="text" className="form-control" id="name" {...register("name")}/>
+                            <input type="text" className="form-control" id="name"
+                                   defaultValue={user?.username} {...register("name")}/>
                         </div>
                         <div className="col-md-6">
                             <label htmlFor="email" className="form-label">Email</label>
-                            <input type="email" className="form-control" id="email" {...register("email")}/>
+                            <input type="email" className="form-control" id="email"
+                                   defaultValue={user?.email} {...register("email")}/>
                         </div>
                         <div className="form-error mt-4 mb-0">
                             {errors?.required?.message || errors?.email?.message}

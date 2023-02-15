@@ -9,7 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 
 // Import ReactJS components
-import Auth from "./components/auth/Auth";
+import Account from "./components/account/Account";
 import Authors from "./components/authors/Authors";
 import Works from "./components/works/Works";
 import Home from './components/index/Index';
@@ -19,8 +19,6 @@ import Footer from './components/shared/footer/Footer';
 import Navbar from './components/shared/navbar/Navbar';
 import Contribution from "./components/contribution/Contribution";
 import {LanguageProvider} from "./containers/Language";
-import AuthService from "./services/AccountService";
-import AuthVerify from "./components/auth/AuthVerify";
 import Articles from "./components/articles/Articles";
 import {Toaster} from "react-hot-toast";
 
@@ -37,12 +35,11 @@ function App() {
                     <Route path='/works' element={<Works/>}/>
                     <Route path='/articles' element={<Articles/>}/>
                     <Route path='/contacts' element={<Contacts/>}/>
-                    <Route path="/account" element={<Auth/>}/>
+                    <Route path="/account" element={<Account/>}/>
                     <Route path="/contribution" element={<Contribution/>}/>
                 </Routes>
                 <Footer/>
             </LanguageProvider>
-            <AuthVerify logout={AuthService.Logout}/>
         </Router>
     );
 }

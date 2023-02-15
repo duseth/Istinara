@@ -44,6 +44,7 @@
             "logout_notify": "كل التسجيل!",
             "nav_profile": "إطفاء",
             "nav_favourite": "التسجيل",
+            "session_expired": "لمفردات اللغة الروسية. الموسومة ثقافيًا",
             "edit_form": {
                 "title": "كل التسجيل",
                 "button_text": "تاريخ التسجيل",

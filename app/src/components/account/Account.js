@@ -3,7 +3,7 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import {useForm} from "react-hook-form";
 
-import './Auth.scss'
+import './Account.scss'
 import AccountService from "../../services/AccountService";
 import {LanguageContext} from "../../languages/Language";
 import {
@@ -14,8 +14,10 @@ import {
     ProfileText,
     RegisterText
 } from "../../containers/Language";
+import User from "../../models/User";
+import Cookies from "universal-cookie";
 
-const Auth = () => {
+const Account = () => {
     let languageContext = useContext(LanguageContext);
     let [rerender, setRerender] = useState(false);
 
@@ -51,8 +53,7 @@ const Auth = () => {
 
     const {register, reset, setError, handleSubmit, formState: {errors}} = useForm();
 
-    let user = AccountService.GetCurrentUser();
-    if (user != null) {
+    const Profile = (user) => {
         return (
             <section className="auth-container">
                 <div className="container py-3">
@@ -197,9 +198,9 @@ const Auth = () => {
                 </div>
             </section>
         )
-    }
+    };
 
-    if (authMode === "sign-in") {
+    const Login = () => {
         return (
             <section className="auth-container">
                 <div className="container py-5">
@@ -207,6 +208,11 @@ const Auth = () => {
                         <form onSubmit={handleSubmit((data) => AccountService.Login(data, setError))}
                               className="auth-form" {...register("login")}>
                             <div className="auth-form-content">
+                                {cookies.get("tokenExpired") !== undefined && (
+                                    <div className="alert alert-info" role="alert">
+                                        <ProfileText tid="session_expired"/>
+                                    </div>
+                                )}
                                 <h3 className="auth-form-title"><LoginText tid="title"/></h3>
                                 <div className="form-group mt-3">
                                     <label htmlFor="email">E-mail</label>
@@ -254,86 +260,107 @@ const Auth = () => {
                 </div>
             </section>
         )
+    };
+
+    const Register = () => {
+        return (
+            <section className="auth-container">
+                <div className="container py-5">
+                    <div className="row d-flex justify-content-center align-items-center m-1">
+                        <form onSubmit={handleSubmit((data) => AccountService.Register(data, setError, changeAuthMode))}
+                              className="auth-form" {...register("register")}>
+                            <div className="auth-form-content">
+                                <h3 className="auth-form-title"><RegisterText tid="title"/></h3>
+                                <div className="form-group mt-2">
+                                    <label htmlFor="username"><AccountText tid="name_input"/></label>
+                                    <input
+                                        type="text"
+                                        className="form-control mt-1"
+                                        name="username"
+                                        {...register("username")}
+                                    />
+                                </div>
+                                <div className="form-group mt-2">
+                                    <label htmlFor="email">E-mail</label>
+                                    <input
+                                        type="text"
+                                        className="form-control mt-1"
+                                        name="email"
+                                        {...register("email")}
+                                    />
+                                </div>
+                                <div className="password_input mt-2">
+                                    <label htmlFor="password"><AccountText tid="password_input"/></label>
+                                    <input
+                                        type={registerPasswordShown ? "text" : "password"}
+                                        className="form-control mt-1"
+                                        name="password"
+                                        {...register("password")}
+                                    />
+                                    <div className="show_password" onClick={() => {
+                                        setRegisterPasswordShown(!registerPasswordShown);
+                                    }
+                                    }>
+                                        <i className={registerPasswordShown ? "bi bi-eye h5" : "bi bi-eye-slash h5"}/>
+                                    </div>
+                                </div>
+                                <div className="password_input mt-2">
+                                    <label htmlFor="accept_password">
+                                        <AccountText tid="accept_password"/>
+                                    </label>
+                                    <input
+                                        type={acceptPasswordShown ? "text" : "password"}
+                                        className="form-control mt-1"
+                                        name="accept_password"
+                                        {...register("accept_password")}
+                                    />
+                                    <div className="show_password" onClick={() => {
+                                        setAcceptPasswordShown(!acceptPasswordShown);
+                                    }
+                                    }>
+                                        <i className={acceptPasswordShown ? "bi bi-eye h5" : "bi bi-eye-slash h5"}/>
+                                    </div>
+                                </div>
+                                <div className="d-grid gap-2 mt-3">
+                                    <button type="submit" className="auth-form-button">
+                                        <RegisterText tid="button_text"/>
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="form-error">{errors?.register?.message}</div>
+                            <div className="text-center">
+                                <p className="link-text">
+                                    <RegisterText tid="already_registered"/>{" "}
+                                    <a className="link" onClick={changeAuthMode} href="#">
+                                        <RegisterText tid="login_redirect"/>
+                                    </a>
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        )
+    };
+
+    const cookies = new Cookies();
+    const user: User = AccountService.GetCurrentUser();
+
+    if (user != null) {
+        if (cookies.get("token") !== undefined) {
+            return Profile(user);
+        } else {
+            localStorage.removeItem("user");
+            cookies.set("tokenExpired", true, {maxAge: 10});
+            return Login();
+        }
     }
 
-    return (
-        <section className="auth-container">
-            <div className="container py-5">
-                <div className="row d-flex justify-content-center align-items-center m-1">
-                    <form onSubmit={handleSubmit((data) => AccountService.Register(data, setError, changeAuthMode))}
-                          className="auth-form" {...register("register")}>
-                        <div className="auth-form-content">
-                            <h3 className="auth-form-title"><RegisterText tid="title"/></h3>
-                            <div className="form-group mt-2">
-                                <label htmlFor="username"><AccountText tid="name_input"/></label>
-                                <input
-                                    type="text"
-                                    className="form-control mt-1"
-                                    name="username"
-                                    {...register("username")}
-                                />
-                            </div>
-                            <div className="form-group mt-2">
-                                <label htmlFor="email">E-mail</label>
-                                <input
-                                    type="text"
-                                    className="form-control mt-1"
-                                    name="email"
-                                    {...register("email")}
-                                />
-                            </div>
-                            <div className="password_input mt-2">
-                                <label htmlFor="password"><AccountText tid="password_input"/></label>
-                                <input
-                                    type={registerPasswordShown ? "text" : "password"}
-                                    className="form-control mt-1"
-                                    name="password"
-                                    {...register("password")}
-                                />
-                                <div className="show_password" onClick={() => {
-                                    setRegisterPasswordShown(!registerPasswordShown);
-                                }
-                                }>
-                                    <i className={registerPasswordShown ? "bi bi-eye h5" : "bi bi-eye-slash h5"}/>
-                                </div>
-                            </div>
-                            <div className="password_input mt-2">
-                                <label htmlFor="accept_password">
-                                    <AccountText tid="accept_password"/>
-                                </label>
-                                <input
-                                    type={acceptPasswordShown ? "text" : "password"}
-                                    className="form-control mt-1"
-                                    name="accept_password"
-                                    {...register("accept_password")}
-                                />
-                                <div className="show_password" onClick={() => {
-                                    setAcceptPasswordShown(!acceptPasswordShown);
-                                }
-                                }>
-                                    <i className={acceptPasswordShown ? "bi bi-eye h5" : "bi bi-eye-slash h5"}/>
-                                </div>
-                            </div>
-                            <div className="d-grid gap-2 mt-3">
-                                <button type="submit" className="auth-form-button">
-                                    <RegisterText tid="button_text"/>
-                                </button>
-                            </div>
-                        </div>
-                        <div className="form-error">{errors?.register?.message}</div>
-                        <div className="text-center">
-                            <p className="link-text">
-                                <RegisterText tid="already_registered"/>{" "}
-                                <a className="link" onClick={changeAuthMode} href="#">
-                                    <RegisterText tid="login_redirect"/>
-                                </a>
-                            </p>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </section>
-    )
+    if (authMode === "sign-in") {
+        return Login();
+    }
+
+    return Register();
 }
 
-export default Auth
+export default Account
