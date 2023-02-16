@@ -241,6 +241,15 @@ paths:
   /articles:
     get:
       description: Returns list of all articles
+      parameters:
+      - description: Count of skipped records
+        in: query
+        name: offset
+        type: integer
+      - description: Limit for take in records
+        in: query
+        name: limit
+        type: integer
       produces:
       - application/json
       responses:
@@ -419,6 +428,15 @@ paths:
   /authors:
     get:
       description: Returns list of all authors
+      parameters:
+      - description: Count of skipped records
+        in: query
+        name: offset
+        type: integer
+      - description: Limit for take in records
+        in: query
+        name: limit
+        type: integer
       produces:
       - application/json
       responses:
@@ -608,6 +626,15 @@ paths:
   /works:
     get:
       description: Returns list of all works
+      parameters:
+      - description: Count of skipped records
+        in: query
+        name: offset
+        type: integer
+      - description: Limit for take in records
+        in: query
+        name: limit
+        type: integer
       produces:
       - application/json
       responses:

@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 
 	"github.com/duseth/istinara/server/dto"
 	"github.com/duseth/istinara/server/models"
@@ -21,17 +22,32 @@ import (
 //	@Description	Returns list of all articles
 //	@Tags			articles
 //	@Produce		json
-//	@Response		200	{object}	dto.ArticleListResult
-//	@Failure		500	{object}	http.InternalServerErrorResponse
+//	@Param			offset	query		integer	false	"Count of skipped records"
+//	@Param			limit	query		integer	false	"Limit for take in records"
+//	@Response		200		{object}	dto.ArticleListResult
+//	@Failure		500		{object}	http.InternalServerErrorResponse
 //	@Router			/articles [get]
 func ListArticles(ctx *gin.Context) {
+	var count int64
 	var articles []models.Article
-	if err := models.DB.Preload("Work").Find(&articles).Error; err != nil {
+
+	db := models.DB
+	db.Model(&models.Article{}).Count(&count)
+
+	if offset, err := strconv.Atoi(ctx.Query("offset")); err == nil {
+		db = db.Offset(offset)
+	}
+
+	if limit, err := strconv.Atoi(ctx.Query("limit")); err == nil {
+		db = db.Limit(limit)
+	}
+
+	if err := db.Preload("Work").Find(&articles).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
 	}
 
-	httputil.ResponseSuccess(ctx, mapper.MapArticles(articles))
+	httputil.ResponseSuccess(ctx, gin.H{"data": mapper.MapArticles(articles), "count": count})
 }
 
 // GetArticle   		godoc

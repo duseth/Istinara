@@ -116,6 +116,20 @@ const docTemplate = `{
                     "articles"
                 ],
                 "summary": "Get all articles",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Count of skipped records",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Limit for take in records",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -399,6 +413,20 @@ const docTemplate = `{
                     "authors"
                 ],
                 "summary": "Get all authors",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Count of skipped records",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Limit for take in records",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -697,6 +725,20 @@ const docTemplate = `{
                     "works"
                 ],
                 "summary": "Get all works",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Count of skipped records",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Limit for take in records",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",

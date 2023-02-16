@@ -18,10 +18,10 @@ const Contribution = () => {
         document.title = languageContext.dictionary["titles"]["contribution"] + " • Istinara";
     }, [languageContext]);
 
-    let [authors: Array<Author>, setAuthors] = useState();
+    const [authors: Array<Author>, setAuthors] = useState();
 
     useEffect(() => {
-        api.get("/authors").then((response) => setAuthors(response.data));
+        api.get("/authors").then((response) => setAuthors(response.data.data));
     }, []);
 
     let [works: Array<Work>, setWorks] = useState();

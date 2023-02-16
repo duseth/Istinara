@@ -14,11 +14,18 @@ const Works = () => {
         document.title = languageContext.dictionary["titles"]["works"] + " • Istinara";
     }, [languageContext]);
 
-    const [next, setNext] = useState(works_per_page);
+    const [count, setCount] = useState(0);
     const [data: Array<Work>, setData] = useState();
 
     useEffect(() => {
-        api.get("/works").then((response) => setData(response.data));
+        api.get(`/works?offset=0&limit=${works_per_page}`)
+            .then((response) => {
+                setCount(response.data.count);
+                setData(response.data.data);
+            })
+            .catch(() => {
+                setData([]);
+            });
     }, []);
 
     if (!data) {
@@ -37,7 +44,8 @@ const Works = () => {
     }
 
     const loadMore = () => {
-        setNext(next + works_per_page)
+        api.get(`/works?offset=${data.length}&limit=${works_per_page}`)
+            .then((response) => setData([...data,  ...response.data.data]))
     };
 
     const getWorkCard = (work: Work) => {
@@ -73,7 +81,7 @@ const Works = () => {
                 {
                     data.length > 0 ? (
                         <div className="justify-content-center align-items-center row row-cols-md-2 g-3 m-3">
-                            {data.slice(0, next).map((work) => getWorkCard(work))}
+                            {data.map((work) => getWorkCard(work))}
                         </div>
                     ) : (
                         <div className="information">
@@ -83,7 +91,7 @@ const Works = () => {
                     )
                 }
                 {
-                    next < data?.length &&
+                    data.length < count &&
                     <div className="text-center m-3">
                         <button className="btn btn-outline-dark" onClick={loadMore}>
                             <WorksText tid="show_more"/>

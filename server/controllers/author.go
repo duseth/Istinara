@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 
 	"github.com/duseth/istinara/server/dto"
 	"github.com/duseth/istinara/server/models"
@@ -21,17 +22,32 @@ import (
 //	@Description	Returns list of all authors
 //	@Tags			authors
 //	@Produce		json
-//	@Response		200	{object}	dto.AuthorListResult
-//	@Failure		500	{object}	http.InternalServerErrorResponse
+//	@Param			offset	query		integer	false	"Count of skipped records"
+//	@Param			limit	query		integer	false	"Limit for take in records"
+//	@Response		200		{object}	dto.AuthorListResult
+//	@Failure		500		{object}	http.InternalServerErrorResponse
 //	@Router			/authors [get]
 func ListAuthors(ctx *gin.Context) {
+	var count int64
 	var authors []models.Author
-	if err := models.DB.Find(&authors).Error; err != nil {
+
+	db := models.DB
+	db.Model(&models.Author{}).Count(&count)
+
+	if offset, err := strconv.Atoi(ctx.Query("offset")); err == nil {
+		db = db.Offset(offset)
+	}
+
+	if limit, err := strconv.Atoi(ctx.Query("limit")); err == nil {
+		db = db.Limit(limit)
+	}
+
+	if err := db.Find(&authors).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
 	}
 
-	httputil.ResponseSuccess(ctx, mapper.MapAuthors(authors))
+	httputil.ResponseSuccess(ctx, gin.H{"data": mapper.MapAuthors(authors), "count": count})
 }
 
 // GetAuthor   		godoc
@@ -68,7 +84,7 @@ func GetAuthor(ctx *gin.Context) {
 func GetWorksByAuthor(ctx *gin.Context) {
 	var works []models.Work
 
-	if err := models.DB.Where("author_id = ?", ctx.Param("id")).Find(&works).Error; err != nil {
+	if err := models.DB.Preload("Author").Where("author_id = ?", ctx.Param("id")).Find(&works).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}

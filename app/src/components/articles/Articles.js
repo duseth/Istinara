@@ -6,7 +6,7 @@ import api from "../../services/API";
 
 import './Articles.scss'
 
-const articles_per_page = 5;
+const articles_per_page = 12;
 
 const Authors = () => {
     const languageContext = useContext(LanguageContext);
@@ -18,7 +18,11 @@ const Authors = () => {
     const [data: Array<Article>, setData] = useState()
 
     useEffect(() => {
-        api.get("/articles").then((response) => setData(response.data));
+        api.get("/articles")
+            .then((response) => setData(response.data))
+            .catch(() => {
+                setData([]);
+            });
     }, []);
 
     if (!data) {

@@ -15,11 +15,18 @@ const Authors = () => {
         document.title = languageContext.dictionary["titles"]["authors"] + " • Istinara";
     }, [languageContext]);
 
-    const [next, setNext] = useState(authors_per_page);
+    const [count, setCount] = useState(0);
     const [data: Array<Author>, setData] = useState()
 
     useEffect(() => {
-        api.get("/authors").then((response) => setData(response.data));
+        api.get(`/authors?offset=0&limit=${authors_per_page}`)
+            .then((response) => {
+                setCount(response.data.count);
+                setData(response.data.data);
+            })
+            .catch(() => {
+                setData([]);
+            });
     }, []);
 
     if (!data) {
@@ -38,7 +45,8 @@ const Authors = () => {
     }
 
     const loadMore = () => {
-        setNext(next + authors_per_page)
+        api.get(`/authors?offset=${data.length}&limit=${authors_per_page}`)
+            .then((response) => setData([...data,  ...response.data.data]))
     };
 
     const truncateString = (text) => text?.length > 100 ? `${text.substring(0, 95)}...` : text;
@@ -104,7 +112,7 @@ const Authors = () => {
                 {
                     data.length > 0 ? (
                         <div className="justify-content-center align-items-center row row-cols-md-3 g-3 m-3">
-                            {data.slice(0, next).map((author) => getAuthorCard(author))}
+                            {data.map((author) => getAuthorCard(author))}
                         </div>
                     ) : (
                         <div className="information">
@@ -114,7 +122,7 @@ const Authors = () => {
                     )
                 }
                 {
-                    next < data?.length &&
+                    data.length < count &&
                     <div className="text-center m-3">
                         <button className="btn btn-outline-dark" onClick={loadMore}>
                             <AuthorsText tid="show_more"/>
