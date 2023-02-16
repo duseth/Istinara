@@ -43,23 +43,26 @@ const Works = () => {
     const getWorkCard = (work: Work) => {
         if (languageContext.userLanguage === "ru") {
             return (
-                <div className="author-card col-md" key={work.id}>
-                    <a className="author-link" href={"/works/" + work.link}/>
-                    <div className="w-50 h-100 mb-3">
-                        <img className="author-image" src={work.picture_path} alt={work.title_ru}/>
+                <div className="work-card col-md" key={work.id}>
+                    <a className="work-card-link" href={"/works/" + work.link}/>
+                    <img className="work-card-image" src={work.picture_path} alt={work.title_ru}/>
+                    <div className="work-card-top-text">
+                        {work.genre_ru} • {new Date(work.publication_date).getFullYear()}
                     </div>
-                    <div className="author-body">
-                        <div className="author-name">{work.title_ru}<br/>
-                            <hr/>
-                        </div>
-                        <div className="author-biography">{work.description_ru}</div>
-                    </div>
+                    <div className="work-card-text">{work.title_ru}</div>
                 </div>
             )
         } else if (languageContext.userLanguage === "ar") {
             return (
-                <div className="work-card" key={work.id}>
+                <div className="work-card col-md" key={work.id}>
+                    <a className="work-card-link" href={"/works/" + work.link}/>
+                    <img className="work-card-image" src={work.picture_path} alt={work.title_ar}/>
+                    <div className="work-card-top-text">
+                        {work.genre_ar} • {new Date(work.publication_date).getFullYear()}
+                    </div>
+                    <div className="work-card-text">{work.title_ar}</div>
                 </div>
+
             )
         }
     };
@@ -69,7 +72,7 @@ const Works = () => {
             <div className="container">
                 {
                     data.length > 0 ? (
-                        <div className="justify-content-center align-items-center row row-cols-md-3 g-3 m-3">
+                        <div className="justify-content-center align-items-center row row-cols-md-2 g-3 m-3">
                             {data.slice(0, next).map((work) => getWorkCard(work))}
                         </div>
                     ) : (
@@ -81,7 +84,7 @@ const Works = () => {
                 }
                 {
                     next < data?.length &&
-                    <div className="text-center">
+                    <div className="text-center m-3">
                         <button className="btn btn-outline-dark" onClick={loadMore}>
                             <WorksText tid="show_more"/>
                         </button>

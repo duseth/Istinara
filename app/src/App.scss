@@ -21,6 +21,12 @@ body {
   background-color: white;
 }
 
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
 .navbar-item {
   font-size: 15px;
   line-height: 15px;
