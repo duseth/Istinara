@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/duseth/istinara/server/dto"
 	"github.com/duseth/istinara/server/utils/datatypes"
 )
 
@@ -22,4 +23,32 @@ type Work struct {
 
 	AuthorID string `gorm:"column:author_id" json:"author_id"`
 	Author   Author
+}
+
+// ToDTO map struct to dto.WorkDTO
+func (work *Work) ToDTO() dto.WorkDTO {
+	return dto.WorkDTO{
+		ID:              work.ID,
+		TitleRu:         work.TitleRu,
+		TitleAr:         work.TitleAr,
+		GenreRu:         work.GenreRu,
+		GenreAr:         work.GenreAr,
+		AboutRu:         work.AboutRu,
+		AboutAr:         work.AboutAr,
+		PublicationDate: work.PublicationDate,
+		PicturePath:     work.PicturePath,
+		Link:            work.Link,
+	}
+}
+
+// ParseForm parse Work from models.Work
+func (work *Work) ParseForm(form dto.WorkInputForm) {
+	work.TitleRu = form.TitleRu
+	work.TitleAr = form.TitleAr
+	work.GenreRu = form.GenreRu
+	work.GenreAr = form.GenreAr
+	work.AboutRu = form.AboutRu
+	work.AboutAr = form.AboutAr
+	work.PublicationDate = form.PublicationDate
+	work.AuthorID = form.AuthorID
 }

@@ -6,7 +6,6 @@ import (
 	"github.com/duseth/istinara/server/dto"
 	"github.com/duseth/istinara/server/models"
 	httputil "github.com/duseth/istinara/server/utils/http"
-	"github.com/duseth/istinara/server/utils/mapper"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -30,7 +29,7 @@ func EditUser(ctx *gin.Context) {
 		return
 	}
 
-	httputil.ResponseSuccess(ctx, mapper.MapUser(user))
+	httputil.ResponseSuccess(ctx, user.ToDTO())
 }
 
 func ChangePassword(ctx *gin.Context) {
@@ -64,5 +63,5 @@ func ChangePassword(ctx *gin.Context) {
 		return
 	}
 
-	httputil.ResponseSuccess(ctx, mapper.MapUser(user))
+	httputil.ResponseSuccess(ctx, true)
 }

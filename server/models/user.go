@@ -5,6 +5,7 @@ import (
 	"html"
 	"strings"
 
+	"github.com/duseth/istinara/server/dto"
 	"github.com/gofrs/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -29,6 +30,24 @@ func (user *User) BeforeSave(_ *gorm.DB) error {
 	user.Username = html.EscapeString(strings.TrimSpace(user.Username))
 
 	return nil
+}
+
+// ToDTO map User to dto.UserDTO
+func (user *User) ToDTO() dto.UserDTO {
+	return dto.UserDTO{
+		ID:           user.ID,
+		CreatedAt:    user.CreatedAt,
+		Username:     user.Username,
+		Email:        user.Email,
+		IsPrivileged: user.IsPrivileged,
+	}
+}
+
+// ParseForm parse User from dto.RegisterInputForm
+func (user *User) ParseForm(form dto.RegisterInputForm) {
+	user.Username = form.Username
+	user.Email = form.Email
+	user.Password = form.Password
 }
 
 func CheckIfUserIsPrivileged(uid uuid.UUID) (bool, error) {

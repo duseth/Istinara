@@ -20,7 +20,7 @@ type ArticleDTO struct {
 	Transcription string `json:"transcription"`
 	Link          string `json:"link"`
 
-	Work WorkDTO `json:"work"`
+	Work *WorkDTO `json:"work"`
 }
 
 type ArticleInputForm struct {

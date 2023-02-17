@@ -10,7 +10,6 @@ import (
 	"github.com/duseth/istinara/server/dto"
 	"github.com/duseth/istinara/server/models"
 	httputil "github.com/duseth/istinara/server/utils/http"
-	"github.com/duseth/istinara/server/utils/mapper"
 	"github.com/duseth/istinara/server/utils/translit"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -42,12 +41,17 @@ func ListArticles(ctx *gin.Context) {
 		db = db.Limit(limit)
 	}
 
-	if err := db.Preload("Work").Find(&articles).Error; err != nil {
+	if err := db.Find(&articles).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
 	}
 
-	httputil.ResponseSuccess(ctx, gin.H{"data": mapper.MapArticles(articles), "count": count})
+	data := make([]dto.ArticleDTO, 0, len(articles))
+	for _, article := range articles {
+		data = append(data, article.ToDTO())
+	}
+
+	httputil.ResponseSuccess(ctx, gin.H{"data": data, "count": count})
 }
 
 // GetArticle   		godoc
@@ -63,12 +67,21 @@ func ListArticles(ctx *gin.Context) {
 func GetArticle(ctx *gin.Context) {
 	var article models.Article
 
-	if err := models.DB.Preload("Work").Where("id = ?", ctx.Param("id")).First(&article).Error; err != nil {
+	err := models.DB.Preload("Work").Preload("Work.Author").Where("id = ?", ctx.Param("id")).First(&article).Error
+	if err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}
 
-	httputil.ResponseSuccess(ctx, mapper.MapArticle(article))
+	data := article.ToDTO()
+
+	work := article.Work.ToDTO()
+	data.Work = &work
+
+	author := article.Work.Author.ToDTO()
+	data.Work.Author = &author
+
+	httputil.ResponseSuccess(ctx, data)
 }
 
 // CreateArticle   		godoc
@@ -107,7 +120,7 @@ func CreateArticle(ctx *gin.Context) {
 	}
 
 	var article models.Article
-	mapper.ParseArticle(articleForm, &article)
+	article.ParseForm(articleForm)
 	article.PicturePath = picturePath
 	article.Link = translit.GenerateLinkFromText(article.TitleRu)
 
@@ -116,7 +129,7 @@ func CreateArticle(ctx *gin.Context) {
 		return
 	}
 
-	httputil.ResponseSuccess(ctx, mapper.MapArticle(article))
+	httputil.ResponseSuccess(ctx, article.ToDTO())
 }
 
 // UpdateArticle   		godoc
@@ -187,7 +200,7 @@ func UpdateArticle(ctx *gin.Context) {
 		}
 	}
 
-	httputil.ResponseSuccess(ctx, mapper.MapArticle(article))
+	httputil.ResponseSuccess(ctx, article.ToDTO())
 }
 
 // DeleteArticle   		godoc

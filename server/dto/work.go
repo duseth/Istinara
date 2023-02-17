@@ -21,7 +21,7 @@ type WorkDTO struct {
 	PicturePath     string         `json:"picture_path"`
 	PublicationDate datatypes.Date `json:"publication_date"`
 
-	Author AuthorDTO `json:"author"`
+	Author *AuthorDTO `json:"author"`
 }
 
 type WorkInputForm struct {

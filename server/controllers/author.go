@@ -10,7 +10,6 @@ import (
 	"github.com/duseth/istinara/server/dto"
 	"github.com/duseth/istinara/server/models"
 	httputil "github.com/duseth/istinara/server/utils/http"
-	"github.com/duseth/istinara/server/utils/mapper"
 	"github.com/duseth/istinara/server/utils/translit"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -47,7 +46,12 @@ func ListAuthors(ctx *gin.Context) {
 		return
 	}
 
-	httputil.ResponseSuccess(ctx, gin.H{"data": mapper.MapAuthors(authors), "count": count})
+	data := make([]dto.AuthorDTO, 0, len(authors))
+	for _, author := range authors {
+		data = append(data, author.ToDTO())
+	}
+
+	httputil.ResponseSuccess(ctx, gin.H{"data": data, "count": count})
 }
 
 // GetAuthor   		godoc
@@ -68,7 +72,7 @@ func GetAuthor(ctx *gin.Context) {
 		return
 	}
 
-	httputil.ResponseSuccess(ctx, mapper.MapAuthor(author))
+	httputil.ResponseSuccess(ctx, author.ToDTO())
 }
 
 // GetWorksByAuthor   		godoc
@@ -89,7 +93,12 @@ func GetWorksByAuthor(ctx *gin.Context) {
 		return
 	}
 
-	httputil.ResponseSuccess(ctx, mapper.MapWorks(works))
+	data := make([]dto.WorkDTO, 0, len(works))
+	for _, work := range works {
+		data = append(data, work.ToDTO())
+	}
+
+	httputil.ResponseSuccess(ctx, data)
 }
 
 // CreateAuthor   		godoc
@@ -128,7 +137,7 @@ func CreateAuthor(ctx *gin.Context) {
 	}
 
 	var author models.Author
-	mapper.ParseAuthor(authorForm, &author)
+	author.ParseForm(authorForm)
 	author.PicturePath = picturePath
 	author.Link = translit.GenerateLinkFromText(author.NameRu)
 
@@ -137,7 +146,7 @@ func CreateAuthor(ctx *gin.Context) {
 		return
 	}
 
-	httputil.ResponseSuccess(ctx, mapper.MapAuthor(author))
+	httputil.ResponseSuccess(ctx, author.ToDTO())
 }
 
 // UpdateAuthor   		godoc
@@ -208,7 +217,7 @@ func UpdateAuthor(ctx *gin.Context) {
 		}
 	}
 
-	httputil.ResponseSuccess(ctx, mapper.MapAuthor(author))
+	httputil.ResponseSuccess(ctx, author.ToDTO())
 }
 
 // DeleteAuthor   		godoc

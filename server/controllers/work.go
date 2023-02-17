@@ -10,7 +10,6 @@ import (
 	"github.com/duseth/istinara/server/dto"
 	"github.com/duseth/istinara/server/models"
 	httputil "github.com/duseth/istinara/server/utils/http"
-	"github.com/duseth/istinara/server/utils/mapper"
 	"github.com/duseth/istinara/server/utils/translit"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -42,12 +41,17 @@ func ListWorks(ctx *gin.Context) {
 		db = db.Limit(limit)
 	}
 
-	if err := db.Preload("Author").Find(&works).Error; err != nil {
+	if err := db.Find(&works).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
 	}
 
-	httputil.ResponseSuccess(ctx, gin.H{"data": mapper.MapWorks(works), "count": count})
+	data := make([]dto.WorkDTO, 0, len(works))
+	for _, work := range works {
+		data = append(data, work.ToDTO())
+	}
+
+	httputil.ResponseSuccess(ctx, gin.H{"data": data, "count": count})
 }
 
 // GetWork   		godoc
@@ -68,7 +72,11 @@ func GetWork(ctx *gin.Context) {
 		return
 	}
 
-	httputil.ResponseSuccess(ctx, mapper.MapWork(work))
+	data := work.ToDTO()
+	author := work.Author.ToDTO()
+	data.Author = &author
+
+	httputil.ResponseSuccess(ctx, data)
 }
 
 // GetArticlesByWork   		godoc
@@ -89,7 +97,12 @@ func GetArticlesByWork(ctx *gin.Context) {
 		return
 	}
 
-	httputil.ResponseSuccess(ctx, mapper.MapArticles(articles))
+	data := make([]dto.ArticleDTO, 0, len(articles))
+	for _, article := range articles {
+		data = append(data, article.ToDTO())
+	}
+
+	httputil.ResponseSuccess(ctx, data)
 }
 
 // CreateWork   		godoc
@@ -128,7 +141,7 @@ func CreateWork(ctx *gin.Context) {
 	}
 
 	var work models.Work
-	mapper.ParseWork(workForm, &work)
+	work.ParseForm(workForm)
 	work.PicturePath = picturePath
 	work.Link = translit.GenerateLinkFromText(work.TitleRu)
 
@@ -137,7 +150,7 @@ func CreateWork(ctx *gin.Context) {
 		return
 	}
 
-	httputil.ResponseSuccess(ctx, mapper.MapWork(work))
+	httputil.ResponseSuccess(ctx, work.ToDTO())
 }
 
 // UpdateWork   		godoc
@@ -208,7 +221,7 @@ func UpdateWork(ctx *gin.Context) {
 		}
 	}
 
-	httputil.ResponseSuccess(ctx, mapper.MapWork(work))
+	httputil.ResponseSuccess(ctx, work.ToDTO())
 }
 
 // DeleteWork   		godoc

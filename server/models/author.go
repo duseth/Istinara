@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/duseth/istinara/server/dto"
 	"github.com/duseth/istinara/server/utils/datatypes"
 )
 
@@ -21,4 +22,33 @@ type Author struct {
 
 	PicturePath string `gorm:"column:picture_path" json:"picture_path"`
 	Link        string `gorm:"column:link" json:"link"`
+}
+
+// ToDTO map Author to dto.AuthorDTO
+func (author *Author) ToDTO() dto.AuthorDTO {
+	return dto.AuthorDTO{
+		ID:          author.ID,
+		NameRu:      author.NameRu,
+		NameAr:      author.NameAr,
+		ShortNameRu: author.ShortNameRu,
+		ShortNameAr: author.ShortNameAr,
+		AboutRu:     author.AboutRu,
+		AboutAr:     author.AboutAr,
+		BirthDate:   author.BirthDate,
+		DeathDate:   author.DeathDate,
+		PicturePath: author.PicturePath,
+		Link:        author.Link,
+	}
+}
+
+// ParseForm parse Author from dto.AuthorInputForm
+func (author *Author) ParseForm(form dto.AuthorInputForm) {
+	author.NameRu = form.NameRu
+	author.NameAr = form.NameAr
+	author.ShortNameRu = form.ShortNameRu
+	author.ShortNameAr = form.ShortNameAr
+	author.AboutRu = form.AboutRu
+	author.AboutAr = form.AboutAr
+	author.BirthDate = form.BirthDate
+	author.DeathDate = form.DeathDate
 }

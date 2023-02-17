@@ -1,21 +1,51 @@
 package models
 
+import "github.com/duseth/istinara/server/dto"
+
 type Article struct {
 	Base
 
-	TitleRu string `gorm:"column:title_ru"`
-	TitleAr string `gorm:"column:title_ar"`
+	TitleRu string `gorm:"column:title_ru" json:"title_ru"`
+	TitleAr string `gorm:"column:title_ar" json:"title_ar"`
 
-	QuoteRu string `gorm:"column:quote_ru"`
-	QuoteAr string `gorm:"column:quote_ar"`
+	QuoteRu string `gorm:"column:quote_ru" json:"quote_ru"`
+	QuoteAr string `gorm:"column:quote_ar" json:"quote_ar"`
 
-	DescriptionRu string `gorm:"column:description_ru"`
-	DescriptionAr string `gorm:"column:description_ar"`
+	DescriptionRu string `gorm:"column:description_ru" json:"description_ru"`
+	DescriptionAr string `gorm:"column:description_ar" json:"description_ar"`
 
-	Transcription string `gorm:"column:transcription"`
-	PicturePath   string `gorm:"column:picture_path"`
-	Link          string `gorm:"column:link"`
+	Transcription string `gorm:"column:transcription" json:"transcription"`
+	PicturePath   string `gorm:"column:picture_path" json:"picture_path"`
+	Link          string `gorm:"column:link" json:"link"`
 
-	WorkID string `gorm:"column:work_id"`
+	WorkID string `gorm:"column:work_id" json:"work_id"`
 	Work   Work
+}
+
+// ToDTO map Article to dto.ArticleDTO
+func (article *Article) ToDTO() dto.ArticleDTO {
+	return dto.ArticleDTO{
+		ID:            article.ID,
+		TitleRu:       article.TitleRu,
+		TitleAr:       article.TitleAr,
+		QuoteRu:       article.QuoteRu,
+		QuoteAr:       article.QuoteAr,
+		DescriptionRu: article.DescriptionRu,
+		DescriptionAr: article.DescriptionAr,
+		PicturePath:   article.PicturePath,
+		Transcription: article.Transcription,
+		Link:          article.Link,
+	}
+}
+
+// ParseForm parse Article from dto.ArticleInputForm
+func (article *Article) ParseForm(form dto.ArticleInputForm) {
+	article.TitleRu = form.TitleRu
+	article.TitleAr = form.TitleAr
+	article.QuoteRu = form.QuoteRu
+	article.QuoteAr = form.QuoteAr
+	article.DescriptionRu = form.DescriptionRu
+	article.DescriptionAr = form.DescriptionAr
+	article.Transcription = form.Transcription
+	article.WorkID = form.WorkID
 }

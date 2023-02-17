@@ -31,8 +31,8 @@ type AuthorInputForm struct {
 	ShortNameRu string `json:"short_name_ru" form:"short_name_ru"`
 	ShortNameAr string `json:"short_name_ar" form:"short_name_ar"`
 
-	AboutRu string `json:"about_ru"`
-	AboutAr string `json:"about_ar"`
+	AboutRu string `json:"about_ru" form:"about_ru"`
+	AboutAr string `json:"about_ar" form:"about_ar"`
 
 	BirthDate datatypes.Date  `json:"birth_date" form:"birth_date"`
 	DeathDate *datatypes.Date `json:"death_date,omitempty" form:"death_date"`
