@@ -29,6 +29,8 @@ func DatabaseConnect() {
 		&Work{},
 		&Article{},
 		&Request{},
+		&Group{},
+		&Favourite{},
 	)
 	if err != nil {
 		return
@@ -57,11 +59,13 @@ func LoadInitialDump() {
 
 	DB.Create(&loadEntities.Authors)
 	DB.Create(&loadEntities.Works)
+	DB.Create(&loadEntities.Groups)
 	DB.Create(&loadEntities.Articles)
 }
 
 type LoadEntities struct {
 	Authors  []Author  `json:"authors"`
 	Works    []Work    `json:"works"`
+	Groups   []Group   `json:"groups"`
 	Articles []Article `json:"articles"`
 }

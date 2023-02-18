@@ -1,25 +1,38 @@
 import React, {useContext, useEffect, useState} from "react";
 import Article from "../../models/Article";
 import {LanguageContext} from "../../languages/Language";
-import {ArticlesText, AuthorsText} from "../../containers/Language";
+import {ArticlesText} from "../../containers/Language";
 import api from "../../services/API";
 
 import './Articles.scss'
+import toast from "react-hot-toast";
+import Cookies from "universal-cookie";
+import AccountService from "../../services/AccountService";
 
 const articles_per_page = 12;
 
-const Authors = () => {
+const Articles = () => {
     const languageContext = useContext(LanguageContext);
     useEffect(() => {
         document.title = languageContext.dictionary["titles"]["articles"] + " • Istinara";
     }, [languageContext]);
 
-    const [next, setNext] = useState(articles_per_page);
+    const cookies = new Cookies();
+
+    let configHeader = null;
+    if (cookies.get("token") !== undefined) {
+        configHeader = AccountService.GetHeaders(true, true)
+    }
+
+    const [count, setCount] = useState(0);
     const [data: Array<Article>, setData] = useState()
 
     useEffect(() => {
-        api.get("/articles")
-            .then((response) => setData(response.data))
+        api.get(`/articles?offset=0&limit=${articles_per_page}`, configHeader)
+            .then((response) => {
+                setCount(response.data.count);
+                setData(response.data.data);
+            })
             .catch(() => {
                 setData([]);
             });
@@ -41,20 +54,43 @@ const Authors = () => {
     }
 
     const loadMore = () => {
-        setNext(next + articles_per_page)
-    }
+        api.get(`/articles?offset=${data.length}&limit=${articles_per_page}`)
+            .then((response) => setData([...data, ...response.data.data]))
+    };
 
-    const getArticleCard = (article: Article) => {
-        if (languageContext.userLanguage === "ru") {
-            return (
-                <div className="article-card" key={article.id}>
-                </div>
-            )
-        } else if (languageContext.userLanguage === "ar") {
-            return (
-                <div className="article-card" key={article.id}>
-                </div>
-            )
+    const likeArticle = (event: Event, article: Article) => {
+        let articleIndex = null;
+        data.map((art, index) => {
+            if (art.id === article.id) {
+                articleIndex = index;
+            }
+        });
+
+        let classList = event.target.classList;
+        const title = languageContext.userLanguage === "ru" ? article.title_ru : article.title_ar;
+
+        if (!article.is_liked) {
+            api.post("/user/favourite/" + article.id, null, configHeader)
+                .then(() => {
+                    data[articleIndex].is_liked = true;
+                    classList.remove("like-icon");
+                    classList.add("liked-icon");
+                    toast(`«${title}» ${languageContext.dictionary["articles"]["like_success"]}`, {icon: "❤️"});
+                })
+                .catch(() => {
+                    toast.error(languageContext.dictionary["articles"]["like_error"]);
+                });
+        } else {
+            api.delete("/user/favourite/" + article.id, configHeader)
+                .then(() => {
+                    data[articleIndex].is_liked = false;
+                    classList.remove("liked-icon");
+                    classList.add("like-icon");
+                    toast(`«${title}» ${languageContext.dictionary["articles"]["dislike_success"]}`, {icon: "➖"});
+                })
+                .catch(() => {
+                    toast.error(languageContext.dictionary["articles"]["dislike_error"]);
+                });
         }
     };
 
@@ -63,8 +99,9 @@ const Authors = () => {
             <div className="container">
                 {
                     data.length > 0 ? (
-                        <div className="row justify-content-center align-items-center m-3">
-                            {data.slice(0, next).map((article) => getArticleCard(article))}
+                        <div className="justify-content-center align-items-center row row-cols-md-2 g-3 m-3">
+                            {data.map((article) => GetArticleCard(languageContext.userLanguage,
+                                article, cookies.get("token") !== undefined, likeArticle))}
                         </div>
                     ) : (
                         <div className="information">
@@ -74,16 +111,63 @@ const Authors = () => {
                     )
                 }
                 {
-                    next < data?.length &&
-                    <div className="text-center">
+                    data.length < count &&
+                    <div className="text-center m-3">
                         <button className="btn btn-outline-dark" onClick={loadMore}>
-                            <AuthorsText tid="show_more"/>
+                            <ArticlesText tid="show_more"/>
                         </button>
                     </div>
                 }
             </div>
         </div>
     );
+};
+
+const GetArticleCard = (lang: string, article: Article, is_favorites: boolean, like_func: Function) => {
+    if (lang === "ru") {
+        return (
+            <div className="article-card col-md" key={article.id}>
+                <a className="article-card-link" href={"/article/" + article.link}/>
+                <div className="article-body">
+                    {is_favorites && (
+                        <button onClick={(event) => like_func(event, article)} className="article-like">
+                            {
+                                article.is_liked
+                                    ? <i className="bi liked-icon"/>
+                                    : <i className="bi like-icon"/>
+                            }
+                        </button>
+                    )}
+                    <div className="article-card-title">{article.title_ru}</div>
+                    <div className="article-group">
+                        <span className="badge bg-secondary">{article.group.short_name_ru}</span>
+                    </div>
+                </div>
+            </div>
+        )
+    } else if (lang === "ar") {
+        return (
+            <div className="article-card col-md" key={article.id}>
+                <a className="article-card-link" href={"/article/" + article.link}/>
+                <div className="article-body">
+                    {is_favorites && (
+                        <button onClick={(event) => like_func(event, article)} className="article-like">
+                            {
+                                article.is_liked
+                                    ? <i className="bi liked-icon"/>
+                                    : <i className="bi like-icon"/>
+                            }
+                        </button>
+                    )}
+                    <div className="article-card-title">{article.title_ar}</div>
+                    <div className="article-group">
+                        <span className="badge bg-secondary">{article.group.short_name_ar}</span>
+                    </div>
+                </div>
+            </div>
+        )
+    }
 }
 
-export default Authors
+export {GetArticleCard}
+export default Articles;

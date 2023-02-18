@@ -45,7 +45,7 @@ const Works = () => {
 
     const loadMore = () => {
         api.get(`/works?offset=${data.length}&limit=${works_per_page}`)
-            .then((response) => setData([...data,  ...response.data.data]))
+            .then((response) => setData([...data, ...response.data.data]))
     };
 
     const getWorkCard = (work: Work) => {
@@ -54,10 +54,10 @@ const Works = () => {
                 <div className="work-card col-md" key={work.id}>
                     <a className="work-card-link" href={"/works/" + work.link}/>
                     <img className="work-card-image" src={work.picture_path} alt={work.title_ru}/>
-                    <div className="work-card-top-text">
+                    <div className="work-card-title">{work.title_ru}</div>
+                    <div className="work-card-about">
                         {work.genre_ru} • {new Date(work.publication_date).getFullYear()}
                     </div>
-                    <div className="work-card-text">{work.title_ru}</div>
                 </div>
             )
         } else if (languageContext.userLanguage === "ar") {
@@ -65,10 +65,10 @@ const Works = () => {
                 <div className="work-card col-md" key={work.id}>
                     <a className="work-card-link" href={"/works/" + work.link}/>
                     <img className="work-card-image" src={work.picture_path} alt={work.title_ar}/>
-                    <div className="work-card-top-text">
+                    <div className="work-card-title">{work.title_ar}</div>
+                    <div className="work-card-about">
                         {work.genre_ar} • {new Date(work.publication_date).getFullYear()}
                     </div>
-                    <div className="work-card-text">{work.title_ar}</div>
                 </div>
 
             )

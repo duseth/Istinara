@@ -6,7 +6,6 @@ import (
 	"github.com/duseth/istinara/server/dto"
 	"github.com/duseth/istinara/server/models"
 	httputil "github.com/duseth/istinara/server/utils/http"
-	"github.com/duseth/istinara/server/utils/mapper"
 	"github.com/duseth/istinara/server/utils/token"
 	"github.com/gin-gonic/gin"
 )
@@ -35,7 +34,7 @@ func Login(ctx *gin.Context) {
 		return
 	}
 
-	httputil.ResponseSuccess(ctx, gin.H{"user": mapper.MapUser(user), "token": accessToken})
+	httputil.ResponseSuccess(ctx, gin.H{"user": user.ToDTO(), "token": accessToken})
 }
 
 // Register   		godoc
@@ -56,7 +55,7 @@ func Register(ctx *gin.Context) {
 	}
 
 	var user models.User
-	mapper.ParseUser(userForm, &user)
+	user.ParseForm(userForm)
 
 	if err := models.DB.Create(&user).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)

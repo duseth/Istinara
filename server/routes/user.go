@@ -6,6 +6,10 @@ import (
 )
 
 func User(router *gin.RouterGroup) {
-	router.POST("/edit/:id", controllers.EditUser)
-	router.POST("/change_password/:id", controllers.ChangePassword)
+	router.GET("/favourites", controllers.ListFavourite)
+	router.POST("/favourite/:id", controllers.CreateFavourite)
+	router.DELETE("/favourite/:id", controllers.DeleteFavourite)
+
+	router.POST("/edit", controllers.EditUser)
+	router.POST("/change_password", controllers.ChangePassword)
 }

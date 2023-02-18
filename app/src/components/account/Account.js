@@ -16,6 +16,12 @@ import {
 } from "../../containers/Language";
 import User from "../../models/User";
 import Cookies from "universal-cookie";
+import Article from "../../models/Article";
+import {GetArticleCard} from "../articles/Articles"
+import api from "../../services/API";
+import toast from "react-hot-toast";
+
+const favourites_per_page = 6;
 
 const Account = () => {
     let languageContext = useContext(LanguageContext);
@@ -54,6 +60,62 @@ const Account = () => {
     const {register, reset, setError, handleSubmit, formState: {errors}} = useForm();
 
     const Profile = (user) => {
+        const [count, setCount] = useState(0);
+        const [data: Array<Article>, setData] = useState()
+
+        const configHeader = AccountService.GetHeaders(true, true)
+        useEffect(() => {
+            api.get(`/user/favourites?offset=0&limit=${favourites_per_page}`, configHeader)
+                .then((response) => {
+                    setCount(response.data.count);
+                    setData(response.data.data);
+                })
+                .catch(() => {
+                    setData([]);
+                });
+        }, []);
+
+        const loadMore = () => {
+            api.get(`/user/favourites?offset=${data.length}&limit=${favourites_per_page}`, configHeader)
+                .then((response) => setData([...data, ...response.data.data]))
+        };
+
+        const likeArticle = (event: Event, article: Article) => {
+            let articleIndex = null;
+            data.map((art, index) => {
+                if (art.id === article.id) {
+                    articleIndex = index;
+                }
+            });
+
+            let classList = event.target.classList;
+            const title = languageContext.userLanguage === "ru" ? article.title_ru : article.title_ar;
+
+            if (!article.is_liked) {
+                api.post("/user/favourite/" + article.id, null, configHeader)
+                    .then(() => {
+                        data[articleIndex].is_liked = true;
+                        classList.remove("like-icon");
+                        classList.add("liked-icon");
+                        toast(`«${title}» ${languageContext.dictionary["articles"]["like_success"]}`, {icon: "❤️"});
+                    })
+                    .catch(() => {
+                        toast.error(languageContext.dictionary["articles"]["like_error"]);
+                    });
+            } else {
+                api.delete("/user/favourite/" + article.id, configHeader)
+                    .then(() => {
+                        data[articleIndex].is_liked = false;
+                        classList.remove("liked-icon");
+                        classList.add("like-icon");
+                        toast(`«${title}» ${languageContext.dictionary["articles"]["dislike_success"]}`, {icon: "➖"});
+                    })
+                    .catch(() => {
+                        toast.error(languageContext.dictionary["articles"]["dislike_error"]);
+                    });
+            }
+        };
+
         return (
             <section className="auth-container">
                 <div className="container py-3">
@@ -190,7 +252,28 @@ const Account = () => {
                                 </Tab>
                                 <Tab tabClassName="account-nav-item" eventKey="favourite"
                                      title={<ProfileText tid="nav_favourite"/>}>
-                                    <div className="account-tab-content">Избранное</div>
+                                    {
+                                        data !== undefined && data.length > 0 ? (
+                                            <div
+                                                className="justify-content-center align-items-center row row-cols-md-1 g-3 m-3">
+                                                {data.map((article) => GetArticleCard(languageContext.userLanguage,
+                                                    article, true, likeArticle))}
+                                            </div>
+                                        ) : (
+                                            <div className="information">
+                                                <i className="bi bi-folder-x information-icon"></i>
+                                                <p className="mt-3"><ProfileText tid="no_favourites"/></p>
+                                            </div>
+                                        )
+                                    }
+                                    {
+                                        data?.length < count &&
+                                        <div className="text-center m-3">
+                                            <button className="btn btn-outline-dark" onClick={loadMore}>
+                                                <ProfileText tid="show_more_favourites"/>
+                                            </button>
+                                        </div>
+                                    }
                                 </Tab>
                             </Tabs>
                         </div>

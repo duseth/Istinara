@@ -18,12 +18,16 @@ type Article struct {
 	PicturePath   string `gorm:"column:picture_path" json:"picture_path"`
 	Link          string `gorm:"column:link" json:"link"`
 
+	GroupID string `gorm:"column:group_id" json:"group_id"`
+	Group   Group
+
 	WorkID string `gorm:"column:work_id" json:"work_id"`
 	Work   Work
 }
 
 // ToDTO map Article to dto.ArticleDTO
 func (article *Article) ToDTO() dto.ArticleDTO {
+	group := article.Group.ToDTO()
 	return dto.ArticleDTO{
 		ID:            article.ID,
 		TitleRu:       article.TitleRu,
@@ -35,6 +39,7 @@ func (article *Article) ToDTO() dto.ArticleDTO {
 		PicturePath:   article.PicturePath,
 		Transcription: article.Transcription,
 		Link:          article.Link,
+		Group:         &group,
 	}
 }
 
@@ -47,5 +52,6 @@ func (article *Article) ParseForm(form dto.ArticleInputForm) {
 	article.DescriptionRu = form.DescriptionRu
 	article.DescriptionAr = form.DescriptionAr
 	article.Transcription = form.Transcription
+	article.GroupID = form.GroupID
 	article.WorkID = form.WorkID
 }

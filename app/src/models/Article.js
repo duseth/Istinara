@@ -1,4 +1,6 @@
 import BaseModel from "./Base";
+import Work from "./Work";
+import Group from "./Group";
 
 class Article extends BaseModel {
     title_ru: string;
@@ -9,7 +11,9 @@ class Article extends BaseModel {
     description_ar: string;
     transcription: string;
     picture_path: string;
-    work_id: number;
+    is_liked: boolean;
+    group: Group;
+    work: Work;
     link: string;
 }
 

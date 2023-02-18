@@ -19,8 +19,10 @@ type ArticleDTO struct {
 	PicturePath   string `json:"picture_path"`
 	Transcription string `json:"transcription"`
 	Link          string `json:"link"`
+	IsLiked       bool   `json:"is_liked"`
 
-	Work *WorkDTO `json:"work"`
+	Group *GroupDTO `json:"group"`
+	Work  *WorkDTO  `json:"work"`
 }
 
 type ArticleInputForm struct {
@@ -34,6 +36,7 @@ type ArticleInputForm struct {
 	DescriptionAr string `json:"description_ar" form:"description_ar"`
 
 	Transcription string `json:"transcription" form:"transcription"`
+	GroupID       string `json:"group_id" binding:"uuid"`
 	WorkID        string `json:"work_id" binding:"uuid"`
 }
 

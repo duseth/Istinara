@@ -367,6 +367,50 @@
             "author_id": "ea35551f-846c-4337-8095-8e671a8ed1ea"
         }
     ],
+    "groups": [
+        {
+            "id": "918796d0-8809-459b-87b8-31fd95719781",
+            "name_ru": "Ассоциативные",
+            "name_ar": "النقابي",
+            "short_name_ru": "Ассоциативные",
+            "short_name_ar": "النقابي"
+        },
+        {
+            "id": "c23b45e5-d097-4251-b51e-09941b42e838",
+            "name_ru": "Бытовые",
+            "name_ar": "المنزلية",
+            "short_name_ru": "Бытовые",
+            "short_name_ar": "المنزلية"
+        },
+        {
+            "id": "8acfa67e-358a-4b53-ac13-6b92b257b0c7",
+            "name_ru": "Ономастические",
+            "name_ar": "أونوماستيك",
+            "short_name_ru": "Ономастические",
+            "short_name_ar": "أونوماستيك"
+        },
+        {
+            "id": "7674a4b7-be0f-47c6-851c-46f94db79672",
+            "name_ru": "Реалии государственного строя и общественной жизни",
+            "name_ar": "حقائق نظام الدولة والحياة العامة",
+            "short_name_ru": "Гос.строй и общ.жизнь",
+            "short_name_ar": "جوستروي وتوتال.الحياة"
+        },
+        {
+            "id": "ae2596ac-ada5-4d40-97fb-5407a7e79b71",
+            "name_ru": "Реалии природного мира",
+            "name_ar": "حقائق العالم الطبيعي",
+            "short_name_ru": "Природный мир",
+            "short_name_ar": "العالم الطبيعي"
+        },
+        {
+            "id": "3832dd81-92b1-4038-abe6-af543b9c0b11",
+            "name_ru": "Этнографические и мифологические реалии",
+            "name_ar": "الحقائق الإثنوغرافية والأسطورية",
+            "short_name_ru": "Этнос и мифология",
+            "short_name_ar": "العرق والأساطير"
+        }
+    ],
     "articles": [
         {
             "id": "7bb385d1-a3a5-46dd-bd9f-1c5893109588",
@@ -379,6 +423,7 @@
             "transcription": "",
             "picture_path": "",
             "link": "agitpoezd",
+            "group_id": "7674a4b7-be0f-47c6-851c-46f94db79672",
             "work_id": "71707fdf-700c-4e4b-bea4-32719395719f"
         },
         {
@@ -392,6 +437,7 @@
             "transcription": "",
             "picture_path": "",
             "link": "akafist",
+            "group_id": "3832dd81-92b1-4038-abe6-af543b9c0b11",
             "work_id": "597de622-d1dd-4d98-a585-bcda870b1fbf"
         },
         {
@@ -405,6 +451,7 @@
             "transcription": "[alīksīyif]",
             "picture_path": "",
             "link": "alekseev",
+            "group_id": "8acfa67e-358a-4b53-ac13-6b92b257b0c7",
             "work_id": "022d9b7e-c316-49e6-9f7c-79c5cada2509"
         },
         {
@@ -418,6 +465,7 @@
             "transcription": "",
             "picture_path": "",
             "link": "antonovka",
+            "group_id": "ae2596ac-ada5-4d40-97fb-5407a7e79b71",
             "work_id": "022d9b7e-c316-49e6-9f7c-79c5cada2509"
         },
         {
@@ -431,6 +479,7 @@
             "transcription": "[arbāt]",
             "picture_path": "",
             "link": "arbat",
+            "group_id": "8acfa67e-358a-4b53-ac13-6b92b257b0c7",
             "work_id": "404286ca-573f-438f-bb31-9a269a394f88"
         },
         {
@@ -444,6 +493,7 @@
             "transcription": "[arshīn]",
             "picture_path": "",
             "link": "arshin",
+            "group_id": "c23b45e5-d097-4251-b51e-09941b42e838",
             "work_id": "404286ca-573f-438f-bb31-9a269a394f88"
         }
     ]

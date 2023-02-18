@@ -46,10 +46,10 @@ const Authors = () => {
 
     const loadMore = () => {
         api.get(`/authors?offset=${data.length}&limit=${authors_per_page}`)
-            .then((response) => setData([...data,  ...response.data.data]))
+            .then((response) => setData([...data, ...response.data.data]))
     };
 
-    const truncateString = (text) => text?.length > 100 ? `${text.substring(0, 95)}...` : text;
+    const truncateString = (text) => text?.length > 125 ? `${text.substring(0, 120)}...` : text;
 
     const getAuthorLifeDates = (birth: Date, death: Date) => {
         const options = {year: 'numeric'};
@@ -69,12 +69,10 @@ const Authors = () => {
     const getAuthorCard = (author: Author) => {
         if (languageContext.userLanguage === "ru") {
             return (
-                <div className="author-card col-md" key={author.id}>
+                <div className="author-card col-md align-items-center" key={author.id}>
                     <a className="author-link" href={"/authors/" + author.link}/>
-                    <div className="w-50 h-100 mb-3">
-                        <img className="author-image" src={author.picture_path} alt={author.short_name_ru}/>
-                    </div>
-                    <div className="author-body">
+                    <img className="author-image w-50 h-100 m-3" src={author.picture_path} alt={author.short_name_ru}/>
+                    <div className="author-body m-3">
                         <div className="author-name">{author.name_ru}<br/>
                             <hr/>
                         </div>
@@ -87,12 +85,10 @@ const Authors = () => {
             )
         } else if (languageContext.userLanguage === "ar") {
             return (
-                <div className="author-card col-md" key={author.id}>
+                <div className="author-card col-md align-items-center" key={author.id}>
                     <a className="author-link" href={"/authors/" + author.link}/>
-                    <div className="w-50 h-100 mb-3">
-                        <img className="author-image" src={author.picture_path} alt={author.short_name_ar}/>
-                    </div>
-                    <div className="author-body">
+                    <img className="author-image w-50 h-100 m-3" src={author.picture_path} alt={author.short_name_ar}/>
+                    <div className="author-body m-3">
                         <div className="author-name">{author.name_ar}<br/>
                             <hr/>
                         </div>

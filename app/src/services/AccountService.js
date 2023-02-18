@@ -17,11 +17,6 @@ class AccountService {
         email: new RegExp(".+@.+\\.[A-Za-z]+$"),
         username: new RegExp("^[а-яА-Яa-zA-Z0-9\\s]*$")
     }
-    headerConfig = {
-        headers: {
-            "Content-Type": "multipart/form-data"
-        }
-    };
 
     async Register(data, setError, changeAuthMode) {
         if (data.username.trim().length === 0 || data.email.trim().length === 0 || data.password.trim().length === 0) {
@@ -49,7 +44,7 @@ class AccountService {
         formData.append("email", data.email.trim())
         formData.append("password", data.password.trim())
 
-        await api.post("/auth/register", formData, this.headerConfig)
+        await api.post("/auth/register", formData, this.GetHeaders(true, false))
             .then(() => {
                 toast.success(<RegisterText tid="success_notify"/>);
                 changeAuthMode();
@@ -74,7 +69,7 @@ class AccountService {
         formData.append("email", data.email)
         formData.append("password", data.password)
 
-        await api.post("/auth/login", formData, this.headerConfig)
+        await api.post("/auth/login", formData, this.GetHeaders(true, false))
             .then(response => {
                 localStorage.setItem("user", JSON.stringify(response.data.user));
 
@@ -113,9 +108,8 @@ class AccountService {
         let formData = new FormData();
         formData.append("username", data.username.trim())
         formData.append("email", data.email.trim())
-
-        const authHeaders = this.GetAuthHeaders();
-        await api.post(`/user/edit/${user.id}`, formData, authHeaders)
+        
+        await api.post("/user/edit", formData, this.GetHeaders(true, true))
             .then((response) => {
                 localStorage.setItem("user", JSON.stringify(response.data));
                 toast.success(<ProfileEditForm tid="success_notify"/>);
@@ -145,18 +139,13 @@ class AccountService {
             return;
         }
 
-        const user: User = this.GetCurrentUser();
-
         let formData = new FormData();
-        formData.append("email", user.email);
         formData.append("current_password", data.current_password);
         formData.append("new_password", data.new_password);
         formData.append("accept_new_password", data.accept_new_password);
 
-        const authHeaders = this.GetAuthHeaders();
-        await api.post(`/user/change_password/${user.id}`, formData, authHeaders)
-            .then((response) => {
-                localStorage.setItem("user", JSON.stringify(response.data));
+        await api.post("/user/change_password", formData, this.GetHeaders(true, true))
+            .then(() => {
                 toast.success(<ProfilePasswordForm tid="success_notify"/>);
             })
             .catch(() => {
@@ -164,10 +153,22 @@ class AccountService {
             })
     }
 
-    GetAuthHeaders() {
-        let config = this.headerConfig;
-        const token = this.cookies.get("token");
-        config.headers.Authorization = token ? "Bearer " + token : "";
+    GetHeaders(post?: boolean, auth?: boolean) {
+        let config = {
+            headers: {}
+        };
+
+        if (post) {
+            config["headers"]["Content-Type"] = "multipart/form-data"
+        }
+
+        if (auth) {
+            const token = this.cookies.get("token");
+            if (token !== undefined) {
+                config["headers"]["Authorization"] = "Bearer " + token;
+            }
+        }
+
         return config
     }
 

@@ -10,6 +10,7 @@ import (
 	"github.com/duseth/istinara/server/dto"
 	"github.com/duseth/istinara/server/models"
 	httputil "github.com/duseth/istinara/server/utils/http"
+	"github.com/duseth/istinara/server/utils/token"
 	"github.com/duseth/istinara/server/utils/translit"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -41,7 +42,8 @@ func ListArticles(ctx *gin.Context) {
 		db = db.Limit(limit)
 	}
 
-	if err := db.Find(&articles).Error; err != nil {
+	err := db.Preload("Group").Find(&articles).Error
+	if err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
 	}
@@ -49,6 +51,23 @@ func ListArticles(ctx *gin.Context) {
 	data := make([]dto.ArticleDTO, 0, len(articles))
 	for _, article := range articles {
 		data = append(data, article.ToDTO())
+	}
+
+	if userId, err := token.ExtractTokenID(ctx); err == nil {
+		var favourites []models.Favourite
+		err = models.DB.Where("user_id = ?", userId.String()).Find(&favourites).Error
+		if err != nil {
+			httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
+			return
+		}
+
+		for i := 0; i < len(data); i++ {
+			for _, favourite := range favourites {
+				if data[i].ID == favourite.ArticleID {
+					data[i].IsLiked = true
+				}
+			}
+		}
 	}
 
 	httputil.ResponseSuccess(ctx, gin.H{"data": data, "count": count})
@@ -67,8 +86,8 @@ func ListArticles(ctx *gin.Context) {
 func GetArticle(ctx *gin.Context) {
 	var article models.Article
 
-	err := models.DB.Preload("Work").Preload("Work.Author").Where("id = ?", ctx.Param("id")).First(&article).Error
-	if err != nil {
+	db := models.DB.Preload("Group").Preload("Work").Preload("Work.Author")
+	if err := db.Where("id = ?", ctx.Param("id")).First(&article).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}

@@ -1,0 +1,80 @@
+@import "bootstrap-icons/font/bootstrap-icons";
+
+.article-card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  margin: 10px;
+  overflow: hidden;
+  max-width: 400px;
+  max-height: 300px;
+  position: relative;
+  height: 175px;
+
+  &:hover {
+    filter: brightness(90%);
+  }
+}
+
+.article-card-link {
+  position: absolute;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border-bottom: none !important;
+}
+
+.article-body {
+  margin: 10px;
+  position: relative;
+  width: 100%;
+}
+
+.article-card-title {
+  height: 100px;
+  margin-top: 10px;
+  font-size: 24px;
+  text-align: center;
+  line-height: 100px;
+}
+
+.article-group {
+  position: absolute;
+  bottom: 0;
+}
+
+.article-like {
+  z-index: 4;
+  border: none;
+  font-size: 24px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+
+  &:hover {
+    background-color: inherit;
+  }
+}
+
+.like-icon::before {
+  color: black;
+  content: "\f417";
+}
+
+.like-icon:hover::before {
+  color: red;
+  content: "\f415";
+}
+
+.liked-icon::before {
+  color: red;
+  content: "\f415";
+}
+
+.liked-icon:hover::before {
+  color: black;
+  content: "\f417";
+}
