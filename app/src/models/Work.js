@@ -1,5 +1,5 @@
 import BaseModel from "./Base";
-import Author from "./Author";
+import {Author} from "./Author";
 
 class Work extends BaseModel {
     title_ru: string;
@@ -14,4 +14,14 @@ class Work extends BaseModel {
     author: Author;
 }
 
-export default Work;
+class WorkCard {
+    title: string;
+    about: string;
+    genre: string;
+    picture_path: string;
+    publication_date: Date;
+    link: string;
+    author: Author;
+}
+
+export {Work, WorkCard};

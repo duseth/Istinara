@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -12,7 +13,7 @@ import (
 	httputil "github.com/duseth/istinara/server/utils/http"
 	"github.com/duseth/istinara/server/utils/translit"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
+	"github.com/gofrs/uuid"
 )
 
 // ListWorks   		godoc
@@ -67,7 +68,13 @@ func ListWorks(ctx *gin.Context) {
 func GetWork(ctx *gin.Context) {
 	var work models.Work
 
-	if err := models.DB.Preload("Author").Where("id = ?", ctx.Param("id")).First(&work).Error; err != nil {
+	column := "id"
+	if _, err := uuid.FromString(ctx.Param("id")); err != nil {
+		column = "link"
+	}
+
+	err := models.DB.Preload("Author").Where(fmt.Sprint(column, " = ?"), ctx.Param("id")).First(&work).Error
+	if err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}
@@ -133,7 +140,13 @@ func CreateWork(ctx *gin.Context) {
 		return
 	}
 
-	pictureName := uuid.New().String() + filepath.Ext(file.Filename)
+	uid, err := uuid.NewV4()
+	pictureName := uid.String() + filepath.Ext(file.Filename)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 	picturePath := filepath.Join("/app", "public", "assets", "images", "works", pictureName)
 	if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
@@ -190,7 +203,13 @@ func UpdateWork(ctx *gin.Context) {
 			return
 		}
 
-		pictureName := uuid.New().String() + filepath.Ext(file.Filename)
+		uid, err := uuid.NewV4()
+		pictureName := uid.String() + filepath.Ext(file.Filename)
+		if err != nil {
+			ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
 		picturePath = filepath.Join("/app", "public", "assets", "images", "works", pictureName)
 		if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
 			httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)

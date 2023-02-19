@@ -8,6 +8,7 @@ import (
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var DB *gorm.DB
@@ -16,26 +17,22 @@ func DatabaseConnect() {
 	connectionString := os.Getenv("CONNECTION_STRING")
 
 	// Initialising database connection
-	database, err := gorm.Open(postgres.Open(connectionString))
+	database, err := gorm.Open(postgres.Open(connectionString), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
+
 	if err != nil {
 		log.Fatal("Failed to connect to database!\n", err)
 	}
 	DB = database
 
 	// Run migrations
-	err = DB.AutoMigrate(
-		&User{},
-		&Author{},
-		&Work{},
-		&Article{},
-		&Request{},
-		&Group{},
-		&Favourite{},
-	)
+	err = DB.AutoMigrate(&User{}, &Author{}, &Work{}, &Article{}, &Request{}, &Group{}, &Favourite{})
 	if err != nil {
 		return
 	}
 
+	// Load dump file
 	if isLoad, err := strconv.ParseBool(os.Getenv("LOAD_DUMP")); err == nil && isLoad {
 		LoadInitialDump()
 	}

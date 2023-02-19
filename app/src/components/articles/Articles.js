@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
-import Article from "../../models/Article";
+import {Article as ArticleDTO} from "../../models/Article";
 import {LanguageContext} from "../../languages/Language";
 import {ArticlesText} from "../../containers/Language";
 import api from "../../services/API";
@@ -8,6 +8,7 @@ import './Articles.scss'
 import toast from "react-hot-toast";
 import Cookies from "universal-cookie";
 import AccountService from "../../services/AccountService";
+import {useParams} from "react-router-dom";
 
 const articles_per_page = 12;
 
@@ -25,7 +26,7 @@ const Articles = () => {
     }
 
     const [count, setCount] = useState(0);
-    const [data: Array<Article>, setData] = useState()
+    const [data: Array<ArticleDTO>, setData] = useState()
 
     useEffect(() => {
         api.get(`/articles?offset=0&limit=${articles_per_page}`, configHeader)
@@ -58,7 +59,7 @@ const Articles = () => {
             .then((response) => setData([...data, ...response.data.data]))
     };
 
-    const likeArticle = (event: Event, article: Article) => {
+    const likeArticle = (event: Event, article: ArticleDTO) => {
         let articleIndex = null;
         data.map((art, index) => {
             if (art.id === article.id) {
@@ -75,7 +76,7 @@ const Articles = () => {
                     data[articleIndex].is_liked = true;
                     classList.remove("like-icon");
                     classList.add("liked-icon");
-                    toast(`«${title}» ${languageContext.dictionary["articles"]["like_success"]}`, {icon: "❤️"});
+                    toast(`«${title}» ${languageContext.dictionary["articles"]["like_success"]}`, {icon: "🌟"});
                 })
                 .catch(() => {
                     toast.error(languageContext.dictionary["articles"]["like_error"]);
@@ -123,32 +124,29 @@ const Articles = () => {
     );
 };
 
-const GetArticleCard = (lang: string, article: Article, is_favorites: boolean, like_func: Function) => {
+const GetArticleCard = (lang: string, article: ArticleDTO, is_favorites: boolean, like_func: Function) => {
     if (lang === "ru") {
         return (
             <div className="article-card col-md" key={article.id}>
-                <a className="article-card-link" href={"/article/" + article.link}/>
+                <a className="article-card-link" href={"/articles/" + article.link}/>
                 <div className="article-body">
                     {is_favorites && (
                         <button onClick={(event) => like_func(event, article)} className="article-like">
                             {
                                 article.is_liked
-                                    ? <i className="bi liked-icon"/>
+                                    ? <i className="bi liked-icon bi-star"/>
                                     : <i className="bi like-icon"/>
                             }
                         </button>
                     )}
                     <div className="article-card-title">{article.title_ru}</div>
-                    <div className="article-group">
-                        <span className="badge bg-secondary">{article.group.short_name_ru}</span>
-                    </div>
                 </div>
             </div>
         )
     } else if (lang === "ar") {
         return (
             <div className="article-card col-md" key={article.id}>
-                <a className="article-card-link" href={"/article/" + article.link}/>
+                <a className="article-card-link" href={"/articles/" + article.link}/>
                 <div className="article-body">
                     {is_favorites && (
                         <button onClick={(event) => like_func(event, article)} className="article-like">
@@ -160,14 +158,18 @@ const GetArticleCard = (lang: string, article: Article, is_favorites: boolean, l
                         </button>
                     )}
                     <div className="article-card-title">{article.title_ar}</div>
-                    <div className="article-group">
-                        <span className="badge bg-secondary">{article.group.short_name_ar}</span>
-                    </div>
                 </div>
             </div>
         )
     }
 }
 
+const Article = () => {
+    const {link} = useParams()
+    return (
+        <div>{link}</div>
+    )
+}
+
 export {GetArticleCard}
-export default Articles;
+export {Article, Articles}

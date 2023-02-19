@@ -91,6 +91,11 @@ export function AuthorsText({tid}) {
     return languageContext.dictionary["authors"][tid] || tid;
 }
 
+export function AuthorsPage({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["authors"]["page"][tid] || tid;
+}
+
 // Works
 export function WorksText({tid}) {
     const languageContext = useContext(LanguageContext);

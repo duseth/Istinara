@@ -1,10 +1,11 @@
 import React, {useContext, useEffect, useState} from "react";
-import Work from "../../models/Work";
+import {Work as WorkDTO} from "../../models/Work";
 import {LanguageContext} from "../../languages/Language";
 import api from "../../services/API";
 
 import './Works.scss'
 import {WorksText} from "../../containers/Language";
+import {useParams} from "react-router-dom";
 
 const works_per_page = 6;
 
@@ -15,7 +16,7 @@ const Works = () => {
     }, [languageContext]);
 
     const [count, setCount] = useState(0);
-    const [data: Array<Work>, setData] = useState();
+    const [data: Array<WorkDTO>, setData] = useState();
 
     useEffect(() => {
         api.get(`/works?offset=0&limit=${works_per_page}`)
@@ -48,14 +49,14 @@ const Works = () => {
             .then((response) => setData([...data, ...response.data.data]))
     };
 
-    const getWorkCard = (work: Work) => {
+    const getWorkCard = (work: WorkDTO) => {
         if (languageContext.userLanguage === "ru") {
             return (
                 <div className="work-card col-md" key={work.id}>
                     <a className="work-card-link" href={"/works/" + work.link}/>
                     <img className="work-card-image" src={work.picture_path} alt={work.title_ru}/>
-                    <div className="work-card-title">{work.title_ru}</div>
-                    <div className="work-card-about">
+                    <div className="work-card-title left-20">{work.title_ru}</div>
+                    <div className="work-card-about right-20">
                         {work.genre_ru} • {new Date(work.publication_date).getFullYear()}
                     </div>
                 </div>
@@ -103,4 +104,11 @@ const Works = () => {
     );
 };
 
-export default Works;
+const Work = () => {
+    const {link} = useParams()
+    return (
+        <div>{link}</div>
+    )
+}
+
+export {Work, Works};

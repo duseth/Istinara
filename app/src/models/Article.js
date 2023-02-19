@@ -17,4 +17,4 @@ class Article extends BaseModel {
     link: string;
 }
 
-export default Article;
+export {Article};

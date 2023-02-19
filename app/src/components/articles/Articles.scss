@@ -41,11 +41,6 @@
   line-height: 100px;
 }
 
-.article-group {
-  position: absolute;
-  bottom: 0;
-}
-
 .article-like {
   z-index: 4;
   border: none;
@@ -61,20 +56,20 @@
 
 .like-icon::before {
   color: black;
-  content: "\f417";
+  content: "\f588";
 }
 
 .like-icon:hover::before {
-  color: red;
-  content: "\f415";
+  color: #FFDF00;
+  content: "\f586";
 }
 
 .liked-icon::before {
-  color: red;
-  content: "\f415";
+  color: #FFDF00;
+  content: "\f586";
 }
 
 .liked-icon:hover::before {
   color: black;
-  content: "\f417";
+  content: "\f588";
 }

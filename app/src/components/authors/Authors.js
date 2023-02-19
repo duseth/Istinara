@@ -1,10 +1,12 @@
 import React, {useContext, useEffect, useState} from "react";
-import Author from "../../models/Author";
+import {Author as AuthorDTO, AuthorCard} from "../../models/Author";
 import {LanguageContext} from "../../languages/Language";
-import {AuthorsText} from "../../containers/Language";
+import {AuthorsPage, AuthorsText} from "../../containers/Language";
 import api from "../../services/API";
 
 import './Authors.scss'
+import {useParams} from "react-router-dom";
+import {Work as WorkDTO} from "../../models/Work";
 
 const authors_per_page = 6;
 
@@ -16,7 +18,7 @@ const Authors = () => {
     }, [languageContext]);
 
     const [count, setCount] = useState(0);
-    const [data: Array<Author>, setData] = useState()
+    const [data: Array<AuthorDTO>, setData] = useState()
 
     useEffect(() => {
         api.get(`/authors?offset=0&limit=${authors_per_page}`)
@@ -66,7 +68,7 @@ const Authors = () => {
         )
     };
 
-    const getAuthorCard = (author: Author) => {
+    const getAuthorCard = (author: AuthorDTO) => {
         if (languageContext.userLanguage === "ru") {
             return (
                 <div className="author-card col-md align-items-center" key={author.id}>
@@ -128,6 +130,202 @@ const Authors = () => {
             </div>
         </div>
     );
+};
+
+const Author = () => {
+    const languageContext = useContext(LanguageContext);
+
+    const {link} = useParams()
+
+    const [author: AuthorDTO, setAuthor] = useState();
+    const [works: Array<WorkDTO>, setWorks] = useState();
+
+    const [prevAuthor: AuthorDTO, setPrevAuthor] = useState();
+    const [nextAuthor: AuthorDTO, setNextAuthor] = useState();
+    const [authorCard: AuthorCard, setAuthorCard] = useState();
+
+    useEffect(() => {
+        api.get("/authors/" + link).then((response) => setAuthor(response.data));
+    }, []);
+
+    useEffect(() => {
+        if (author) {
+            document.title = languageContext.userLanguage === "ru" ? author.name_ru : author.name_ar + " • Istinara";
+        }
+    }, [author, languageContext]);
+
+    useEffect(() => {
+        if (author) {
+            api.get(`/authors/${author.id}/works`).then((response) => setWorks(response.data));
+        }
+    }, [author]);
+
+    useEffect(() => {
+        if (author) {
+            api.get("/authors").then((response) => {
+                let authors: Array<AuthorDTO> = response.data.data;
+                authors.map((item, index) => {
+                    if (item.id === author.id) {
+                        setPrevAuthor(authors[((index - 1) + authors.length) % authors.length]);
+                        setNextAuthor(authors[(index + 1) % authors.length]);
+                    }
+                });
+            });
+        }
+    }, [author]);
+
+    useEffect(() => {
+        if (author) {
+            let card = {
+                birth_date: author.birth_date,
+                death_date: author.death_date,
+                picture_path: author.picture_path,
+                link: link
+            };
+
+            if (languageContext.userLanguage === "ru") {
+                card.name = author.name_ru;
+                card.short_name = author.short_name_ru;
+                card.about = author.about_ru;
+            } else if (languageContext.userLanguage === "ar") {
+                card.name = author.name_ar;
+                card.short_name = author.short_name_ar;
+                card.about = author.about_ar;
+            }
+
+            setAuthorCard(card);
+        }
+    }, [author, languageContext]);
+
+    if (!author || !works || !prevAuthor || !nextAuthor) {
+        return (
+            <div className="album">
+                <div className="container py-5">
+                    <div className="row justify-content-center align-items-center m-3">
+                        <div className="information">
+                            <div className="spinner-border" role="status"/>
+                            <p className="mt-3"><AuthorsPage tid="loading"/></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    const getDate = (date: Date) => {
+        const locale = languageContext.userLanguage === "ru" ? "ru-RU" : "ar-AE";
+        return new Date(date).toLocaleDateString(locale, {day: "numeric", month: "long", year: 'numeric'})
+    };
+
+    const getWorkCard = (work: WorkDTO, is_active: boolean) => {
+        if (languageContext.userLanguage === "ru") {
+            return (
+                <div className={is_active ? "carousel-item active" : "carousel-item"} key={work.id}>
+                    <div className="author-work-card m-auto">
+                        <a className="work-card-link" href={"/works/" + work.link}/>
+                        <img className="work-card-image" src={work.picture_path} alt={work.title_ru}/>
+                        <div className="author-work-card-title left-20">{work.title_ru}</div>
+                        <div className="author-work-card-about right-20">
+                            {work.genre_ru} • {new Date(work.publication_date).getFullYear()}
+                        </div>
+                    </div>
+                </div>
+            )
+        } else if (languageContext.userLanguage === "ar") {
+            return (
+                <div className={is_active ? "carousel-item active" : "carousel-item"} key={work.id}>
+                    <div className="author-work-card m-auto">
+                        <a className="work-card-link" href={"/works/" + work.link}/>
+                        <img className="work-card-image" src={work.picture_path} alt={work.title_ar}/>
+                        <div className="author-work-card-title left-20">{work.title_ar}</div>
+                        <div className="author-work-card-about right-20">
+                            {work.genre_ar} • {new Date(work.publication_date).getFullYear()}
+                        </div>
+                    </div>
+                </div>
+
+            )
+        }
+    };
+
+    return (
+        <section className="auth-container">
+            <div className="container py-5">
+                <div className="row m-3">
+                    <div className="text-center col-md-4">
+                        <img className="author-page-image m-2 me-3" src={authorCard.picture_path}
+                             alt={authorCard.name}/>
+                        <h6 className="mt-0">{authorCard.short_name}</h6>
+                        <div className="mt-3 mb-3">
+                            <p className="author-date m-1">
+                                <AuthorsPage tid="birth_date"/> {getDate(authorCard.birth_date)}
+                            </p>
+                            {
+                                authorCard.death_date && (
+                                    <p className="author-date m-1">
+                                        <AuthorsPage tid="death_date"/> {getDate(authorCard.death_date)}
+                                    </p>
+                                )
+                            }
+                        </div>
+                    </div>
+                    <div className="col-md-8">
+                        <h4>{authorCard.name}</h4>
+                        <div className="author-page-about my-4">
+                            {authorCard.about}
+                        </div>
+                        <hr/>
+                        {
+                            works?.length > 0 && (
+                                <div className="text-center m-3">
+                                    <h5 className="mb-3"><AuthorsPage tid="works_title"/></h5>
+                                    <div id="carouselExampleControls" className="carousel carousel-dark slide"
+                                         data-bs-ride="carousel">
+                                        <div className="carousel-inner">
+                                            {
+                                                works.map((work, index) => getWorkCard(work, index === 0))
+                                            }
+                                        </div>
+                                        <button className="carousel-control-prev" type="button"
+                                                data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                            <span className="carousel-control-prev-icon text-dark"
+                                                  aria-hidden="true"></span>
+                                        </button>
+                                        <button className="carousel-control-next" type="button"
+                                                data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            )
+                        }
+                    </div>
+                </div>
+                <hr/>
+                <div className="row justify-content-center align-items-center m-1">
+                    <div className="random-author-card col-md-3">
+                        <a className="author-link" href={prevAuthor.link}/>
+                        <i className="bi bi-arrow-left random-author-icon"></i>
+                        <div className="random-author-name col">
+                            {languageContext.userLanguage === "ru"
+                                ? prevAuthor.short_name_ru
+                                : prevAuthor.short_name_ar}
+                        </div>
+                    </div>
+                    <div className="col-md-5"/>
+                    <div className="random-author-card col-md-3">
+                        <a className="author-link" href={nextAuthor.link}/>
+                        <div className="random-author-name col">
+                            {languageContext.userLanguage === "ru"
+                                ? nextAuthor.short_name_ru
+                                : nextAuthor.short_name_ar}
+                        </div>
+                        <i className="bi bi-arrow-right random-author-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+    )
 }
 
-export default Authors
+export {Author, Authors}

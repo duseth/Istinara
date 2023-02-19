@@ -10,8 +10,9 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 
 // Import ReactJS components
 import Account from "./components/account/Account";
-import Authors from "./components/authors/Authors";
-import Works from "./components/works/Works";
+import {Author, Authors} from "./components/authors/Authors";
+import {Work, Works} from "./components/works/Works";
+import {Article, Articles} from "./components/articles/Articles";
 import Home from './components/index/Index';
 import About from './components/about/About';
 import Contacts from './components/contacts/Contacts';
@@ -19,7 +20,6 @@ import Footer from './components/shared/footer/Footer';
 import Navbar from './components/shared/navbar/Navbar';
 import Contribution from "./components/contribution/Contribution";
 import {LanguageProvider} from "./containers/Language";
-import Articles from "./components/articles/Articles";
 import {Toaster} from "react-hot-toast";
 
 function App() {
@@ -32,8 +32,11 @@ function App() {
                     <Route exact path='/' element={<Home/>}/>
                     <Route path='/about' element={<About/>}/>
                     <Route path='/authors' element={<Authors/>}/>
+                    <Route path='/authors/:link' element={<Author/>}/>
                     <Route path='/works' element={<Works/>}/>
+                    <Route path='/works/:link' element={<Work/>}/>
                     <Route path='/articles' element={<Articles/>}/>
+                    <Route path='/articles/:link' element={<Article/>}/>
                     <Route path='/contacts' element={<Contacts/>}/>
                     <Route path="/account" element={<Account/>}/>
                     <Route path="/contribution" element={<Contribution/>}/>

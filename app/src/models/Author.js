@@ -13,4 +13,14 @@ class Author extends BaseModel {
     link: string;
 }
 
-export default Author;
+class AuthorCard {
+    name: string;
+    short_name: string;
+    about: string;
+    birth_date: Date;
+    death_date: Date;
+    picture_path: string;
+    link: string;
+}
+
+export {Author, AuthorCard};

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -13,7 +14,7 @@ import (
 	"github.com/duseth/istinara/server/utils/token"
 	"github.com/duseth/istinara/server/utils/translit"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
+	"github.com/gofrs/uuid"
 )
 
 // ListArticles   		godoc
@@ -86,8 +87,13 @@ func ListArticles(ctx *gin.Context) {
 func GetArticle(ctx *gin.Context) {
 	var article models.Article
 
+	column := "id"
+	if _, err := uuid.FromString(ctx.Param("id")); err != nil {
+		column = "link"
+	}
+
 	db := models.DB.Preload("Group").Preload("Work").Preload("Work.Author")
-	if err := db.Where("id = ?", ctx.Param("id")).First(&article).Error; err != nil {
+	if err := db.Where(fmt.Sprint(column, " = ?"), ctx.Param("id")).First(&article).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}
@@ -131,7 +137,13 @@ func CreateArticle(ctx *gin.Context) {
 		return
 	}
 
-	pictureName := uuid.New().String() + filepath.Ext(file.Filename)
+	uid, err := uuid.NewV4()
+	pictureName := uid.String() + filepath.Ext(file.Filename)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 	picturePath := filepath.Join("/app", "public", "assets", "images", "articles", pictureName)
 	if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
@@ -188,7 +200,13 @@ func UpdateArticle(ctx *gin.Context) {
 			return
 		}
 
-		pictureName := uuid.New().String() + filepath.Ext(file.Filename)
+		uid, err := uuid.NewV4()
+		pictureName := uid.String() + filepath.Ext(file.Filename)
+		if err != nil {
+			ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
 		picturePath = filepath.Join("/app", "public", "assets", "images", "articles", pictureName)
 		if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
 			httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -12,7 +13,7 @@ import (
 	httputil "github.com/duseth/istinara/server/utils/http"
 	"github.com/duseth/istinara/server/utils/translit"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
+	"github.com/gofrs/uuid"
 )
 
 // ListAuthors   		godoc
@@ -60,14 +61,19 @@ func ListAuthors(ctx *gin.Context) {
 //	@Description	Returns a single author
 //	@Tags			authors
 //	@Produce		json
-//	@Param			id	path		string	true	"Author ID"
+//	@Param			id	path		string	true	"Author ID or Author Link"
 //	@Response		200	{object}	dto.AuthorSingleResult
 //	@Failure		400	{object}	http.BadRequestResponse
 //	@Router			/authors/{id} [get]
 func GetAuthor(ctx *gin.Context) {
 	var author models.Author
 
-	if err := models.DB.Where("id = ?", ctx.Param("id")).First(&author).Error; err != nil {
+	column := "id"
+	if _, err := uuid.FromString(ctx.Param("id")); err != nil {
+		column = "link"
+	}
+
+	if err := models.DB.Where(fmt.Sprint(column, " = ?"), ctx.Param("id")).First(&author).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}
@@ -129,7 +135,13 @@ func CreateAuthor(ctx *gin.Context) {
 		return
 	}
 
-	pictureName := uuid.New().String() + filepath.Ext(file.Filename)
+	uid, err := uuid.NewV4()
+	pictureName := uid.String() + filepath.Ext(file.Filename)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 	picturePath := filepath.Join("/app", "public", "assets", "images", "authors", pictureName)
 	if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
@@ -186,7 +198,13 @@ func UpdateAuthor(ctx *gin.Context) {
 			return
 		}
 
-		pictureName := uuid.New().String() + filepath.Ext(file.Filename)
+		uid, err := uuid.NewV4()
+		pictureName := uid.String() + filepath.Ext(file.Filename)
+		if err != nil {
+			ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
 		picturePath = filepath.Join("/server", "assets", "pictures", "authors", pictureName)
 		if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
 			ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
