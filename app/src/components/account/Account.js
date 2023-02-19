@@ -14,18 +14,29 @@ import {
     ProfileText,
     RegisterText
 } from "../../containers/Language";
-import User from "../../models/User";
-import Cookies from "universal-cookie";
-import Article from "../../models/Article";
+import {Article} from "../../models/Article";
 import {GetArticleCard} from "../articles/Articles"
 import api from "../../services/API";
 import toast from "react-hot-toast";
+import Cookies from "universal-cookie";
+import User from "../../models/User";
 
-const favourites_per_page = 6;
+const favourites_per_page = 2;
 
 const Account = () => {
-    let languageContext = useContext(LanguageContext);
-    let [rerender, setRerender] = useState(false);
+    const languageContext = useContext(LanguageContext);
+
+    useEffect(() => {
+        document.title = languageContext.dictionary["titles"]["profile"] + " • Istinara";
+    }, [languageContext]);
+
+    const cookies = new Cookies();
+    const user: User = AccountService.GetCurrentUser();
+
+    const [rerender, setRerender] = useState(false);
+
+    const [count, setCount] = useState(0);
+    const [data: Array<Article>, setData] = useState();
 
     const [loginPasswordShown, setLoginPasswordShown] = useState(false),
         [registerPasswordShown, setRegisterPasswordShown] = useState(false),
@@ -34,9 +45,61 @@ const Account = () => {
         [acceptPasswordShown, setAcceptPasswordShown] = useState(false),
         [acceptNewPasswordShown, setAcceptNewPasswordShown] = useState(false);
 
+    const configHeader = AccountService.GetHeaders(true, true)
     useEffect(() => {
-        document.title = languageContext.dictionary["titles"]["profile"] + " • Istinara";
-    }, [languageContext]);
+        if (cookies.get("token") !== undefined) {
+            api.get(`/user/favourites?offset=0&limit=${favourites_per_page}`, configHeader)
+                .then((response) => {
+                    setCount(response.data.count);
+                    setData(response.data.data);
+                })
+                .catch(() => {
+                    setData([]);
+                });
+        }
+    }, [cookies.get("token")]);
+
+    const loadMore = () => {
+        api.get(`/user/favourites?offset=${data.length}&limit=${favourites_per_page}`, configHeader)
+            .then((response) => setData([...data, ...response.data.data]))
+    };
+
+    const likeArticle = (event: Event, article: Article) => {
+        let articleIndex = null;
+        data.map((art, index) => {
+            if (art.id === article.id) {
+                articleIndex = index;
+            }
+        });
+
+        let classList = event.target.classList;
+        const title = languageContext.userLanguage === "ru" ? article.title_ru : article.title_ar;
+
+        if (!article.is_liked) {
+            api.post("/user/favourite/" + article.id, null, configHeader)
+                .then(() => {
+                    data[articleIndex].is_liked = true;
+                    classList.remove("like-icon");
+                    classList.add("liked-icon");
+                    toast(`«${title}» ${languageContext.dictionary["articles"]["like_success"]}`, {icon: "❤️"});
+                })
+                .catch(() => {
+                    toast.error(languageContext.dictionary["articles"]["like_error"]);
+                });
+        } else {
+            api.delete("/user/favourite/" + article.id, configHeader)
+                .then(() => {
+                    data[articleIndex].is_liked = false;
+                    classList.remove("liked-icon");
+                    classList.add("like-icon");
+                    toast(`«${title}» ${languageContext.dictionary["articles"]["dislike_success"]}`, {icon: "➖"});
+                })
+                .catch(() => {
+                    toast.error(languageContext.dictionary["articles"]["dislike_error"]);
+                });
+        }
+    };
+
 
     let [authMode, setAuthMode] = useState("sign-in")
     const changeAuthMode = () => {
@@ -59,63 +122,7 @@ const Account = () => {
 
     const {register, reset, setError, handleSubmit, formState: {errors}} = useForm();
 
-    const Profile = (user) => {
-        const [count, setCount] = useState(0);
-        const [data: Array<Article>, setData] = useState()
-
-        const configHeader = AccountService.GetHeaders(true, true)
-        useEffect(() => {
-            api.get(`/user/favourites?offset=0&limit=${favourites_per_page}`, configHeader)
-                .then((response) => {
-                    setCount(response.data.count);
-                    setData(response.data.data);
-                })
-                .catch(() => {
-                    setData([]);
-                });
-        }, []);
-
-        const loadMore = () => {
-            api.get(`/user/favourites?offset=${data.length}&limit=${favourites_per_page}`, configHeader)
-                .then((response) => setData([...data, ...response.data.data]))
-        };
-
-        const likeArticle = (event: Event, article: Article) => {
-            let articleIndex = null;
-            data.map((art, index) => {
-                if (art.id === article.id) {
-                    articleIndex = index;
-                }
-            });
-
-            let classList = event.target.classList;
-            const title = languageContext.userLanguage === "ru" ? article.title_ru : article.title_ar;
-
-            if (!article.is_liked) {
-                api.post("/user/favourite/" + article.id, null, configHeader)
-                    .then(() => {
-                        data[articleIndex].is_liked = true;
-                        classList.remove("like-icon");
-                        classList.add("liked-icon");
-                        toast(`«${title}» ${languageContext.dictionary["articles"]["like_success"]}`, {icon: "❤️"});
-                    })
-                    .catch(() => {
-                        toast.error(languageContext.dictionary["articles"]["like_error"]);
-                    });
-            } else {
-                api.delete("/user/favourite/" + article.id, configHeader)
-                    .then(() => {
-                        data[articleIndex].is_liked = false;
-                        classList.remove("liked-icon");
-                        classList.add("like-icon");
-                        toast(`«${title}» ${languageContext.dictionary["articles"]["dislike_success"]}`, {icon: "➖"});
-                    })
-                    .catch(() => {
-                        toast.error(languageContext.dictionary["articles"]["dislike_error"]);
-                    });
-            }
-        };
-
+    const Profile = () => {
         return (
             <section className="auth-container">
                 <div className="container py-3">
@@ -426,12 +433,9 @@ const Account = () => {
         )
     };
 
-    const cookies = new Cookies();
-    const user: User = AccountService.GetCurrentUser();
-
     if (user != null) {
         if (cookies.get("token") !== undefined) {
-            return Profile(user);
+            return Profile();
         } else {
             localStorage.removeItem("user");
             cookies.set("tokenExpired", true, {maxAge: 10});
