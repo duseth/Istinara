@@ -150,7 +150,8 @@ const Author = () => {
 
     useEffect(() => {
         if (author) {
-            document.title = languageContext.userLanguage === "ru" ? author.name_ru : author.name_ar + " • Istinara";
+            const title = languageContext.userLanguage === "ru" ? author.short_name_ru : author.short_name_ar;
+            document.title = title + " • Istinara";
         }
     }, [author, languageContext]);
 
@@ -249,7 +250,7 @@ const Author = () => {
     };
 
     return (
-        <section className="auth-container">
+        <section className="main-container">
             <div className="container py-5">
                 <div className="row m-3">
                     <div className="text-center col-md-4">
@@ -258,12 +259,12 @@ const Author = () => {
                         <h6 className="mt-0">{authorCard.short_name}</h6>
                         <div className="mt-3 mb-3">
                             <p className="author-date m-1">
-                                <AuthorsPage tid="birth_date"/> {getDate(authorCard.birth_date)}
+                                <b><AuthorsPage tid="birth_date"/></b> {getDate(authorCard.birth_date)}
                             </p>
                             {
                                 authorCard.death_date && (
                                     <p className="author-date m-1">
-                                        <AuthorsPage tid="death_date"/> {getDate(authorCard.death_date)}
+                                        <b><AuthorsPage tid="death_date"/></b> {getDate(authorCard.death_date)}
                                     </p>
                                 )
                             }
@@ -274,10 +275,10 @@ const Author = () => {
                         <div className="author-page-about my-4">
                             {authorCard.about}
                         </div>
-                        <hr/>
                         {
                             works?.length > 0 && (
-                                <div className="text-center m-3">
+                                <div className="text-center my-3">
+                                    <hr/>
                                     <h5 className="mb-3"><AuthorsPage tid="works_title"/></h5>
                                     <div id="carouselExampleControls" className="carousel carousel-dark slide"
                                          data-bs-ride="carousel">
@@ -303,24 +304,28 @@ const Author = () => {
                 </div>
                 <hr/>
                 <div className="row justify-content-center align-items-center m-1">
-                    <div className="random-author-card col-md-3">
+                    <div className="jump-author-card col-md-3">
                         <a className="author-link" href={prevAuthor.link}/>
-                        <i className="bi bi-arrow-left random-author-icon"></i>
-                        <div className="random-author-name col">
+                        <i className={languageContext.userLanguage === "ru"
+                            ? "bi bi-arrow-left jump-author-icon"
+                            : "bi bi-arrow-right jump-author-icon"}></i>
+                        <div className="jump-author-name col">
                             {languageContext.userLanguage === "ru"
                                 ? prevAuthor.short_name_ru
                                 : prevAuthor.short_name_ar}
                         </div>
                     </div>
                     <div className="col-md-5"/>
-                    <div className="random-author-card col-md-3">
+                    <div className="jump-author-card col-md-3">
                         <a className="author-link" href={nextAuthor.link}/>
-                        <div className="random-author-name col">
+                        <div className="jump-author-name col">
                             {languageContext.userLanguage === "ru"
                                 ? nextAuthor.short_name_ru
                                 : nextAuthor.short_name_ar}
                         </div>
-                        <i className="bi bi-arrow-right random-author-icon"></i>
+                        <i className={languageContext.userLanguage === "ru"
+                            ? "bi bi-arrow-right jump-author-icon"
+                            : "bi bi-arrow-left jump-author-icon"}></i>
                     </div>
                 </div>
             </div>

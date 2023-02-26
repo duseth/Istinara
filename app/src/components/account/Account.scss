@@ -17,17 +17,16 @@ button {
   }
 }
 
-.auth-container {
-  display: block;
-  background-color: #f7f7f7;
-}
-
 .auth-form {
   width: 660px;
   box-shadow: 0 2px 3px rgb(0 0 0 / 5%);
   border-radius: 10px;
   background-color: #ffffff;
   padding: 55px 20px 34px;
+}
+
+.profile-header {
+  max-width: 660px;
 }
 
 .auth-form-title {
@@ -48,10 +47,25 @@ button {
   margin: 30px 0 33px;
 }
 
-.show_password {
+.show-password {
   position: absolute;
   top: 65%;
   right: 16px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  transform: translateY(-50%);
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+.show-password-left {
+  position: absolute;
+  top: 65%;
+  left: 16px;
   width: 18px;
   height: 18px;
   cursor: pointer;
@@ -84,7 +98,7 @@ button {
 }
 
 .account-nav-items {
-  margin-bottom: 20px;
+  margin: auto auto 5px auto;
   max-width: 700px;
   --bs-nav-tabs-border-width: none !important;
   --bs-nav-tabs-link-active-bg: none !important;
@@ -134,13 +148,9 @@ ul > li > .active {
 
 .logout-bi-icon {
   font-size: 20px;
-  margin-right: 7px;
-}
-
-@media (max-width: 1100px) {
-  .account-image {
-    margin-right: 50px;
-  }
+  margin-left: 5px;
+  margin-right: 5px;
+  position: relative;
 }
 
 .account-bi-icon {

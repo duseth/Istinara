@@ -65,7 +65,7 @@ const Navbar = () => {
                             </g>
                         </svg>
                     </a>
-                    <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                    <ul className="navbar-nav mb-2 mb-lg-0">
                         <li className="nav-item">
                             <a className="nav-link nav-header-link" href="/authors"><HeaderLink tid="authors"/></a>
                         </li>

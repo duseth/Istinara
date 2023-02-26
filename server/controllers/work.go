@@ -11,6 +11,7 @@ import (
 	"github.com/duseth/istinara/server/dto"
 	"github.com/duseth/istinara/server/models"
 	httputil "github.com/duseth/istinara/server/utils/http"
+	"github.com/duseth/istinara/server/utils/token"
 	"github.com/duseth/istinara/server/utils/translit"
 	"github.com/gin-gonic/gin"
 	"github.com/gofrs/uuid"
@@ -99,7 +100,7 @@ func GetWork(ctx *gin.Context) {
 func GetArticlesByWork(ctx *gin.Context) {
 	var articles []models.Article
 
-	if err := models.DB.Where("work_id = ?", ctx.Param("id")).Find(&articles).Error; err != nil {
+	if err := models.DB.Preload("Group").Where("work_id = ?", ctx.Param("id")).Find(&articles).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}
@@ -107,6 +108,23 @@ func GetArticlesByWork(ctx *gin.Context) {
 	data := make([]dto.ArticleDTO, 0, len(articles))
 	for _, article := range articles {
 		data = append(data, article.ToDTO())
+	}
+
+	if userId, err := token.ExtractTokenID(ctx); err == nil {
+		var favourites []models.Favourite
+		err = models.DB.Where("user_id = ?", userId.String()).Find(&favourites).Error
+		if err != nil {
+			httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
+			return
+		}
+
+		for i := 0; i < len(data); i++ {
+			for _, favourite := range favourites {
+				if data[i].ID == favourite.ArticleID {
+					data[i].IsLiked = true
+				}
+			}
+		}
 	}
 
 	httputil.ResponseSuccess(ctx, data)

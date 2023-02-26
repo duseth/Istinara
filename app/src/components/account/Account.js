@@ -15,11 +15,10 @@ import {
     RegisterText
 } from "../../containers/Language";
 import {Article} from "../../models/Article";
-import {GetArticleCard} from "../articles/Articles"
 import api from "../../services/API";
-import toast from "react-hot-toast";
 import Cookies from "universal-cookie";
 import User from "../../models/User";
+import ArticleService from "../../services/ArticleService";
 
 const favourites_per_page = 2;
 
@@ -64,43 +63,6 @@ const Account = () => {
             .then((response) => setData([...data, ...response.data.data]))
     };
 
-    const likeArticle = (event: Event, article: Article) => {
-        let articleIndex = null;
-        data.map((art, index) => {
-            if (art.id === article.id) {
-                articleIndex = index;
-            }
-        });
-
-        let classList = event.target.classList;
-        const title = languageContext.userLanguage === "ru" ? article.title_ru : article.title_ar;
-
-        if (!article.is_liked) {
-            api.post("/user/favourite/" + article.id, null, configHeader)
-                .then(() => {
-                    data[articleIndex].is_liked = true;
-                    classList.remove("like-icon");
-                    classList.add("liked-icon");
-                    toast(`«${title}» ${languageContext.dictionary["articles"]["like_success"]}`, {icon: "❤️"});
-                })
-                .catch(() => {
-                    toast.error(languageContext.dictionary["articles"]["like_error"]);
-                });
-        } else {
-            api.delete("/user/favourite/" + article.id, configHeader)
-                .then(() => {
-                    data[articleIndex].is_liked = false;
-                    classList.remove("liked-icon");
-                    classList.add("like-icon");
-                    toast(`«${title}» ${languageContext.dictionary["articles"]["dislike_success"]}`, {icon: "➖"});
-                })
-                .catch(() => {
-                    toast.error(languageContext.dictionary["articles"]["dislike_error"]);
-                });
-        }
-    };
-
-
     let [authMode, setAuthMode] = useState("sign-in")
     const changeAuthMode = () => {
         setAuthMode(authMode === "sign-in" ? "sign-up" : "sign-in");
@@ -122,28 +84,32 @@ const Account = () => {
 
     const {register, reset, setError, handleSubmit, formState: {errors}} = useForm();
 
+    const getShowPwdIcon = () => {
+        return languageContext.userLanguage === "ar" ? "show-password-left" : "show-password";
+    };
+
     const Profile = () => {
         return (
-            <section className="auth-container">
+            <section className="main-container">
                 <div className="container py-3">
-                    <div className="row justify-content-center align-items-center m-3">
-                        <div className="col-1 account-image">
+                    <div className="row justify-content-center align-items-center m-3 profile-header m-auto">
+                        <div className="col-md-2 m-2">
                             <i className="bi bi-person-circle account-bi-icon"/>
                         </div>
-                        <div className="col-5">
+                        <div className="col-md-7 m-2">
                             <div className="account-name">{user.username}</div>
                             <div className="account-registration">
                                 <ProfileText tid="registration_date"/> {getRegistrationDate(user.created_at)}
                             </div>
                         </div>
-                        <div className="col-2">
+                        <div className="col-md-2 m-2">
                             <button type="button" className="btn btn-outline-dark logout-button"
                                     onClick={logout}>
                                 <i className="bi bi-box-arrow-right logout-bi-icon"/> <ProfileText tid="logout"/>
                             </button>
                         </div>
                     </div>
-                    <hr/>
+                    <hr className="w-75 m-auto"/>
                     <div className="container">
                         <div className="account-nav col-8">
                             <Tabs className="account-nav-items justify-content-center align-items-center"
@@ -206,7 +172,7 @@ const Account = () => {
                                                         name="current_password"
                                                         {...register("current_password")}
                                                     />
-                                                    <div className="show_password" onClick={() => {
+                                                    <div className={getShowPwdIcon()} onClick={() => {
                                                         setCurrentPasswordShown(!currentPasswordShown);
                                                     }
                                                     }>
@@ -223,7 +189,7 @@ const Account = () => {
                                                         name="new_password"
                                                         {...register("new_password")}
                                                     />
-                                                    <div className="show_password" onClick={() => {
+                                                    <div className={getShowPwdIcon()} onClick={() => {
                                                         setNewPasswordShown(!newPasswordShown);
                                                     }
                                                     }>
@@ -240,7 +206,7 @@ const Account = () => {
                                                         name="accept_new_password"
                                                         {...register("accept_new_password")}
                                                     />
-                                                    <div className="show_password" onClick={() => {
+                                                    <div className={getShowPwdIcon()} onClick={() => {
                                                         setAcceptNewPasswordShown(!acceptNewPasswordShown);
                                                     }
                                                     }>
@@ -262,9 +228,8 @@ const Account = () => {
                                     {
                                         data !== undefined && data.length > 0 ? (
                                             <div
-                                                className="justify-content-center align-items-center row row-cols-md-1 g-3 m-3">
-                                                {data.map((article) => GetArticleCard(languageContext.userLanguage,
-                                                    article, true, likeArticle))}
+                                                className="row row-cols-md-1 m-3">
+                                                {data.map((article) => ArticleService.GetArticleCard(data, article, languageContext))}
                                             </div>
                                         ) : (
                                             <div className="information">
@@ -292,7 +257,7 @@ const Account = () => {
 
     const Login = () => {
         return (
-            <section className="auth-container">
+            <section className="main-container">
                 <div className="container py-5">
                     <div className="row d-flex justify-content-center align-items-center m-1">
                         <form onSubmit={handleSubmit((data) => AccountService.Login(data, setError))}
@@ -322,7 +287,7 @@ const Account = () => {
                                             name="password"
                                             {...register("password")}
                                         />
-                                        <div className="show_password" onClick={() => {
+                                        <div className={getShowPwdIcon()} onClick={() => {
                                             setLoginPasswordShown(!loginPasswordShown);
                                         }
                                         }>
@@ -354,7 +319,7 @@ const Account = () => {
 
     const Register = () => {
         return (
-            <section className="auth-container">
+            <section className="main-container">
                 <div className="container py-5">
                     <div className="row d-flex justify-content-center align-items-center m-1">
                         <form onSubmit={handleSubmit((data) => AccountService.Register(data, setError, changeAuthMode))}
@@ -387,7 +352,7 @@ const Account = () => {
                                         name="password"
                                         {...register("password")}
                                     />
-                                    <div className="show_password" onClick={() => {
+                                    <div className={getShowPwdIcon()} onClick={() => {
                                         setRegisterPasswordShown(!registerPasswordShown);
                                     }
                                     }>
@@ -404,7 +369,7 @@ const Account = () => {
                                         name="accept_password"
                                         {...register("accept_password")}
                                     />
-                                    <div className="show_password" onClick={() => {
+                                    <div className={getShowPwdIcon()} onClick={() => {
                                         setAcceptPasswordShown(!acceptPasswordShown);
                                     }
                                     }>
