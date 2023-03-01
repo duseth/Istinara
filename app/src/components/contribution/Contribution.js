@@ -3,13 +3,13 @@ import React, {useContext, useEffect, useState} from 'react';
 import './Contribution.scss'
 import {LanguageContext} from "../../languages/Language";
 import {ContributionForm, ContributionText, GeneralForm} from "../../containers/Language";
-import Author from "../../models/Author";
+import {Author} from "../../models/Author";
 import api from "../../services/API";
-import Work from "../../models/Work";
+import {Work} from "../../models/Work";
 import {useForm} from "react-hook-form";
-import toast from "react-hot-toast";
 import AccountService from "../../services/AccountService";
 import User from "../../models/User";
+import NotifyService from "../../services/NotifyService";
 
 const Contribution = () => {
     let languageContext = useContext(LanguageContext);
@@ -82,10 +82,10 @@ const Contribution = () => {
 
         await api.post("/requests", formData, formDataHeaders)
             .then(() => {
-                toast.success(<ContributionForm tid="success_notify"/>);
+                NotifyService.Success(<ContributionForm tid="success_notify"/>);
                 reset();
             })
-            .catch(() => toast.error(<ContributionForm tid="error_notify"/>))
+            .catch(() => NotifyService.Error(<ContributionForm tid="error_notify"/>))
     };
 
     const user: User = AccountService.GetCurrentUser();

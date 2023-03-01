@@ -1,25 +1,28 @@
-import React from 'react';
+import React, {useContext, useEffect} from 'react';
 
 import './Index.scss'
-
-document.title = "Istinara";
+import {HomeText} from "../../containers/Language";
+import {LanguageContext} from "../../languages/Language";
 
 const Home = () => {
+    const languageContext = useContext(LanguageContext);
+    useEffect(() => {
+        document.title = languageContext.dictionary["titles"]["home"] + " • Istinara";
+    }, [languageContext]);
+
     return (
         <main>
-            <section className="py-5 text-center container">
-                <div className="row py-lg-5">
-                    <div className="col-lg-6 col-md-8 mx-auto">
-                        <h1 className="fw-light">Album example</h1>
-                        <p className="lead text-muted">Something short and leading about the collection below—its
-                            contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply
-                            skip over it entirely.</p>
+            <section className="container py-5 text-center">
+                <div className="row py-5">
+                    <div className="col-md-9 m-auto">
+                        <h1 className="fw-light my-4"><HomeText tid="header"/></h1>
+                        <p className="lead text-muted"><HomeText tid="main_text"/></p>
                     </div>
                 </div>
             </section>
             <div className="album py-5 bg-light">
                 <div className="container">
-                    
+
                 </div>
             </div>
         </main>

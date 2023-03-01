@@ -7,9 +7,9 @@ import {
     RegisterText
 } from "../containers/Language";
 import api from "../services/API"
-import toast from "react-hot-toast";
 import User from "../models/User";
 import Cookies from 'universal-cookie';
+import NotifyService from "./NotifyService";
 
 class AccountService {
     cookies = new Cookies();
@@ -46,11 +46,11 @@ class AccountService {
 
         await api.post("/auth/register", formData, this.GetHeaders(true, false))
             .then(() => {
-                toast.success(<RegisterText tid="success_notify"/>);
+                NotifyService.Success(<RegisterText tid="success_notify"/>);
                 changeAuthMode();
             })
             .catch(() => {
-                toast.error(<RegisterText tid="error_notify"/>);
+                NotifyService.Error(<RegisterText tid="error_notify"/>);
             })
     }
 
@@ -76,10 +76,10 @@ class AccountService {
                 const token = JSON.parse(atob(response.data.token.split(".")[1]));
                 this.cookies.set("token", response.data.token, {path: "/", expires: new Date(token.exp * 1000)});
 
-                toast.success(<LoginText tid="success_notify"/>);
+                NotifyService.Success(<LoginText tid="success_notify"/>);
             })
             .catch(() => {
-                toast.error(<LoginText tid="error_notify"/>);
+                NotifyService.Error(<LoginText tid="error_notify"/>);
             });
     }
 
@@ -108,14 +108,14 @@ class AccountService {
         let formData = new FormData();
         formData.append("username", data.username.trim())
         formData.append("email", data.email.trim())
-        
+
         await api.post("/user/edit", formData, this.GetHeaders(true, true))
             .then((response) => {
                 localStorage.setItem("user", JSON.stringify(response.data));
-                toast.success(<ProfileEditForm tid="success_notify"/>);
+                NotifyService.Success(<ProfileEditForm tid="success_notify"/>);
             })
             .catch(() => {
-                toast.error(<ProfileEditForm tid="error_notify"/>);
+                NotifyService.Error(<ProfileEditForm tid="error_notify"/>);
             })
     }
 
@@ -146,7 +146,7 @@ class AccountService {
 
         await api.post("/user/change_password", formData, this.GetHeaders(true, true))
             .then(() => {
-                toast.success(<ProfilePasswordForm tid="success_notify"/>);
+                NotifyService.Success(<ProfilePasswordForm tid="success_notify"/>);
             })
             .catch(() => {
                 setError("change_password", {message: <ProfilePasswordForm tid="error_notify"/>});
@@ -175,7 +175,7 @@ class AccountService {
     Logout() {
         localStorage.removeItem("user");
         this.cookies.remove("token");
-        toast(<ProfileText tid="logout_notify"/>, {icon: "👋"});
+        NotifyService.Success(<ProfileText tid="logout_notify"/>);
     }
 
     GetCurrentUser = () => JSON.parse(localStorage.getItem("user"));

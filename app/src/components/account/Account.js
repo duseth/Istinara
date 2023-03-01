@@ -20,7 +20,7 @@ import Cookies from "universal-cookie";
 import User from "../../models/User";
 import ArticleService from "../../services/ArticleService";
 
-const favourites_per_page = 2;
+const favourites_per_page = 6;
 
 const Account = () => {
     const languageContext = useContext(LanguageContext);
@@ -228,7 +228,7 @@ const Account = () => {
                                     {
                                         data !== undefined && data.length > 0 ? (
                                             <div
-                                                className="row row-cols-md-1 m-3">
+                                                className="row row-cols-md-2 justify-content-center align-items-center g-3 m-3">
                                                 {data.map((article) => ArticleService.GetArticleCard(data, article, languageContext))}
                                             </div>
                                         ) : (

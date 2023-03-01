@@ -19,6 +19,12 @@ export function LanguageProvider({children}) {
     );
 }
 
+// Home
+export function HomeText({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["home"][tid] || tid;
+}
+
 // Header
 export function HeaderLink({tid}) {
     const languageContext = useContext(LanguageContext);
@@ -111,6 +117,11 @@ export function WorksPage({tid}) {
 export function ArticlesText({tid}) {
     const languageContext = useContext(LanguageContext);
     return languageContext.dictionary["articles"][tid] || tid;
+}
+
+export function ArticlesPage({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["articles"]["page"][tid] || tid;
 }
 
 // Contribution

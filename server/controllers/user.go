@@ -151,15 +151,9 @@ func DeleteFavourite(ctx *gin.Context) {
 		return
 	}
 
-	var favourite models.Favourite
-	err = models.DB.Where("user_id = ? AND article_id = ?", userId.String(), ctx.Param("id")).First(&favourite).Error
+	err = models.DB.Where("user_id = ? AND article_id = ?", userId.String(), ctx.Param("id")).Delete(&models.Favourite{}).Error
 	if err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
-		return
-	}
-
-	if err = models.DB.Delete(&favourite).Error; err != nil {
-		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
 	}
 

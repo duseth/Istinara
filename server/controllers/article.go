@@ -100,11 +100,42 @@ func GetArticle(ctx *gin.Context) {
 
 	data := article.ToDTO()
 
+	group := article.Group.ToDTO()
+	data.Group = &group
+
 	work := article.Work.ToDTO()
 	data.Work = &work
 
 	author := article.Work.Author.ToDTO()
 	data.Work.Author = &author
+
+	var linked []uuid.UUID
+	models.DB.Model(&models.ArticleLink{}).Select("link_id").Where("article_id = ?", data.ID).Find(&linked)
+
+	if len(linked) > 0 {
+		var linkedArticles []models.Article
+		models.DB.Preload("Group").Find(&linkedArticles, linked)
+
+		data.LinkedArticles = make([]dto.ArticleDTO, 0, len(linkedArticles))
+		for _, linkArticle := range linkedArticles {
+			data.LinkedArticles = append(data.LinkedArticles, linkArticle.ToDTO())
+		}
+	}
+
+	if userId, err := token.ExtractTokenID(ctx); err == nil {
+		var favourites []models.Favourite
+		err = models.DB.Where("user_id = ?", userId.String()).Find(&favourites).Error
+		if err != nil {
+			httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
+			return
+		}
+
+		for _, favourite := range favourites {
+			if data.ID == favourite.ArticleID {
+				data.IsLiked = true
+			}
+		}
+	}
 
 	httputil.ResponseSuccess(ctx, data)
 }

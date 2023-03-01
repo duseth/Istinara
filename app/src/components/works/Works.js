@@ -125,7 +125,9 @@ const Work = () => {
     const configHeader = AccountService.GetHeaders(true, cookies.get("token") !== undefined)
 
     useEffect(() => {
-        api.get("/works/" + link).then((response) => setWork(response.data));
+        api.get("/works/" + link)
+            .then((response) => setWork(response.data))
+            .catch(() => setWork(null));
     }, []);
 
     useEffect(() => {
@@ -181,7 +183,16 @@ const Work = () => {
         }
     }, [work, languageContext]);
 
-    if (!work || !articles || !prevWork || !nextWork) {
+    if (work === null) {
+        return (
+            <div className="information">
+                <i className="bi bi-folder-x information-icon"></i>
+                <p className="mt-3"><WorksPage tid="no_data"/></p>
+            </div>
+        )
+    }
+
+    if (!work || !workCard || !articles || !prevWork || !nextWork) {
         return (
             <div className="album">
                 <div className="container py-5">
@@ -196,19 +207,23 @@ const Work = () => {
         );
     }
 
-    const getArticleCard = (article: ArticleDTO, is_active: boolean) => {
-        return (
-            <div className={is_active ? "carousel-item active" : "carousel-item"} key={article.id}>
-                <div className="justify-content-center align-items-center">
-                    {ArticleService.GetArticleCard(articles, article, languageContext)}
-                </div>
-            </div>
-        )
-    };
-
     return (
         <section className="main-container">
             <div className="container py-5">
+                <nav aria-label="breadcrumb">
+                    <ol className="breadcrumb">
+                        <li className={languageContext.userLanguage === "ar" ? "breadcrumb-item-rtl" : "breadcrumb-item"}>
+                            <a className="breadcrumb-link" href={"/authors/" + workCard.author.link}>
+                                {workCard.author.short_name}
+                            </a>
+                        </li>
+                        <li className={languageContext.userLanguage === "ar"
+                            ? "breadcrumb-item-rtl active" : "breadcrumb-item active"} aria-current="page">
+                            {workCard.title}
+                        </li>
+                    </ol>
+                </nav>
+                <hr className="mb-5"/>
                 <div className="work-cover-image">
                     <img className="work-page-image" src={workCard.picture_path} alt={workCard.title}/>
                 </div>
@@ -217,10 +232,7 @@ const Work = () => {
                     <hr/>
                     <div className="row">
                         <p className="col-md-4 m-0">
-                            <b><WorksPage tid="author"/></b> <a className="work-page-author-link"
-                                                                href={"/authors/" + workCard.author.link}>
-                            {workCard.author.short_name}
-                        </a>
+                            <b><WorksPage tid="author"/></b> {workCard.author.short_name}
                         </p>
                         <p className="col-md-4 m-0">
                             <b><WorksPage tid="genre"/></b> {workCard.genre}
@@ -245,7 +257,8 @@ const Work = () => {
                                      data-bs-ride="carousel">
                                     <div className="carousel-inner">
                                         {
-                                            articles.map((article, index) => getArticleCard(article, index === 0))
+                                            articles.map((article, index) =>
+                                                ArticleService.GetCarouselArticleCard(articles, article, index === 0, languageContext))
                                         }
                                     </div>
                                     <button className="carousel-control-prev" type="button"

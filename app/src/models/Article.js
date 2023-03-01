@@ -1,5 +1,5 @@
 import BaseModel from "./Base";
-import Work from "./Work";
+import {Work} from "./Work";
 import Group from "./Group";
 
 class Article extends BaseModel {
@@ -14,6 +14,7 @@ class Article extends BaseModel {
     is_liked: boolean;
     group: Group;
     work: Work;
+    linked_articles: Array<Article>;
     link: string;
 }
 

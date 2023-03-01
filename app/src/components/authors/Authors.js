@@ -73,15 +73,21 @@ const Authors = () => {
             return (
                 <div className="author-card col-md align-items-center" key={author.id}>
                     <a className="author-link" href={"/authors/" + author.link}/>
-                    <img className="author-image w-50 h-100 m-3" src={author.picture_path} alt={author.short_name_ru}/>
-                    <div className="author-body m-3">
-                        <div className="author-name">{author.name_ru}<br/>
-                            <hr/>
+                    <div className="row">
+                        <div className="col-md-4 m-3 text-center">
+                            <img className="author-image" src={author.picture_path} alt={author.short_name_ru}/>
                         </div>
-                        <div className="author-life">
-                            {getAuthorLifeDates(author.birth_date, author.death_date)}
+                        <div className="col-md-7 m-2">
+                            <div className="author-body">
+                                <div className="author-name">{author.name_ru}<br/>
+                                    <hr/>
+                                </div>
+                                <div className="author-life" dir="ltr">
+                                    {getAuthorLifeDates(author.birth_date, author.death_date)}
+                                </div>
+                                <div className="author-biography">{truncateString(author.about_ru)}</div>
+                            </div>
                         </div>
-                        <div className="author-biography">{truncateString(author.about_ru)}</div>
                     </div>
                 </div>
             )
@@ -94,7 +100,7 @@ const Authors = () => {
                         <div className="author-name">{author.name_ar}<br/>
                             <hr/>
                         </div>
-                        <div className="author-life">
+                        <div className="author-life" dir="ltr">
                             {getAuthorLifeDates(author.birth_date, author.death_date)}
                         </div>
                         <div className="author-biography">{truncateString(author.about_ar)}</div>
@@ -145,7 +151,9 @@ const Author = () => {
     const [authorCard: AuthorCard, setAuthorCard] = useState();
 
     useEffect(() => {
-        api.get("/authors/" + link).then((response) => setAuthor(response.data));
+        api.get("/authors/" + link)
+            .then((response) => setAuthor(response.data))
+            .catch(() => setAuthor(null));
     }, []);
 
     useEffect(() => {
@@ -198,7 +206,16 @@ const Author = () => {
         }
     }, [author, languageContext]);
 
-    if (!author || !works || !prevAuthor || !nextAuthor) {
+    if (author === null) {
+        return (
+            <div className="information">
+                <i className="bi bi-folder-x information-icon"></i>
+                <p className="mt-3"><AuthorsPage tid="no_data"/></p>
+            </div>
+        )
+    }
+
+    if (!author || !authorCard || !works || !prevAuthor || !nextAuthor) {
         return (
             <div className="album">
                 <div className="container py-5">

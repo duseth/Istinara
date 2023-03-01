@@ -21,8 +21,9 @@ type ArticleDTO struct {
 	Link          string `json:"link"`
 	IsLiked       bool   `json:"is_liked"`
 
-	Group *GroupDTO `json:"group"`
-	Work  *WorkDTO  `json:"work"`
+	LinkedArticles []ArticleDTO `json:"linked_articles"`
+	Group          *GroupDTO    `json:"group"`
+	Work           *WorkDTO     `json:"work"`
 }
 
 type ArticleInputForm struct {
@@ -38,6 +39,11 @@ type ArticleInputForm struct {
 	Transcription string `json:"transcription" form:"transcription"`
 	GroupID       string `json:"group_id" binding:"uuid"`
 	WorkID        string `json:"work_id" binding:"uuid"`
+}
+
+type ArticleLinkInputForm struct {
+	ArticleID string `json:"article_id" binding:"uuid"`
+	LinkID    string `json:"link_id" binding:"uuid"`
 }
 
 type ArticleSingleResult struct {
