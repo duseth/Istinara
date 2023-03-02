@@ -82,7 +82,7 @@ const Authors = () => {
                                 <div className="author-name">{author.name_ru}<br/>
                                     <hr/>
                                 </div>
-                                <div className="author-life" dir="ltr">
+                                <div className="author-life">
                                     {getAuthorLifeDates(author.birth_date, author.death_date)}
                                 </div>
                                 <div className="author-biography">{truncateString(author.about_ru)}</div>
@@ -100,7 +100,7 @@ const Authors = () => {
                         <div className="author-name">{author.name_ar}<br/>
                             <hr/>
                         </div>
-                        <div className="author-life" dir="ltr">
+                        <div className="author-life">
                             {getAuthorLifeDates(author.birth_date, author.death_date)}
                         </div>
                         <div className="author-biography">{truncateString(author.about_ar)}</div>

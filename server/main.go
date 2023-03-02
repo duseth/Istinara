@@ -87,6 +87,7 @@ func main() {
 				routes.WorkPrivate(private)
 				routes.ArticlesPrivate(private)
 				routes.RequestPrivate(private)
+				routes.FeedbackPrivate(private)
 			}
 		}
 	}
