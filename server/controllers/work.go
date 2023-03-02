@@ -275,14 +275,8 @@ func UpdateWork(ctx *gin.Context) {
 //
 //	@Router		/works/{id} [delete]
 func DeleteWork(ctx *gin.Context) {
-	var work models.Work
-	if err := models.DB.Where("id = ?", ctx.Param("id")).First(&work).Error; err != nil {
+	if err := models.DB.Where("id = ?", ctx.Param("id")).Delete(&models.Work{}).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
-		return
-	}
-
-	if err := models.DB.Delete(&work).Error; err != nil {
-		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
 	}
 

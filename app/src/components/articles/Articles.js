@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from "react";
 import {Article as ArticleDTO} from "../../models/Article";
 import {LanguageContext} from "../../languages/Language";
-import {ArticlesPage, ArticlesText} from "../../containers/Language";
+import {ArticlesPage, ArticlesPageForm, ArticlesText, GeneralForm} from "../../containers/Language";
 import api from "../../services/API";
 
 import './Articles.scss'
@@ -10,6 +10,7 @@ import {useParams} from "react-router-dom";
 import ArticleService from "../../services/ArticleService";
 import Cookies from "universal-cookie";
 import NotifyService from "../../services/NotifyService";
+import {useForm} from "react-hook-form";
 
 const articles_per_page = 12;
 
@@ -92,6 +93,8 @@ const Article = () => {
 
     const cookies = new Cookies();
     const configHeader = AccountService.GetHeaders(true, cookies.get("token") !== undefined)
+
+    let {register, reset, setError, handleSubmit, formState: {errors}} = useForm();
 
     useEffect(() => {
         api.get("/articles/" + link, configHeader)
@@ -243,6 +246,36 @@ const Article = () => {
         }
     };
 
+    const getArticleFormAccordionButton = () => {
+        return languageContext.userLanguage === "ru"
+            ? "accordion-button article-form-header collapsed"
+            : "accordion-button article-form-header accordion-button-ar collapsed";
+    };
+
+    const sendFeedback = async (data) => {
+        if (data.title.trim().length === 0 || data.description.trim().length === 0) {
+            setError("required", {message: <GeneralForm tid="error_required"/>});
+            return;
+        }
+
+        let formData = new FormData();
+        formData.append("title", data.title);
+        formData.append("description", data.description);
+
+        let formDataHeaders = {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        };
+
+        await api.post(`/articles/${article.id}/feedback`, formData, formDataHeaders)
+            .then(() => {
+                NotifyService.Success(<ArticlesPageForm tid="success_notify"/>);
+                reset();
+            })
+            .catch(() => NotifyService.Error(<ArticlesPageForm tid="error_notify"/>))
+    };
+
     return (
         <section className="main-container">
             <div className="container py-5">
@@ -382,6 +415,53 @@ const Article = () => {
                             </div>
                         )
                     }
+                    <div className="col-md-12 justify-content-center align-items-center">
+                        <hr/>
+                        <div className="col-md-6 m-auto">
+                            <div className="accordion accordion-flush" id="accordionFlushExample">
+                                <div className="accordion-item">
+                                    <h2 className="accordion-header" id="flush-headingFb">
+                                        <button className={getArticleFormAccordionButton()} type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#flush-collapseFb"
+                                                aria-expanded="false" aria-controls="flush-collapseFb">
+                                            <ArticlesPageForm tid="header"/>
+                                        </button>
+                                    </h2>
+                                    <div id="flush-collapseFb" className="accordion-collapse collapse"
+                                         aria-labelledby="flush-headingFb">
+                                        <div className="accordion-body">
+                                            <form onSubmit={handleSubmit((data) => sendFeedback(data))}
+                                                  id="request-form" {...register("required")}>
+                                                <div className="col-12">
+                                                    <label htmlFor="title" className="form-label">
+                                                        <ArticlesPageForm tid="title"/>
+                                                    </label>
+                                                    <input type="text" className="form-control"
+                                                           id="title" {...register("title")}/>
+                                                </div>
+                                                <div className="col-12">
+                                                    <label htmlFor="description" className="form-label">
+                                                        <ArticlesPageForm tid="description"/>
+                                                    </label>
+                                                    <textarea rows="5" className="form-control"
+                                                              id="description" {...register("description")}/>
+                                                </div>
+                                                <div className="form-error mt-4 mb-0">
+                                                    {errors?.required?.message || errors?.email?.message}
+                                                </div>
+                                                <div
+                                                    className="col-12 row justify-content-center align-items-center mt-2 m-auto">
+                                                    <button type="submit" className="btn btn-outline-dark w-auto">
+                                                        <ArticlesPageForm tid="button_text"/>
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

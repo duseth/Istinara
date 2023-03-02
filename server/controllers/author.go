@@ -252,14 +252,8 @@ func UpdateAuthor(ctx *gin.Context) {
 //
 //	@Router		/authors/{id} [delete]
 func DeleteAuthor(ctx *gin.Context) {
-	var author models.Author
-	if err := models.DB.Where("id = ?", ctx.Param("id")).First(&author).Error; err != nil {
+	if err := models.DB.Where("id = ?", ctx.Param("id")).Delete(&models.Author{}).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
-		return
-	}
-
-	if err := models.DB.Delete(&author).Error; err != nil {
-		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
 	}
 

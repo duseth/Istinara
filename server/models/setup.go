@@ -27,7 +27,9 @@ func DatabaseConnect() {
 	DB = database
 
 	// Run migrations
-	err = DB.AutoMigrate(&User{}, &Author{}, &Work{}, &Article{}, &Request{}, &Group{}, &Favourite{}, &ArticleLink{})
+	err = DB.AutoMigrate(
+		&User{}, &Author{}, &Work{}, &Article{}, &Request{}, &Group{}, &Favourite{}, &ArticleLink{}, &Feedback{},
+	)
 	if err != nil {
 		return
 	}

@@ -285,14 +285,8 @@ func UpdateArticle(ctx *gin.Context) {
 //
 //	@Router		/articles/{id} [delete]
 func DeleteArticle(ctx *gin.Context) {
-	var article models.Article
-	if err := models.DB.Where("id = ?", ctx.Param("id")).First(&article).Error; err != nil {
+	if err := models.DB.Where("id = ?", ctx.Param("id")).Delete(&models.Article{}).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
-		return
-	}
-
-	if err := models.DB.Delete(&article).Error; err != nil {
-		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
 	}
 

@@ -124,6 +124,11 @@ export function ArticlesPage({tid}) {
     return languageContext.dictionary["articles"]["page"][tid] || tid;
 }
 
+export function ArticlesPageForm({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["articles"]["page"]["form"][tid] || tid;
+}
+
 // Contribution
 export function ContributionText({tid}) {
     const languageContext = useContext(LanguageContext);

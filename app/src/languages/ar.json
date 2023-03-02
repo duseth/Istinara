@@ -126,7 +126,15 @@
         "page": {
             "loading": "الترللغةوسومة...",
             "no_data": "الترللغةوسومة ثقافيًا",
-            "linked_title": "الترللغةوسومة"
+            "linked_title": "الترللغةوسومة",
+            "form": {
+                "header": "الترللغةوسومة? الترللغةوسومة!",
+                "title": "ثقاف",
+                "description": "الإلكتر",
+                "button_text": "الإلكتر",
+                "success_notify": "الترللغةوسومة!",
+                "error_notify": "الترللغةوسومة"
+            }
         }
     },
     "contribution": {
