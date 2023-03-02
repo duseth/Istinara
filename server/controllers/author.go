@@ -142,7 +142,7 @@ func CreateAuthor(ctx *gin.Context) {
 		return
 	}
 
-	picturePath := filepath.Join("/app", "public", "assets", "images", "authors", pictureName)
+	picturePath := filepath.Join("/app", "public", "images", "authors", pictureName)
 	if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
@@ -205,7 +205,7 @@ func UpdateAuthor(ctx *gin.Context) {
 			return
 		}
 
-		picturePath = filepath.Join("/server", "assets", "pictures", "authors", pictureName)
+		picturePath = filepath.Join("/app", "pictures", "authors", pictureName)
 		if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
 			ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return

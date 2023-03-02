@@ -165,7 +165,7 @@ func CreateWork(ctx *gin.Context) {
 		return
 	}
 
-	picturePath := filepath.Join("/app", "public", "assets", "images", "works", pictureName)
+	picturePath := filepath.Join("/app", "public", "images", "works", pictureName)
 	if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
@@ -228,7 +228,7 @@ func UpdateWork(ctx *gin.Context) {
 			return
 		}
 
-		picturePath = filepath.Join("/app", "public", "assets", "images", "works", pictureName)
+		picturePath = filepath.Join("/app", "public", "images", "works", pictureName)
 		if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
 			httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 			return

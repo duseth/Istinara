@@ -8,7 +8,7 @@ cmd = "cd server && go build -o ./tmp/main.exe ."
 
 delay = 1000
 
-exclude_dir = ["assets", "tmp", "vendor", "app"]
+exclude_dir = ["tmp", "vendor", "app"]
 exclude_file = []
 
 follow_symlink = false

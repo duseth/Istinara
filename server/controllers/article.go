@@ -175,7 +175,7 @@ func CreateArticle(ctx *gin.Context) {
 		return
 	}
 
-	picturePath := filepath.Join("/app", "public", "assets", "images", "articles", pictureName)
+	picturePath := filepath.Join("/app", "public", "images", "articles", pictureName)
 	if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
@@ -238,7 +238,7 @@ func UpdateArticle(ctx *gin.Context) {
 			return
 		}
 
-		picturePath = filepath.Join("/app", "public", "assets", "images", "articles", pictureName)
+		picturePath = filepath.Join("/app", "public", "images", "articles", pictureName)
 		if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
 			httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 			return

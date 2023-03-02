@@ -6,7 +6,7 @@
 .pnp.js
 
 # assets
-/public/assets/images
+#/public/images
 
 # testing
 /coverage
