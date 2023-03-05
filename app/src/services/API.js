@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: `${window.location.protocol}//${window.location.hostname}:5000/api`
+    baseURL: `${window.location.protocol}//istinara.ru/api`
 })
 
 export default api;

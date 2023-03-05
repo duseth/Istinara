@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 	"time"
 
 	_ "github.com/duseth/istinara/server/docs"
@@ -93,7 +94,7 @@ func main() {
 	}
 
 	// Run server
-	err := router.Run()
+	err := router.RunTLS(":"+os.Getenv("PORT"), os.Getenv("SSL_CERT"), os.Getenv("SSL_KEY"))
 	if err != nil {
 		log.Fatal(err.Error())
 	}
