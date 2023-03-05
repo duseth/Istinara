@@ -70,18 +70,22 @@
 
 .like-icon::before {
   content: "\f1a2";
+  color: black;
 }
 
 .like-icon:hover::before {
   content: "\f196";
+  color: black;
 }
 
 .liked-icon::before {
   content: "\f195";
+  color: black;
 }
 
 .liked-icon:hover::before {
   content: "\f198";
+  color: black;
 }
 
 .article-quote-block {

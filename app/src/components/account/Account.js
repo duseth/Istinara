@@ -116,26 +116,26 @@ const Account = () => {
                                   defaultActiveKey="profile">
                                 <Tab tabClassName="account-nav-item" eventKey="profile"
                                      title={<ProfileText tid="nav_profile"/>}>
-                                    <div className="row d-flex justify-content-center align-items-center mb-4">
+                                    <div className="row justify-content-center align-items-center mb-4">
                                         <form onSubmit={handleSubmit((data) => AccountService.Edit(data, setError))}
                                               className="auth-form" {...register("edit_profile")}>
-                                            <div className="auth-form-content">
+                                            <div className="auth-form-content row">
                                                 <h3 className="auth-form-title">
                                                     <ProfileEditForm tid="title"/>
                                                 </h3>
-                                                <div className="form-group mt-3 w-50">
+                                                <div className="col-md-6 mt-3">
                                                     <label htmlFor="username">
                                                         <AccountText tid="name_input"/>
                                                     </label>
                                                     <input
                                                         type="text"
-                                                        className="form-control mt-1"
+                                                        className="form-control"
                                                         name="username"
                                                         defaultValue={user.username}
                                                         {...register("username")}
                                                     />
                                                 </div>
-                                                <div className="form-group mt-3 w-50">
+                                                <div className="col-md-6 mt-3">
                                                     <label htmlFor="email">E-mail</label>
                                                     <input
                                                         type="text"
@@ -145,8 +145,8 @@ const Account = () => {
                                                         {...register("email")}
                                                     />
                                                 </div>
-                                                <div className="d-grid gap-2 mt-3">
-                                                    <button type="submit" className="auth-form-button">
+                                                <div className="col-md-6 mt-3 text-center">
+                                                    <button type="submit" className="btn btn-outline-dark btn-form">
                                                         <ProfileEditForm tid="button_text"/>
                                                     </button>
                                                 </div>
@@ -154,67 +154,73 @@ const Account = () => {
                                             <div className="form-error">{errors?.edit_profile?.message}</div>
                                         </form>
                                     </div>
-                                    <div className="row d-flex justify-content-center align-items-center">
+                                    <div className="row justify-content-center align-items-center">
                                         <form
                                             onSubmit={handleSubmit((data) => AccountService.ChangePassword(data, setError))}
                                             className="auth-form" {...register("change_password")}>
-                                            <div className="auth-form-content">
+                                            <div className="auth-form-content row">
                                                 <h3 className="auth-form-title">
                                                     <ProfilePasswordForm tid="title"/>
                                                 </h3>
-                                                <div className="password_input w-50 m-1">
-                                                    <label htmlFor="current_password">
-                                                        <ProfilePasswordForm tid="current_password"/>
-                                                    </label>
-                                                    <input
-                                                        type={currentPasswordShown ? "text" : "password"}
-                                                        className="form-control"
-                                                        name="current_password"
-                                                        {...register("current_password")}
-                                                    />
-                                                    <div className={getShowPwdIcon()} onClick={() => {
-                                                        setCurrentPasswordShown(!currentPasswordShown);
-                                                    }
-                                                    }>
-                                                        <i className={currentPasswordShown ? "bi bi-eye h5" : "bi bi-eye-slash h5"}/>
+                                                <div className="col-md-6 mt-3">
+                                                    <div className="position-relative">
+                                                        <label htmlFor="current_password">
+                                                            <ProfilePasswordForm tid="current_password"/>
+                                                        </label>
+                                                        <input
+                                                            type={currentPasswordShown ? "text" : "password"}
+                                                            className="form-control"
+                                                            name="current_password"
+                                                            {...register("current_password")}
+                                                        />
+                                                        <div className={getShowPwdIcon()} onClick={() => {
+                                                            setCurrentPasswordShown(!currentPasswordShown);
+                                                        }
+                                                        }>
+                                                            <i className={currentPasswordShown ? "bi bi-eye h5" : "bi bi-eye-slash h5"}/>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div className="password_input w-50 m-1">
-                                                    <label htmlFor="new_password">
-                                                        <ProfilePasswordForm tid="new_password"/>
-                                                    </label>
-                                                    <input
-                                                        type={newPasswordShown ? "text" : "password"}
-                                                        className="form-control"
-                                                        name="new_password"
-                                                        {...register("new_password")}
-                                                    />
-                                                    <div className={getShowPwdIcon()} onClick={() => {
-                                                        setNewPasswordShown(!newPasswordShown);
-                                                    }
-                                                    }>
-                                                        <i className={newPasswordShown ? "bi bi-eye h5" : "bi bi-eye-slash h5"}/>
+                                                <div className="col-md-6 mt-3">
+                                                    <div className="position-relative">
+                                                        <label htmlFor="new_password">
+                                                            <ProfilePasswordForm tid="new_password"/>
+                                                        </label>
+                                                        <input
+                                                            type={newPasswordShown ? "text" : "password"}
+                                                            className="form-control"
+                                                            name="new_password"
+                                                            {...register("new_password")}
+                                                        />
+                                                        <div className={getShowPwdIcon()} onClick={() => {
+                                                            setNewPasswordShown(!newPasswordShown);
+                                                        }
+                                                        }>
+                                                            <i className={newPasswordShown ? "bi bi-eye h5" : "bi bi-eye-slash h5"}/>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div className="password_input w-50 m-1">
-                                                    <label htmlFor="accept_new_password">
-                                                        <ProfilePasswordForm tid="accept_new_password"/>
-                                                    </label>
-                                                    <input
-                                                        type={acceptNewPasswordShown ? "text" : "password"}
-                                                        className="form-control"
-                                                        name="accept_new_password"
-                                                        {...register("accept_new_password")}
-                                                    />
-                                                    <div className={getShowPwdIcon()} onClick={() => {
-                                                        setAcceptNewPasswordShown(!acceptNewPasswordShown);
-                                                    }
-                                                    }>
-                                                        <i className={acceptNewPasswordShown ? "bi bi-eye h5" : "bi bi-eye-slash h5"}/>
+                                                <div className="col-md-6 mt-3">
+                                                    <div className="position-relative">
+                                                        <label htmlFor="accept_new_password">
+                                                            <ProfilePasswordForm tid="accept_new_password"/>
+                                                        </label>
+                                                        <input
+                                                            type={acceptNewPasswordShown ? "text" : "password"}
+                                                            className="form-control"
+                                                            name="accept_new_password"
+                                                            {...register("accept_new_password")}
+                                                        />
+                                                        <div className={getShowPwdIcon()} onClick={() => {
+                                                            setAcceptNewPasswordShown(!acceptNewPasswordShown);
+                                                        }
+                                                        }>
+                                                            <i className={acceptNewPasswordShown ? "bi bi-eye h5" : "bi bi-eye-slash h5"}/>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div className="d-grid gap-2 mt-3">
-                                                    <button type="submit" className="auth-form-button">
+                                                <div className="col-md-6 mt-3 text-center">
+                                                    <button type="submit" className="btn btn-outline-dark btn-form">
                                                         <ProfilePasswordForm tid="button_text"/>
                                                     </button>
                                                 </div>
@@ -259,27 +265,27 @@ const Account = () => {
         return (
             <section className="main-container">
                 <div className="container py-5">
-                    <div className="row d-flex justify-content-center align-items-center m-1">
+                    <div className="row justify-content-center align-items-center m-1">
                         <form onSubmit={handleSubmit((data) => AccountService.Login(data, setError))}
                               className="auth-form" {...register("login")}>
-                            <div className="auth-form-content">
+                            <div className="auth-form-content row">
                                 {cookies.get("tokenExpired") !== undefined && (
                                     <div className="alert alert-info" role="alert">
                                         <ProfileText tid="session_expired"/>
                                     </div>
                                 )}
                                 <h3 className="auth-form-title"><LoginText tid="title"/></h3>
-                                <div className="form-group mt-3">
+                                <div className="col-md-6 mt-3">
                                     <label htmlFor="email">E-mail</label>
                                     <input
                                         type="text"
                                         name="email"
-                                        className="form-control mt-1"
+                                        className="form-control"
                                         {...register("email")}
                                     />
                                 </div>
-                                <div className="form-group mt-3 flex">
-                                    <div className="password_input">
+                                <div className="col-md-6 mt-3">
+                                    <div className="position-relative">
                                         <label htmlFor="password"><AccountText tid="password_input"/></label>
                                         <input
                                             type={loginPasswordShown ? "text" : "password"}
@@ -295,12 +301,13 @@ const Account = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="d-grid gap-2 mt-3">
-                                    <button type="submit" className="auth-form-button">
+                                <div className="col-md-6 mt-3 text-center">
+                                    <button type="submit" className="btn btn-outline-dark btn-form">
                                         <LoginText tid="button_text"/>
                                     </button>
                                 </div>
                             </div>
+                            <hr/>
                             <div className="form-error">{errors?.login?.message}</div>
                             <div className="text-center">
                                 <p className="link-text">
@@ -321,67 +328,72 @@ const Account = () => {
         return (
             <section className="main-container">
                 <div className="container py-5">
-                    <div className="row d-flex justify-content-center align-items-center m-1">
+                    <div className="row justify-content-center align-items-center m-1">
                         <form onSubmit={handleSubmit((data) => AccountService.Register(data, setError, changeAuthMode))}
                               className="auth-form" {...register("register")}>
-                            <div className="auth-form-content">
+                            <div className="auth-form-content row">
                                 <h3 className="auth-form-title"><RegisterText tid="title"/></h3>
-                                <div className="form-group mt-2">
+                                <div className="col-md-6 mt-3">
                                     <label htmlFor="username"><AccountText tid="name_input"/></label>
                                     <input
                                         type="text"
-                                        className="form-control mt-1"
+                                        className="form-control"
                                         name="username"
                                         {...register("username")}
                                     />
                                 </div>
-                                <div className="form-group mt-2">
+                                <div className="col-md-6 mt-3">
                                     <label htmlFor="email">E-mail</label>
                                     <input
                                         type="text"
-                                        className="form-control mt-1"
+                                        className="form-control"
                                         name="email"
                                         {...register("email")}
                                     />
                                 </div>
-                                <div className="password_input mt-2">
-                                    <label htmlFor="password"><AccountText tid="password_input"/></label>
-                                    <input
-                                        type={registerPasswordShown ? "text" : "password"}
-                                        className="form-control mt-1"
-                                        name="password"
-                                        {...register("password")}
-                                    />
-                                    <div className={getShowPwdIcon()} onClick={() => {
-                                        setRegisterPasswordShown(!registerPasswordShown);
-                                    }
-                                    }>
-                                        <i className={registerPasswordShown ? "bi bi-eye h5" : "bi bi-eye-slash h5"}/>
+                                <div className="col-md-6 mt-3">
+                                    <div className="position-relative">
+                                        <label htmlFor="password"><AccountText tid="password_input"/></label>
+                                        <input
+                                            type={registerPasswordShown ? "text" : "password"}
+                                            className="form-control"
+                                            name="password"
+                                            {...register("password")}
+                                        />
+                                        <div className={getShowPwdIcon()} onClick={() => {
+                                            setRegisterPasswordShown(!registerPasswordShown);
+                                        }
+                                        }>
+                                            <i className={registerPasswordShown ? "bi bi-eye h5" : "bi bi-eye-slash h5"}/>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="password_input mt-2">
-                                    <label htmlFor="accept_password">
-                                        <AccountText tid="accept_password"/>
-                                    </label>
-                                    <input
-                                        type={acceptPasswordShown ? "text" : "password"}
-                                        className="form-control mt-1"
-                                        name="accept_password"
-                                        {...register("accept_password")}
-                                    />
-                                    <div className={getShowPwdIcon()} onClick={() => {
-                                        setAcceptPasswordShown(!acceptPasswordShown);
-                                    }
-                                    }>
-                                        <i className={acceptPasswordShown ? "bi bi-eye h5" : "bi bi-eye-slash h5"}/>
+                                <div className="col-md-6 mt-3">
+                                    <div className="position-relative">
+                                        <label htmlFor="accept_password">
+                                            <AccountText tid="accept_password"/>
+                                        </label>
+                                        <input
+                                            type={acceptPasswordShown ? "text" : "password"}
+                                            className="form-control"
+                                            name="accept_password"
+                                            {...register("accept_password")}
+                                        />
+                                        <div className={getShowPwdIcon()} onClick={() => {
+                                            setAcceptPasswordShown(!acceptPasswordShown);
+                                        }
+                                        }>
+                                            <i className={acceptPasswordShown ? "bi bi-eye h5" : "bi bi-eye-slash h5"}/>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="d-grid gap-2 mt-3">
-                                    <button type="submit" className="auth-form-button">
+                                <div className="col-md-6 mt-3 text-center">
+                                    <button type="submit" className="btn btn-outline-dark btn-form">
                                         <RegisterText tid="button_text"/>
                                     </button>
                                 </div>
                             </div>
+                            <hr/>
                             <div className="form-error">{errors?.register?.message}</div>
                             <div className="text-center">
                                 <p className="link-text">

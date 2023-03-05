@@ -95,15 +95,21 @@ const Authors = () => {
             return (
                 <div className="author-card col-md align-items-center" key={author.id}>
                     <a className="author-link" href={"/authors/" + author.link}/>
-                    <img className="author-image w-50 h-100 m-3" src={author.picture_path} alt={author.short_name_ar}/>
-                    <div className="author-body m-3">
-                        <div className="author-name">{author.name_ar}<br/>
-                            <hr/>
+                    <div className="row">
+                        <div className="col-md-4 m-3 text-center">
+                            <img className="author-image" src={author.picture_path} alt={author.short_name_ar}/>
                         </div>
-                        <div className="author-life">
-                            {getAuthorLifeDates(author.birth_date, author.death_date)}
+                        <div className="col-md-7 m-2">
+                            <div className="author-body">
+                                <div className="author-name">{author.name_ar}<br/>
+                                    <hr/>
+                                </div>
+                                <div className="author-life">
+                                    {getAuthorLifeDates(author.birth_date, author.death_date)}
+                                </div>
+                                <div className="author-biography">{truncateString(author.about_ar)}</div>
+                            </div>
                         </div>
-                        <div className="author-biography">{truncateString(author.about_ar)}</div>
                     </div>
                 </div>
             )

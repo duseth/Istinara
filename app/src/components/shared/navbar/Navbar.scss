@@ -20,6 +20,13 @@
   &:focus {
     color: white;
   }
+
+  &:hover {
+    color: white;
+    text-decoration: underline;
+    text-decoration-color: white;
+    text-underline-offset: 4px;
+  }
 }
 
 .nav-header-link {
@@ -38,13 +45,6 @@
 .nav-bi-icon {
   color: white;
   font-size: 26px;
-}
-
-.nav-link:hover {
-  color: white;
-  text-decoration: underline;
-  text-decoration-color: white;
-  text-underline-offset: 4px;
 }
 
 .navbar-vertical-separator {

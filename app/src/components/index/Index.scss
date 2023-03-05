@@ -1,0 +1,50 @@
+.welcome-page {
+  position: relative;
+  padding: 1rem;
+  text-align: center;
+}
+
+.welcome-image {
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  object-position: center;
+  filter: brightness(70%) sepia(10%);
+}
+
+.welcome-block {
+  max-width: 1000px;
+  border: white 5px solid;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 15px 20px rgba(0, 0, 0, 0.2);
+}
+
+.welcome-header {
+  font-size: 32px;
+  font-weight: bold;
+  padding: 20px;
+  margin: 10px;
+  color: white;
+}
+
+.welcome-text {
+  font-size: 20px;
+  color: black;
+}
+
+.caption-logo {
+  height: 300px;
+  width: 100%;
+  max-width: 900px;
+}
+
+.btn-home-random {
+  position: relative;
+  font-size: 18px;
+  padding: 10px 20px;
+}
