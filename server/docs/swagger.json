@@ -17,7 +17,7 @@
         },
         "version": "1.0"
     },
-    "host": "localhost:8080",
+    "host": "istinara.ru",
     "basePath": "/api",
     "paths": {
         "/account/login": {
@@ -116,6 +116,12 @@
                 "summary": "Get all articles",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Search query",
+                        "name": "query",
+                        "in": "query"
+                    },
+                    {
                         "type": "integer",
                         "description": "Count of skipped records",
                         "name": "offset",
@@ -203,6 +209,11 @@
                     {
                         "type": "string",
                         "name": "description_ru",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "group_id",
                         "in": "formData"
                     },
                     {
@@ -343,6 +354,11 @@
                     },
                     {
                         "type": "string",
+                        "name": "group_id",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
                         "name": "quote_ar",
                         "in": "formData"
                     },
@@ -454,7 +470,7 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Author ID",
+                        "description": "Author ID or Author Link",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1058,11 +1074,23 @@
                 "description_ru": {
                     "type": "string"
                 },
+                "group": {
+                    "$ref": "#/definitions/dto.GroupDTO"
+                },
                 "id": {
                     "type": "string"
                 },
+                "is_liked": {
+                    "type": "boolean"
+                },
                 "link": {
                     "type": "string"
+                },
+                "linked_articles": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.ArticleDTO"
+                    }
                 },
                 "picture_path": {
                     "type": "string"
@@ -1160,6 +1188,26 @@
             "properties": {
                 "data": {
                     "$ref": "#/definitions/dto.AuthorDTO"
+                }
+            }
+        },
+        "dto.GroupDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name_ar": {
+                    "type": "string"
+                },
+                "name_ru": {
+                    "type": "string"
+                },
+                "short_name_ar": {
+                    "type": "string"
+                },
+                "short_name_ru": {
+                    "type": "string"
                 }
             }
         },

@@ -6,7 +6,7 @@ import api from "../../services/API";
 
 import './Articles.scss'
 import AccountService from "../../services/AccountService";
-import {useParams} from "react-router-dom";
+import {useParams, useSearchParams} from "react-router-dom";
 import ArticleService from "../../services/ArticleService";
 import Cookies from "universal-cookie";
 import NotifyService from "../../services/NotifyService";
@@ -20,6 +20,11 @@ const Articles = () => {
         document.title = languageContext.dictionary["titles"]["articles"] + " • Istinara";
     }, [languageContext]);
 
+    const [searchParams, _] = useSearchParams();
+    const query = searchParams.get("query") !== null
+        ? 'query=' + searchParams.get("query") + "&"
+        : "";
+
     const cookies = new Cookies();
     const configHeader = AccountService.GetHeaders(true, cookies.get("token") !== undefined)
 
@@ -27,7 +32,7 @@ const Articles = () => {
     const [data: Array<ArticleDTO>, setData] = useState()
 
     useEffect(() => {
-        api.get(`/articles?offset=0&limit=${articles_per_page}`, configHeader)
+        api.get(`/articles?${query}offset=0&limit=${articles_per_page}`, configHeader)
             .then((response) => {
                 setCount(response.data.count);
                 setData(response.data.data);
@@ -53,7 +58,7 @@ const Articles = () => {
     }
 
     const loadMore = () => {
-        api.get(`/articles?offset=${data.length}&limit=${articles_per_page}`)
+        api.get(`/articles?${query}offset=${data.length}&limit=${articles_per_page}`)
             .then((response) => setData([...data, ...response.data.data]))
     };
 

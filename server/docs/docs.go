@@ -118,6 +118,12 @@ const docTemplate = `{
                 "summary": "Get all articles",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Search query",
+                        "name": "query",
+                        "in": "query"
+                    },
+                    {
                         "type": "integer",
                         "description": "Count of skipped records",
                         "name": "offset",
@@ -205,6 +211,11 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "name": "description_ru",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "group_id",
                         "in": "formData"
                     },
                     {
@@ -345,6 +356,11 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
+                        "name": "group_id",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
                         "name": "quote_ar",
                         "in": "formData"
                     },
@@ -456,7 +472,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Author ID",
+                        "description": "Author ID or Author Link",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1060,11 +1076,23 @@ const docTemplate = `{
                 "description_ru": {
                     "type": "string"
                 },
+                "group": {
+                    "$ref": "#/definitions/dto.GroupDTO"
+                },
                 "id": {
                     "type": "string"
                 },
+                "is_liked": {
+                    "type": "boolean"
+                },
                 "link": {
                     "type": "string"
+                },
+                "linked_articles": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.ArticleDTO"
+                    }
                 },
                 "picture_path": {
                     "type": "string"
@@ -1162,6 +1190,26 @@ const docTemplate = `{
             "properties": {
                 "data": {
                     "$ref": "#/definitions/dto.AuthorDTO"
+                }
+            }
+        },
+        "dto.GroupDTO": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name_ar": {
+                    "type": "string"
+                },
+                "name_ru": {
+                    "type": "string"
+                },
+                "short_name_ar": {
+                    "type": "string"
+                },
+                "short_name_ru": {
+                    "type": "string"
                 }
             }
         },
@@ -1313,7 +1361,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:8080",
+	Host:             "istinara.ru",
 	BasePath:         "/api",
 	Schemes:          []string{"http", "https"},
 	Title:            "Istinara API",

@@ -11,15 +11,17 @@
     POSTGRES_DB="postgres"
     PGCLIENTENCODING="utf-8"
     ```
-    
+
     ### API container config
     ```
     GIN_MODE="release"
     PORT="8080"
+    SSL_CERT="path/to/ssl/certificate.crt"
+    SSL_KEY="path/to/ssl/private.key"
     API_SECRET="secret"
     TOKEN_HOUR_LIFESPAN="24"
     CONNECTION_STRING="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres_db:5432/${POSTGRES_DB}"
-    LOAD_DUMP="false"
+    IS_LOAD_DUMP="false"
     DUMP_FILE_NAME="initial_dump.json"
     ```
 

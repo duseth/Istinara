@@ -25,7 +25,7 @@ import (
 //	@license.name	MIT License
 //	@license.url	https://spdx.org/licenses/MIT.html
 
-//	@host		localhost:8080
+//	@host		istinara.ru
 //	@BasePath	/api
 
 //	@schemes	http https
@@ -36,6 +36,12 @@ import (
 func main() {
 	// Initialise database
 	models.DatabaseConnect()
+
+	// Run migrations for updating database state
+	models.RunMigrations()
+
+	// Loading initial database data from JSON file
+	models.LoadInitialDump()
 
 	// Initialise router
 	router := gin.Default()

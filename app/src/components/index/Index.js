@@ -1,46 +1,45 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext} from 'react';
 
 import './Index.scss'
 import {HomeText} from "../../containers/Language";
 import api from "../../services/API";
+import NotifyService from "../../services/NotifyService";
+import {LanguageContext} from "../../languages/Language";
+import {isInteger} from "lodash";
 
 const Home = () => {
     document.title = "Istinara";
+    const languageContext = useContext(LanguageContext);
 
-    const [random: string, setRandom] = useState();
-    const [max: number, setMax] = useState(0);
+    const redirectToRandomArticle = async () => {
+        const articlesCount = await api.get("/articles?limit=0")
+            .then((response) => response.data.count)
+            .catch(() => NotifyService.Error(<HomeText tid="random_error"/>));
 
-    useEffect(() => {
-        api.get("/articles?limit=0").then((response) => setMax(response.data.count));
-    }, []);
-
-    useEffect(() => {
-        if (max !== 0) {
-            const random = Math.floor(Math.random() * Math.floor(max));
-            api.get(`/articles?offset=${random}&limit=1`)
-                .then((response) => {
-                    response.data.data.length > 0
-                        ? setRandom("/articles/" + response.data.data[0].link)
-                        : setRandom("/articles")
-                })
-                .catch(() => setRandom("/articles"));
+        if (!isInteger(articlesCount)) {
+            return;
         }
-    }, [max]);
 
-    if (random === undefined || max === 0) {
-        return (
-            <div className="album">
-                <div className="container py-5">
-                    <div className="row justify-content-center align-items-center m-3">
-                        <div className="information">
-                            <div className="spinner-border" role="status"/>
-                            <p className="mt-3"><HomeText tid="loading"/></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+        if (articlesCount === 0) {
+            NotifyService.Warning(<HomeText tid="zero_articles"/>)
+            return;
+        }
+
+        const randomNum = Math.floor(Math.random() * Math.floor(articlesCount));
+        api.get(`/articles?offset=${randomNum}&limit=1`)
+            .then((response) => {
+                response.data.data.length > 0
+                    ? window.location.href += "articles/" + response.data.data[0].link
+                    : NotifyService.Error(<HomeText tid="random_error"/>)
+            })
+            .catch(() => NotifyService.Error(<HomeText tid="random_error"/>));
+    };
+
+    const getIconByLanguage = () => {
+        return languageContext.userLanguage === "ru"
+            ? "bi bi-arrow-right logout-bi-icon"
+            : "bi bi-arrow-left logout-bi-icon";
+    };
 
     return (
         <main>
@@ -50,11 +49,9 @@ const Home = () => {
                     <img alt="Istinara" src="/istinara.svg" className="caption-logo"/>
                     <div className="welcome-block m-auto mb-5">
                         <h2 className="welcome-header"><HomeText tid="header"/></h2>
-                        <a href={random}>
-                            <button className="btn btn-outline-light btn-home-random">
-                                Мне повезет <i className="bi bi-arrow-right logout-bi-icon"/>
-                            </button>
-                        </a>
+                        <button className="btn btn-outline-light btn-home-random" onClick={redirectToRandomArticle}>
+                            <HomeText tid="feeling_lucky"/> <i className={getIconByLanguage()}/>
+                        </button>
                     </div>
                 </div>
             </section>

@@ -19,6 +19,14 @@ class NotifyService {
         });
     }
 
+    Warning(message: string) {
+        toast(message, {
+            icon: "⚠️",
+            style: this.style,
+            duration: this.duration
+        });
+    }
+
     Error(message: string) {
         toast.error(message, {
             style: this.style,

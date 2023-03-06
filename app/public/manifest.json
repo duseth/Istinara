@@ -3,12 +3,8 @@
     "icons": [
         {
             "src": "favicon.ico",
-            "sizes": "16x16",
+            "sizes": "35x32",
             "type": "image/x-icon"
-        },
-        {
-            "src": "logo.svg",
-            "type": "image/svg"
         }
     ],
     "start_url": ".",

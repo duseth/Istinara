@@ -14,10 +14,18 @@ definitions:
         type: string
       description_ru:
         type: string
+      group:
+        $ref: '#/definitions/dto.GroupDTO'
       id:
         type: string
+      is_liked:
+        type: boolean
       link:
         type: string
+      linked_articles:
+        items:
+          $ref: '#/definitions/dto.ArticleDTO'
+        type: array
       picture_path:
         type: string
       quote_ar:
@@ -81,6 +89,19 @@ definitions:
     properties:
       data:
         $ref: '#/definitions/dto.AuthorDTO'
+    type: object
+  dto.GroupDTO:
+    properties:
+      id:
+        type: string
+      name_ar:
+        type: string
+      name_ru:
+        type: string
+      short_name_ar:
+        type: string
+      short_name_ru:
+        type: string
     type: object
   dto.LoginResponse:
     properties:
@@ -171,7 +192,7 @@ definitions:
         example: 200
         type: integer
     type: object
-host: localhost:8080
+host: istinara.ru
 info:
   contact:
     name: Istinara
@@ -242,6 +263,10 @@ paths:
     get:
       description: Returns list of all articles
       parameters:
+      - description: Search query
+        in: query
+        name: query
+        type: string
       - description: Count of skipped records
         in: query
         name: offset
@@ -330,6 +355,9 @@ paths:
         name: description_ru
         type: string
       - in: formData
+        name: group_id
+        type: string
+      - in: formData
         name: quote_ar
         type: string
       - in: formData
@@ -381,6 +409,9 @@ paths:
         type: string
       - in: formData
         name: description_ru
+        type: string
+      - in: formData
+        name: group_id
         type: string
       - in: formData
         name: quote_ar
@@ -482,7 +513,7 @@ paths:
     get:
       description: Returns a single author
       parameters:
-      - description: Author ID
+      - description: Author ID or Author Link
         in: path
         name: id
         required: true

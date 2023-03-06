@@ -7,10 +7,9 @@ import LanguageSelector from "../LanguageSelector";
 
 const Navbar = () => {
     const languageContext = useContext(LanguageContext);
+    const iconX = "bi bi-x-lg nav-bi-icon icon-hover", iconS = "bi bi-search nav-bi-icon icon-hover";
 
-    let iconX = "bi bi-x-lg nav-bi-icon icon-hover", iconS = "bi bi-search nav-bi-icon icon-hover";
-
-    let [searchIcon, setSearchIcon] = useState(iconS);
+    const [searchIcon, setSearchIcon] = useState(iconS);
     const changeSearchIcon = () => {
         setSearchIcon(searchIcon === iconS ? iconX : iconS);
     };
@@ -25,8 +24,13 @@ const Navbar = () => {
         return [htmlElRef, setFocus]
     }
 
+    const submitSearch = () => {
+        const form = document.getElementById("search");
+        form.action = "/articles?query=" + document.getElementsByName("query")[0].value;
+    }
+
     const [inputRef, setInputFocus] = useFocus()
-    let search_placeholder = languageContext.dictionary["header"]["search_placeholder"]
+    const search_placeholder = languageContext.dictionary["header"]["search_placeholder"]
     return (
         <>
             <nav className="navbar navbar-expand-lg navbar-dark bg-black">
@@ -108,8 +112,8 @@ const Navbar = () => {
             <form className="collapse container-fluid p-0 shadow-lg" id="search">
                 <div className="input-group border-5 rounded-0">
                     <input ref={inputRef} className="form-control border-0 rounded-0 shadow-none"
-                           placeholder={search_placeholder} type="search"/>
-                    <button className="btn btn-default rounded-0 shadow-none" type="submit">
+                           placeholder={search_placeholder} type="search" name="query"/>
+                    <button className="btn btn-default rounded-0 shadow-none" type="submit" onClick={submitSearch}>
                         <i className="bi bi-search text-black fs-5"></i>
                     </button>
                 </div>

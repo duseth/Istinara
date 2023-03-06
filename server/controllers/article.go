@@ -11,6 +11,7 @@ import (
 	"github.com/duseth/istinara/server/dto"
 	"github.com/duseth/istinara/server/models"
 	httputil "github.com/duseth/istinara/server/utils/http"
+	"github.com/duseth/istinara/server/utils/queries"
 	"github.com/duseth/istinara/server/utils/token"
 	"github.com/duseth/istinara/server/utils/translit"
 	"github.com/gin-gonic/gin"
@@ -23,6 +24,7 @@ import (
 //	@Description	Returns list of all articles
 //	@Tags			articles
 //	@Produce		json
+//	@Param			query	query		string	false	"Search query"
 //	@Param			offset	query		integer	false	"Count of skipped records"
 //	@Param			limit	query		integer	false	"Limit for take in records"
 //	@Response		200		{object}	dto.ArticleListResult
@@ -32,8 +34,14 @@ func ListArticles(ctx *gin.Context) {
 	var count int64
 	var articles []models.Article
 
-	db := models.DB
-	db.Model(&models.Article{}).Count(&count)
+	db := models.DB.Model(&models.Article{})
+
+	if ctx.Query("query") != "" {
+		properties := []string{"title_ru", "title_ar", "quote_ru", "quote_ar", "description_ru", "description_ar"}
+		queries.SearchArticles(db, ctx.Query("query"), properties...)
+	}
+
+	db.Count(&count)
 
 	if offset, err := strconv.Atoi(ctx.Query("offset")); err == nil {
 		db = db.Offset(offset)
