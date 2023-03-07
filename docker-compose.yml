@@ -51,8 +51,8 @@ services:
       - /app/node_modules
     depends_on:
       - server
-    environment:
-      - CHOKIDAR_USEPOLLING=true
+    env_file:
+      - app/.env
     networks:
       - local
 
