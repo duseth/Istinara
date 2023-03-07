@@ -43,3 +43,9 @@ sketch
 
 # Environment files
 **/*.env
+
+# PostgreSQL data
+pg-data
+
+# Initial JSON data to database (temporary ignore)
+initial_dump.json

@@ -43,7 +43,7 @@ func RunMigrations() {
 }
 
 func LoadInitialDump() {
-	if isLoad, err := strconv.ParseBool(os.Getenv("IS_LOAD_DUMP")); err == nil || !isLoad {
+	if isLoad, err := strconv.ParseBool(os.Getenv("IS_LOAD_DUMP")); err != nil || !isLoad {
 		return
 	}
 

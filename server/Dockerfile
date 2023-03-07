@@ -17,8 +17,5 @@ RUN go get -d -v
 RUN go install -v
 RUN go install github.com/cosmtrek/air@latest
 
-# Expose port 5000 to the outside world
-EXPOSE 5000
-
 # Run the executable
 ENTRYPOINT ["air"]

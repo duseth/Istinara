@@ -4,11 +4,11 @@ tmp_dir = "server/tmp"
 [build]
 args_bin = []
 bin = "server/tmp/main.exe"
-cmd = "cd server && go build -o ./tmp/main.exe ."
+cmd = "cd server && go build -buildvcs=false -o ./tmp/main.exe ."
 
 delay = 1000
 
-exclude_dir = ["tmp", "vendor", "app"]
+exclude_dir = ["tmp", "vendor", "app", "pg-data"]
 exclude_file = []
 
 follow_symlink = false
