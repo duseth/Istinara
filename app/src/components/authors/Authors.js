@@ -57,15 +57,27 @@ const Authors = () => {
         const options = {year: 'numeric'};
         const locale = languageContext.userLanguage === "ru" ? "ru-RU" : "ar-AE";
 
-        const birth_date = new Date(birth).toLocaleDateString(locale, options);
+        const birth_date = new Date(birth);
 
-        return (
-            <p>
-                {birth_date} ― {death !== undefined
-                ? new Date(death).toLocaleDateString(locale, options)
-                : <AuthorsText tid="not_death"/>}
+        if (death !== undefined) {
+            return <p>
+                {birth_date.toLocaleDateString(locale, options)} ― {new Date(death).toLocaleDateString(locale, options)}
             </p>
-        )
+        } else {
+            const yearsOld = Math.abs(new Date(Date.now() - birth_date.getTime()).getUTCFullYear() - 1970)
+            return <p>
+                {birth_date.toLocaleDateString(locale, options)} ({yearsOld} {getDeclension(yearsOld)})
+            </p>
+        }
+    };
+
+    const getDeclension = (years: number) => {
+        if (languageContext.userLanguage === "ar") return "سنة";
+
+        const cases = [2, 0, 1, 1, 1, 2];
+        const titles = ["год", "года", "лет"];
+
+        return titles[(years % 100 > 4 && years % 100 < 20) ? 2 : cases[(years % 10 < 5) ? years % 10 : 5]];
     };
 
     const getAuthorCard = (author: AuthorDTO) => {
@@ -282,12 +294,12 @@ const Author = () => {
                         <h6 className="mt-0">{authorCard.short_name}</h6>
                         <div className="mt-3 mb-3">
                             <p className="author-date m-1">
-                                <b><AuthorsPage tid="birth_date"/></b> {getDate(authorCard.birth_date)}
+                                <b><AuthorsPage tid="birth_date"/>:</b> {getDate(authorCard.birth_date)}
                             </p>
                             {
                                 authorCard.death_date && (
                                     <p className="author-date m-1">
-                                        <b><AuthorsPage tid="death_date"/></b> {getDate(authorCard.death_date)}
+                                        <b><AuthorsPage tid="death_date"/>:</b> {getDate(authorCard.death_date)}
                                     </p>
                                 )
                             }

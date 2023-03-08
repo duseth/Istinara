@@ -99,7 +99,7 @@ const Account = () => {
                         <div className="col-md-7 m-2">
                             <div className="account-name">{user.username}</div>
                             <div className="account-registration">
-                                <ProfileText tid="registration_date"/> {getRegistrationDate(user.created_at)}
+                                <ProfileText tid="registration_date"/>: {getRegistrationDate(user.created_at)}
                             </div>
                         </div>
                         <div className="col-md-2 m-2">

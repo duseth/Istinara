@@ -73,7 +73,9 @@ const Articles = () => {
                     ) : (
                         <div className="information">
                             <i className="bi bi-folder-x information-icon"></i>
-                            <p className="mt-3"><ArticlesText tid="no_data"/></p>
+                            <p className="mt-3">
+                                {query === "" ? <ArticlesText tid="no_data"/> : <ArticlesText tid="not_found"/>}
+                            </p>
                         </div>
                     )
                 }
@@ -267,7 +269,7 @@ const Article = () => {
         formData.append("title", data.title);
         formData.append("description", data.description);
 
-        let formDataHeaders = {
+        const formDataHeaders = {
             headers: {
                 "Content-Type": "multipart/form-data"
             }
@@ -345,31 +347,15 @@ const Article = () => {
                 )}
                 <div className="row">
                     <div className="col-md-6" dir="ltr">
-                        <h3 className="text-center my-2">«{article.title_ru}»</h3>
+                        <h4 className="text-center my-2">{article.title_ru}</h4>
                     </div>
                     <div className="col-md-6" dir="rtl">
-                        <h3 className="text-center my-2">
-                            «{article.title_ar}» {article.transcription !== "" && article.transcription}
-                        </h3>
+                        <h4 className="text-center my-2">
+                            {article.title_ar} {article.transcription !== "" && article.transcription}
+                        </h4>
                     </div>
-                    <div className="col-md-6" dir="ltr">
-                        <div className="article-item">
-                            <div className="accordion accordion-flush" id="accordionFlushExample">
-                                <div className="accordion-item">
-                                    <h2 className="accordion-header" id="flush-headingRu">
-                                        <button className="accordion-button collapsed" type="button"
-                                                data-bs-toggle="collapse" data-bs-target="#flush-collapseRu"
-                                                aria-expanded="false" aria-controls="flush-collapseRu">
-                                            Описание
-                                        </button>
-                                    </h2>
-                                    <div id="flush-collapseRu" className="accordion-collapse collapse"
-                                         aria-labelledby="flush-headingRu">
-                                        <div className="accordion-body">{article.description_ru}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div className="col-md-6 border-bottom border-2 pb-2 mb-2" dir="ltr">
+                        <div className="article-item">{article.description_ru}</div>
                         <figure className="article-quote-block">
                             <blockquote className="blockquote pb-1">
                                 {getRussianHighlightedQuote()}
@@ -379,24 +365,8 @@ const Article = () => {
                             </figcaption>
                         </figure>
                     </div>
-                    <div className="col-md-6" dir="rtl">
-                        <div className="article-item">
-                            <div className="accordion accordion-flush" id="accordionFlushExample">
-                                <div className="accordion-item">
-                                    <h2 className="accordion-header" id="flush-headingAr">
-                                        <button className="accordion-button accordion-button-ar collapsed" type="button"
-                                                data-bs-toggle="collapse" data-bs-target="#flush-collapseAr"
-                                                aria-expanded="false" aria-controls="flush-collapseAr">
-                                            وصف
-                                        </button>
-                                    </h2>
-                                    <div id="flush-collapseAr" className="accordion-collapse collapse"
-                                         aria-labelledby="flush-headingAr">
-                                        <div className="accordion-body">{article.description_ar}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div className="col-md-6 border-bottom border-2 pb-2 mb-2" dir="rtl">
+                        <div className="article-item">{article.description_ar}</div>
                         <figure className="article-quote-block">
                             <blockquote className="blockquote pb-1">
                                 {getArabicHighlightedQuote()}
@@ -408,9 +378,8 @@ const Article = () => {
                     </div>
                     {
                         article.linked_articles !== null && article.linked_articles.length > 0 && (
-                            <div className="col-md-12">
-                                <hr/>
-                                <h5 className="text-center mb-3"><ArticlesPage tid="linked_title"/></h5>
+                            <div className="col-md-12 border-bottom border-2 mb-2">
+                                <h5 className="text-center my-3"><ArticlesPage tid="linked_title"/></h5>
                                 <div className="row row-cols-md-2 justify-content-center align-items-center g-3 m-3">
                                     {
                                         article.linked_articles.map((article) =>
@@ -421,7 +390,6 @@ const Article = () => {
                         )
                     }
                     <div className="col-md-12 justify-content-center align-items-center">
-                        <hr/>
                         <div className="col-md-6 m-auto">
                             <div className="accordion accordion-flush" id="accordionFlushExample">
                                 <div className="accordion-item">

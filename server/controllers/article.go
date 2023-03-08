@@ -142,6 +142,12 @@ func GetArticle(ctx *gin.Context) {
 			if data.ID == favourite.ArticleID {
 				data.IsLiked = true
 			}
+
+			for i := 0; i < len(data.LinkedArticles); i++ {
+				if data.LinkedArticles[i].ID == favourite.ArticleID {
+					data.LinkedArticles[i].IsLiked = true
+				}
+			}
 		}
 	}
 

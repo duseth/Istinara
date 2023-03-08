@@ -232,14 +232,13 @@ const Work = () => {
                     <hr/>
                     <div className="row">
                         <p className="col-md-4 m-0">
-                            <b><WorksPage tid="author"/></b> {workCard.author.short_name}
+                            <b><WorksPage tid="author"/>:</b> {workCard.author.short_name}
                         </p>
                         <p className="col-md-4 m-0">
-                            <b><WorksPage tid="genre"/></b> {workCard.genre}
+                            <b><WorksPage tid="genre"/>:</b> {workCard.genre}
                         </p>
                         <p className="col-md-4 m-0">
-                            <b><WorksPage
-                                tid="publication_year"/></b> {new Date(workCard.publication_date).getFullYear()}
+                            <b><WorksPage tid="publication_year"/>:</b> {new Date(workCard.publication_date).getFullYear()}
                         </p>
                     </div>
                 </div>
