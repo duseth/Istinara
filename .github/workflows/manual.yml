@@ -1,11 +1,11 @@
-name: Remote SSH
+name: Auto-pulling changes
 on: [push]
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
-    - name: executing remote ssh commands using password
+    - name: executing git pull command on remote SSH server
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.IP }}
@@ -15,4 +15,3 @@ jobs:
         script: |
           cd istinara
           git pull https://${{secrets.PAT}}@github.com/duseth/Istinara.git main
-          pm2 restart 0
