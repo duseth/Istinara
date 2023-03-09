@@ -179,6 +179,7 @@ class AccountService {
     }
 
     GetCurrentUser = () => JSON.parse(localStorage.getItem("user"));
+    IsPrivilegedUser = () => JSON.parse(atob(this.cookies.get("token").split(".")[1])).is_privileged;
 }
 
 let service = new AccountService();

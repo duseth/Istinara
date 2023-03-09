@@ -14,10 +14,10 @@ import (
 type User struct {
 	Base
 
-	Username     string `gorm:"column:username;not null"`
-	Email        string `gorm:"column:email;not null;unique"`
-	Password     string `gorm:"column:password;not null"`
-	IsPrivileged bool   `gorm:"column:is_privileged;not null;default:false"`
+	Username     string `gorm:"column:username;not null" json:"username"`
+	Email        string `gorm:"column:email;not null;unique" json:"email"`
+	Password     string `gorm:"column:password;not null" json:"password"`
+	IsPrivileged bool   `gorm:"column:is_privileged;not null;default:false" json:"is_privileged"`
 }
 
 func (user *User) BeforeSave(_ *gorm.DB) error {
@@ -35,11 +35,9 @@ func (user *User) BeforeSave(_ *gorm.DB) error {
 // ToDTO map User to dto.UserDTO
 func (user *User) ToDTO() dto.UserDTO {
 	return dto.UserDTO{
-		ID:           user.ID,
-		CreatedAt:    user.CreatedAt,
-		Username:     user.Username,
-		Email:        user.Email,
-		IsPrivileged: user.IsPrivileged,
+		CreatedAt: user.CreatedAt,
+		Username:  user.Username,
+		Email:     user.Email,
 	}
 }
 

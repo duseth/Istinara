@@ -2,18 +2,13 @@ package dto
 
 import (
 	"time"
-
-	"github.com/gofrs/uuid"
 )
 
 type UserDTO struct {
-	ID        uuid.UUID `json:"id"`
 	CreatedAt time.Time `json:"created_at"`
 
 	Username string `json:"username"`
 	Email    string `json:"email"`
-
-	IsPrivileged bool `json:"is_privileged"`
 }
 
 type LoginInputForm struct {

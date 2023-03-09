@@ -14,7 +14,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func GenerateToken(userId uuid.UUID) (string, error) {
+func GenerateToken(user *models.User) (string, error) {
 	tokenLifespan, err := strconv.Atoi(os.Getenv("TOKEN_HOUR_LIFESPAN"))
 
 	if err != nil {
@@ -23,7 +23,8 @@ func GenerateToken(userId uuid.UUID) (string, error) {
 
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
-	claims["user_id"] = userId
+	claims["is_privileged"] = user.IsPrivileged
+	claims["user_id"] = user.ID
 	claims["exp"] = time.Now().Add(time.Hour * time.Duration(tokenLifespan)).Unix()
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -90,7 +91,7 @@ func GetAuthorizationToken(user *models.User, email string, password string) (st
 		return "", err
 	}
 
-	generatedToken, err := GenerateToken(user.ID)
+	generatedToken, err := GenerateToken(user)
 	if err != nil {
 		return "", err
 	}

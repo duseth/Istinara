@@ -2,10 +2,10 @@ name: Auto-pulling changes
 on: [push]
 jobs:
   build:
-    name: Build
+    name: Pulling
     runs-on: ubuntu-latest
     steps:
-    - name: executing git pull command on remote SSH server
+    - name: Executing git pull command on remote SSH server
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.IP }}
