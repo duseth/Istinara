@@ -90,17 +90,17 @@ const Contribution = () => {
 
     const user: User = AccountService.GetCurrentUser();
     return (
-        <section className="contribution-container">
-            <div className="container py-5 bg-light">
-                <div className="row justify-content-center align-items-center">
+        <section className="main-container">
+            <div className="container py-5">
+                <div className="row justify-content-center align-items-center m-1">
                     <div className="contribution-header">
-                        <i className="bi bi-send-plus contribution-icon"></i>
+                        <i className="bi bi-folder-plus contribution-icon"/>
                         <p><ContributionText tid="header"/></p>
                     </div>
                     <form onSubmit={handleSubmit((data) => sendRequest(data))}
-                          className="contribution-form row g-3" id="request-form" {...register("required")}>
+                          className="contribution-form row" id="request-form" {...register("required")}>
                         <p className="contribution-form-header"><ContributionForm tid="header"/></p>
-                        <div className="col-12">
+                        <div className="col-12 mt-3">
                             <select className="form-select" id="author_id" defaultValue="null" name="author_id"
                                     {...register("author_id")} onChange={unlockWorks}>
                                 <option value="null" disabled><ContributionForm tid="choose-author"/></option>
@@ -113,7 +113,7 @@ const Contribution = () => {
                                 }
                             </select>
                         </div>
-                        <div className="col-12">
+                        <div className="col-12 mt-3">
                             <select className="form-select" id="work_id" defaultValue="null" name="work_id"
                                     {...register("work_id")} disabled>
                                 <option value="null" disabled><ContributionForm tid="choose-work"/></option>
@@ -126,31 +126,31 @@ const Contribution = () => {
                                 }
                             </select>
                         </div>
-                        <div className="col-12">
+                        <div className="col-12 mt-3">
                             <label htmlFor="title" className="form-label">
                                 <ContributionForm tid="title"/>
                             </label>
                             <input type="text" className="form-control" id="title" {...register("title")}/>
                         </div>
-                        <div className="col-12">
+                        <div className="col-12 mt-3">
                             <label htmlFor="quote" className="form-label">
                                 <ContributionForm tid="quote"/>
                             </label>
                             <input type="text" className="form-control" id="quote" {...register("quote")}/>
                         </div>
-                        <div className="col-12">
+                        <div className="col-12 mt-3">
                             <label htmlFor="description" className="form-label">
                                 <ContributionForm tid="description"/>
                             </label>
                             <textarea rows="5" className="form-control" id="description" {...register("description")}/>
                         </div>
-                        <hr/>
-                        <div className="col-md-6">
+                        <hr className="mt-4"/>
+                        <div className="col-md-6 mt-3">
                             <label htmlFor="name" className="form-label"><ContributionForm tid="name"/></label>
                             <input type="text" className="form-control" id="name"
                                    defaultValue={user?.username} {...register("name")}/>
                         </div>
-                        <div className="col-md-6">
+                        <div className="col-md-6 mt-3">
                             <label htmlFor="email" className="form-label">Email</label>
                             <input type="email" className="form-control" id="email"
                                    defaultValue={user?.email} {...register("email")}/>
@@ -158,7 +158,7 @@ const Contribution = () => {
                         <div className="form-error mt-4 mb-0">
                             {errors?.required?.message || errors?.email?.message}
                         </div>
-                        <div className="col-12 row justify-content-center align-items-center mt-4 m-auto">
+                        <div className="col-12 row justify-content-center align-items-center mt-3 m-auto">
                             <button type="submit" className="btn btn-outline-dark w-auto">
                                 <ContributionForm tid="button_text"/>
                             </button>

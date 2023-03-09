@@ -1,22 +1,6 @@
-.upper-text {
-  font-size: 13px;
+.footer-text {
+  font-size: 14px;
   text-transform: uppercase;
-}
-
-.footer-link-text {
-  font-size: 15px;
-  margin: 0 25px 0 25px;
-}
-
-.float-end {
-  transform: scale(1, 0.9);
-  font-weight: bold;
-  color: white;
-  letter-spacing: 0.01px;
-}
-
-.footer-svg {
-  margin-bottom: 25px;
 }
 
 .site-footer {
@@ -30,7 +14,49 @@
 .copyright-text {
   margin: 0;
   text-align: center;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 15px;
   color: gray;
+}
+
+.language {
+  width: 95px;
+  height: 27px;
+  margin: auto;
+}
+
+.language-container-left, .language-container-right {
+  float: left;
+  width: 40px;
+  height: 27px;
+  margin: 0 3px;
+  position: relative;
+}
+
+.language-control {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.language-control:checked + .flag-image {
+  filter: brightness(95%);
+}
+
+.language-control + .flag-image:hover {
+  filter: brightness(95%);
+}
+
+.flag-image {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  position: absolute;
+  border-radius: 3px;
+  object-fit: cover;
+  object-position: top;
+  filter: brightness(50%);
 }

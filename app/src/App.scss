@@ -26,39 +26,6 @@ body {
   background-color: #f7f7f7;
 }
 
-.navbar-item {
-  font-size: 15px;
-  line-height: 15px;
-  font-weight: 300;
-  transform: scale(1, .9);
-  margin: 0 10px 0 10px;
-}
-
-.link-text {
-  font-size: 13px;
-  color: #999999;
-  border-bottom: 1px solid transparent;
-  text-decoration: none;
-  transform: scale(1, .9);
-}
-
-.link-text a {
-  position: relative;
-  color: black;
-  text-decoration: none;
-  line-height: 24px;
-
-  &:before, &:after {
-    content: '';
-    position: absolute;
-    transition: transform .3s ease;
-  }
-
-  &:hover {
-    color: black;
-  }
-}
-
 label {
   text-align: center;
   color: #999999;

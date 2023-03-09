@@ -52,6 +52,32 @@ button {
   margin: 30px 20px 30px;
 }
 
+.auth-link-text {
+  font-size: 13px;
+  color: #999999;
+  border-bottom: 1px solid transparent;
+  text-decoration: none;
+  transform: scale(1, .9);
+}
+
+.auth-link-text a {
+  position: relative;
+  color: black;
+  text-decoration: none;
+  line-height: 24px;
+
+  &:before, &:after {
+    content: '';
+    position: absolute;
+    height: 1px;
+    transition: transform .3s ease;
+  }
+
+  &:hover {
+    color: black;
+  }
+}
+
 .show-password {
   position: absolute;
   top: 65%;

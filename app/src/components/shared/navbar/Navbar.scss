@@ -11,11 +11,10 @@
 }
 
 .nav-link {
-  transform: scale(1, 0.9);
+  transform: scale(1, 0.8);
   font-weight: bold;
   color: white;
-  margin: 0 5px 0 5px;
-  letter-spacing: 0.25px;
+  margin: 0 7px;
 
   &:focus {
     color: white;
@@ -30,11 +29,11 @@
 }
 
 .nav-header-link {
-  font-size: 15px;
-  line-height: 18px;
+  font-size: 16px;
+  line-height: 16px;
   transition: all 0.2s ease;
   border-bottom: 1px solid transparent;
-  margin: 0 5px 0 5px;
+  margin: 0 5px;
   white-space: nowrap;
 }
 
@@ -53,4 +52,18 @@
   display: block;
   background: rgba(255, 255, 255, 0.2);
   transition: all 0.2s ease;
+  margin: 0 2px;
+}
+
+.navbar-toggler {
+  border: none;
+  font-size: 28px;
+
+  &:hover {
+    background-color: transparent;
+  }
+
+  &:focus {
+    box-shadow: none;
+  }
 }

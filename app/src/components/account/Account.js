@@ -310,7 +310,7 @@ const Account = () => {
                             <hr/>
                             <div className="form-error">{errors?.login?.message}</div>
                             <div className="text-center">
-                                <p className="link-text">
+                                <p className="auth-link-text">
                                     <LoginText tid="not_registered_yet"/>{" "}
                                     <a className="link" onClick={changeAuthMode} href="#">
                                         <LoginText tid="register_redirect"/>
@@ -396,7 +396,7 @@ const Account = () => {
                             <hr/>
                             <div className="form-error">{errors?.register?.message}</div>
                             <div className="text-center">
-                                <p className="link-text">
+                                <p className="auth-link-text">
                                     <RegisterText tid="already_registered"/>{" "}
                                     <a className="link" onClick={changeAuthMode} href="#">
                                         <RegisterText tid="login_redirect"/>

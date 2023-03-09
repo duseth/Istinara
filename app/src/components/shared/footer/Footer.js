@@ -2,44 +2,43 @@ import React from 'react';
 
 import './Footer.scss'
 import {FooterLink, FooterText} from "../../../containers/Language";
+import LanguageSelector from "../../../languages/LanguageSelector";
 
 const Footer = () => {
     return (
         <footer className="site-footer text-center">
-            <div className="container p-4 pb-0 pt-0">
-                <svg width="320" height="80" viewBox="0 0 320 107.31933314070741" className="footer-svg">
-                    <g transform="matrix(1.1924369338126177,0,0,1.1924369338126177,-9.627118733501554,-5.962184669063088)"
-                       fill="#ffffff">
-                        <path xmlns="http://www.w3.org/2000/svg" fill="#ffffff"
-                              d="M91.1,77.4L91.1,77.4c-3-17.6-23.8-26.8-30.5-28.9c6.8-4,11.3-11.6,11.3-20.2C71.9,15.4,62,5,49.8,5  S27.6,15.4,27.6,28.2c0,8.9,4.8,16.7,11.9,20.6c-2.8,0.9-8.6,3.1-14.5,6.9c-9,5.9-14.5,13.2-16,21.3L9,77.4  c-2,9.2-0.7,15.5,3.3,17.2c0.6,0.2,1.4,0.4,2.3,0.4c4.3,0,11.5-2.3,14.8-3.5c0.5-0.1,0.9-0.3,1.3-0.5l1.1-0.4l-0.2-0.1  c2-1.3,3.2-3.6,3.2-6v-0.3c0-4-3.2-7.2-7.2-7.2h-0.3c-0.5,0-1.1,0.1-1.6,0.2V64.8c2.8,0.1,15.2,0.7,23.3,5.9l0.1,23.7l1.1,0  l-0.1-23.7c8.2-5.2,20.6-5.8,23.4-5.9v12.3C73.2,77,72.6,77,72.1,77h-0.3c-4,0-7.2,3.2-7.2,7.2v0.3c0,3.4,2.4,6.3,5.7,7  c3.3,1.2,10.5,3.5,14.9,3.5c0.9,0,1.7-0.1,2.3-0.4C91.6,93,93,86.4,91.1,77.4z M28.7,28.2c0-12.2,9.5-22.1,21.1-22.1  c11.6,0,21.1,9.9,21.1,22.1s-9.5,22.1-21.1,22.1C38.1,50.4,28.7,40.4,28.7,28.2z M87,93.6c-3.2,1.3-13.4-2.1-16.5-3.2l-0.1,0  c-2.8-0.6-4.8-3.1-4.8-6v-0.3c0-3.4,2.7-6.1,6.1-6.1h0.3c0.7,0,1.3,0.1,2,0.3l0.7,0.3v-15l-0.6,0c-0.6,0-15.1,0.1-24.5,6.1  c-9.4-6-23.8-6.1-24.4-6.1l-0.6,0v15l0.7-0.3c0.6-0.2,1.3-0.3,2-0.3h0.3c3.4,0,6.1,2.7,6.1,6.1v0.3c0,2.3-1.3,4.4-3.4,5.5l-0.1,0  c-0.4,0.2-0.8,0.3-1.2,0.4c-3,1.1-13.2,4.4-16.4,3.1c-3.4-1.4-4.4-7-2.8-15.1l0,0l0.1-0.8c3.3-19.5,28.6-27.4,30.8-28.1  c2.7,1.2,5.7,1.9,8.8,1.9c3.4,0,6.6-0.8,9.5-2.2c4.8,1.2,27.7,10.2,30.8,28.4l0.2,0.9l0,0C91.6,86.3,90.5,92.2,87,93.6z"></path>
-                    </g>
-                    <g transform="matrix(1.1098778382446535,0,0,1.1098778382446535,115.11653740587732,25.72364133278824)"
-                       fill="#ffffff">
-                        <path
-                            d="M8.68 40 l-4.28 0 l0 -29.84 l4.28 0 l0 29.84 z M33.76 21.2 l-2.76 3.2 q-2.2 -1.8 -6.16 -1.8 q-1.56 0 -2.88 0.68 t-1.32 1.56 q0 0.72 0.28 1.08 q0.36 0.52 1.28 0.72 q1.04 0.28 2.96 0.28 q4.16 0 6.56 0.92 q2.12 0.76 2.96 2.28 q0.68 1.24 0.68 3.16 q0 3.6 -3 5.52 q-2.84 1.84 -7.48 1.84 q-2.68 0 -5.18 -1.18 t-4.22 -3.22 l2.96 -3 l0.36 0.4 q0.84 0.88 1.36 1.36 q0.92 0.76 1.92 1.16 q1.24 0.48 2.8 0.48 q2.88 0 4.64 -0.88 t1.76 -2.48 q0 -1.36 -1.56 -1.84 q-1.4 -0.44 -4.84 -0.44 q-4 0 -6.12 -1.4 q-2.44 -1.52 -2.44 -4.76 q0 -1.84 1.2 -3.28 q1.12 -1.4 3.08 -2.18 t4.28 -0.78 q2.48 0 4.44 0.52 q2.32 0.6 4.44 2.08 z M58.8 23.4 l-7.8 0 l0 16.6 l-4.12 0 l0 -16.6 l-7.52 0 l0 -4.12 l19.44 0 l0 4.12 z M69.28 40 l-4.08 0 l0 -20.72 l4.08 0 l0 20.72 z M76.28 19.28 l5.16 0 l12.52 14.4 l0 -14.4 l4.12 0 l0 20.72 l-4.12 0 l-11.52 -13.48 l0 13.48 l-4.12 0 l0 -17.64 z M119.6 33.12 l0.56 0 l-4.04 -7.68 l-4.92 9.48 q1.36 -0.72 3.08 -1.16 q2.48 -0.64 5.32 -0.64 z M114 21.4 l-1.36 -2.6 l4.44 0 l11.2 21.2 l-4.52 0 l-1.64 -3.12 l-2.48 0 q-2.36 0 -5 0.56 q-2.24 0.44 -4.08 1.2 q-1.68 0.64 -2.04 1.12 l-0.12 0.24 l-4.32 0 z M149.8 31.560000000000002 l1.28 2.16 q0.68 1.12 1.72 1.56 q0.72 0.28 1.76 0.28 l1.44 0 l0 4.44 l-1.8 0 q-1.32 0 -2.08 -0.16 q-1.12 -0.24 -2.04 -0.88 q-1 -0.76 -1.92 -2.24 l-3.2 -5.2 l-0.28 0 q-2.28 0 -3.48 0.28 q-0.96 0.2 -2.32 0.92 l0 7.28 l-4.2 0 l0 -20.72 l13.36 0 q1.88 0 3.36 0.8 t2.32 2.24 t0.84 3.2 q0 2.32 -1.22 3.82 t-3.54 2.22 z M144.68 27.4 l3.36 0 q1 0 1.66 -0.52 t0.66 -1.48 q0 -1.24 -0.96 -1.68 q-0.68 -0.32 -2.08 -0.32 l-8.44 0 l0 5.2 q2.2 -1.2 5.8 -1.2 z M175.92 33.12 l0.56 0 l-4.04 -7.68 l-4.92 9.48 q1.36 -0.72 3.08 -1.16 q2.48 -0.64 5.32 -0.64 z M170.32 21.4 l-1.36 -2.6 l4.44 0 l11.2 21.2 l-4.52 0 l-1.64 -3.12 l-2.48 0 q-2.36 0 -5 0.56 q-2.24 0.44 -4.08 1.2 q-1.68 0.64 -2.04 1.12 l-0.12 0.24 l-4.32 0 z"></path>
-                    </g>
-                </svg>
-                <ul className="nav justify-content-center border-bottom pb-3 mb-3">
-                    <li className="nav-item nav-link p-0">
-                        <a href="/" className="nav-link upper-text px-2"><FooterLink tid="home"/></a>
+            <div className="container p-4 my-2">
+                <img src={`${window.location.protocol}//${window.location.host}/footer.svg`} alt="Istinara"/>
+                <ul className="nav justify-content-center border-bottom mb-3 py-1">
+                    <li className="nav-item p-0">
+                        <a href="/" className="nav-link footer-text px-2"><FooterLink tid="home"/></a>
                     </li>
-                    <li className="nav-item nav-link p-0">
-                        <a href="/about" className="nav-link upper-text px-2"><FooterLink tid="about"/></a>
+                    <li className="nav-item p-0">
+                        <a href="/about" className="nav-link footer-text px-2"><FooterLink tid="about"/></a>
                     </li>
-                    <li className="nav-item nav-link p-0">
-                        <a target="_blank" href="//istinara.ru/api/docs/index.html" className="nav-link upper-text px-2">
+                    <li className="nav-item p-0">
+                        <a href="/contacts" className="nav-link footer-text px-2"><FooterLink tid="contacts"/></a>
+                    </li>
+                    <li className="nav-item p-0">
+                        <a target="_blank" href="//istinara.ru/api/docs/index.html" className="nav-link footer-text px-2">
                             <FooterLink tid="docs"/>
                         </a>
                     </li>
-                    <li className="nav-item nav-link p-0">
-                        <a href="/contacts" className="nav-link upper-text px-2"><FooterLink tid="contacts"/></a>
-                    </li>
                 </ul>
-                <p className="float-end p-0">
-                    <a href="#" className="nav-link upper-text"><FooterText tid="back-to-top"/></a>
-                </p>
-                <p className="copyright-text"><FooterText tid="information"/></p>
-                <p className="copyright-text">&copy; Istinara, 2023 <FooterText tid="rights"/></p>
+                <div className="row justify-content-center align-items-center">
+                    <div className="col-md-2 my-2">
+                        <LanguageSelector/>
+                    </div>
+                    <div className="col-md-8 my-2">
+                        <p className="copyright-text">
+                            <FooterText tid="information"/><br/>
+                            &copy; Istinara, {new Date(Date.now()).getFullYear()} <FooterText tid="rights"/>
+                        </p>
+                    </div>
+                    <div className="col-md-2 my-2">
+                        <a href="#" className="nav-link footer-text"><FooterText tid="back-to-top"/></a>
+                    </div>
+                </div>
             </div>
         </footer>
     );

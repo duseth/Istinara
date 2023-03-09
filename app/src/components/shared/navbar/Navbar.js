@@ -3,7 +3,6 @@ import React, {useContext, useRef, useState} from "react";
 import './Navbar.scss'
 import {LanguageContext} from "../../../languages/Language";
 import {HeaderLink} from "../../../containers/Language";
-import LanguageSelector from "../LanguageSelector";
 
 const Navbar = () => {
     const languageContext = useContext(LanguageContext);
@@ -36,7 +35,7 @@ const Navbar = () => {
             <nav className="navbar navbar-expand-lg navbar-dark bg-black">
                 <button className="navbar-toggler m-2" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false">
-                    <i className="bi bi-list"></i>
+                    <i className="bi bi-list"/>
                 </button>
                 <div className="collapse navbar-collapse" id="navbarCollapse">
                     <a className="me-3 ms-3" href="/">
@@ -84,12 +83,6 @@ const Navbar = () => {
 
                 <div className="d-flex align-items-center">
                     <div className="nav-item">
-                        <div className="nav-link nav-icon">
-                            <LanguageSelector/>
-                        </div>
-                    </div>
-                    <div className="navbar-vertical-separator"/>
-                    <div className="nav-item">
                         <a className="nav-link nav-icon" href="/contribution">
                             <i className="bi bi-exclude nav-bi-icon icon-hover"></i>
                         </a>
@@ -109,10 +102,10 @@ const Navbar = () => {
                     </div>
                 </div>
             </nav>
-            <form className="collapse container-fluid p-0 shadow-lg" id="search">
+            <form className="collapse container-fluid p-0 shadow-lg bg-light" id="search">
                 <div className="input-group border-5 rounded-0">
-                    <input ref={inputRef} className="form-control border-0 rounded-0 shadow-none"
-                           placeholder={search_placeholder} type="search" name="query"/>
+                    <input ref={inputRef} className="form-control border-0 rounded-0 shadow-none bg-light"
+                           required="required" placeholder={search_placeholder} type="search" name="query"/>
                     <button className="btn btn-default rounded-0 shadow-none" type="submit" onClick={submitSearch}>
                         <i className="bi bi-search text-black fs-5"></i>
                     </button>
