@@ -345,7 +345,7 @@ const Article = () => {
                              alt={languageContext.userLanguage === "ru" ? article.title_ru : article.title_ar}/>
                     </div>
                 )}
-                <div className="row">
+                <div className="row" dir="ltr">
                     <div className="col-md-6" dir="ltr">
                         <h4 className="text-center my-2">{article.title_ru}</h4>
                     </div>
@@ -376,6 +376,8 @@ const Article = () => {
                             </figcaption>
                         </figure>
                     </div>
+                </div>
+                <div className="row">
                     {
                         article.linked_articles !== null && article.linked_articles.length > 0 && (
                             <div className="col-md-12 border-bottom border-2 mb-2">
@@ -389,6 +391,8 @@ const Article = () => {
                             </div>
                         )
                     }
+                </div>
+                <div className="row">
                     <div className="col-md-12 justify-content-center align-items-center">
                         <div className="col-md-6 m-auto">
                             <div className="accordion accordion-flush" id="accordionFlushExample">

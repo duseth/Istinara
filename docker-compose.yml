@@ -38,6 +38,21 @@ services:
       timeout: 5s
       retries: 5
 
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    restart: always
+    env_file:
+      - server/.env
+    ports:
+      - "5050:5050"
+    networks:
+      - local
+    volumes:
+      - ./pg-admin:/var/lib/pgadmin
+      - ./app/nginx/ssl/istinara.crt:/certs/server.cert
+      - ./app/nginx/ssl/istinara.key:/certs/server.key
+
   app:
     build:
       context: app
@@ -70,6 +85,7 @@ services:
     depends_on:
       - app
       - server
+      - pgadmin
     networks:
       - local
       - global
