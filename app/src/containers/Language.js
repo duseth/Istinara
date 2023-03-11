@@ -19,8 +19,8 @@ export function LanguageProvider({children}) {
     );
 }
 
-// Home
-export function HomeText({tid}) {
+// Welcome
+export function WelcomeText({tid}) {
     const languageContext = useContext(LanguageContext);
     return languageContext.dictionary["home"][tid] || tid;
 }
@@ -95,6 +95,26 @@ export function AboutText({tid}) {
 export function AuthorsText({tid}) {
     const languageContext = useContext(LanguageContext);
     return languageContext.dictionary["authors"][tid] || tid;
+}
+
+export function AuthorsForm({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["authors"]["form"][tid] || tid;
+}
+
+export function AuthorsCreateForm({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["authors"]["form"]["create"][tid] || tid;
+}
+
+export function AuthorsUpdateForm({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["authors"]["form"]["update"][tid] || tid;
+}
+
+export function AuthorsDeleteForm({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["authors"]["form"]["delete"][tid] || tid;
 }
 
 export function AuthorsPage({tid}) {

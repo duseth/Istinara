@@ -1,7 +1,8 @@
 package dto
 
 import (
-	"github.com/duseth/istinara/server/utils/datatypes"
+	"time"
+
 	"github.com/gofrs/uuid"
 )
 
@@ -17,9 +18,9 @@ type WorkDTO struct {
 	GenreRu string `json:"genre_ru"`
 	GenreAr string `json:"genre_ar"`
 
-	Link            string         `json:"link"`
-	PicturePath     string         `json:"picture_path"`
-	PublicationDate datatypes.Date `json:"publication_date"`
+	Link            string    `json:"link"`
+	PicturePath     string    `json:"picture_path"`
+	PublicationDate time.Time `json:"publication_date"`
 
 	Author *AuthorDTO `json:"author"`
 }
@@ -34,8 +35,8 @@ type WorkInputForm struct {
 	GenreRu string `form:"genre_ru"`
 	GenreAr string `form:"genre_ar"`
 
-	PublicationDate datatypes.Date `form:"publication_date"`
-	AuthorID        string         `form:"author_id" binding:"omitempty,uuid"`
+	PublicationDate time.Time `form:"publication_date"`
+	AuthorID        string    `form:"author_id" binding:"omitempty,uuid"`
 }
 
 type WorkSingleResult struct {

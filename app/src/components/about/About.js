@@ -1,9 +1,10 @@
 import React, {useContext, useEffect} from "react";
-import './About.scss'
-import {LanguageContext} from "../../languages/Language";
-import {AboutText} from "../../containers/Language";
 
-const About = () => {
+import './About.scss'
+import {AboutText} from "../../containers/Language";
+import {LanguageContext} from "../../languages/Language";
+
+const AboutPage = () => {
     const languageContext = useContext(LanguageContext);
 
     useEffect(() => {
@@ -23,4 +24,4 @@ const About = () => {
     );
 };
 
-export default About;
+export default AboutPage;

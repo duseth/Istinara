@@ -37,6 +37,25 @@ class NotifyService {
             },
         });
     }
+
+    Confirm(message: string, yes: string, no: string, func: Function) {
+        toast((t) => (
+            (
+                <div className="text-center p-2">
+                    <h6>{message}</h6>
+                    <button className="btn btn-outline-danger mx-1" onClick={() => {
+                        toast.dismiss(t.id);
+                        func();
+                    }}>
+                        {yes}
+                    </button>
+                    <button className="btn btn-outline-secondary mx-1" onClick={() => toast.dismiss(t.id)}>
+                        {no}
+                    </button>
+                </div>
+            )
+        ), {duration: 20000});
+    }
 }
 
 export default new NotifyService();

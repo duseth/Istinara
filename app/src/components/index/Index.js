@@ -1,38 +1,38 @@
+import {isInteger} from "lodash";
 import React, {useContext} from 'react';
 
 import './Index.scss'
-import {HomeText} from "../../containers/Language";
-import api from "../../services/API";
+import API from "../../services/API";
+import {WelcomeText} from "../../containers/Language";
 import NotifyService from "../../services/NotifyService";
 import {LanguageContext} from "../../languages/Language";
-import {isInteger} from "lodash";
 
-const Home = () => {
+const WelcomePage = () => {
     document.title = "Istinara";
     const languageContext = useContext(LanguageContext);
 
     const redirectToRandomArticle = async () => {
-        const articlesCount = await api.get("/articles?limit=0")
+        const articlesCount = await API.get("/articles?limit=0")
             .then((response) => response.data.count)
-            .catch(() => NotifyService.Error(<HomeText tid="random_error"/>));
+            .catch(() => NotifyService.Error(<WelcomeText tid="random_error"/>));
 
         if (!isInteger(articlesCount)) {
             return;
         }
 
         if (articlesCount === 0) {
-            NotifyService.Warning(<HomeText tid="zero_articles"/>)
+            NotifyService.Warning(<WelcomeText tid="zero_articles"/>)
             return;
         }
 
         const randomNum = Math.floor(Math.random() * Math.floor(articlesCount));
-        api.get(`/articles?offset=${randomNum}&limit=1`)
+        API.get(`/articles?offset=${randomNum}&limit=1`)
             .then((response) => {
                 response.data.data.length > 0
                     ? window.location.href += "articles/" + response.data.data[0].link
-                    : NotifyService.Error(<HomeText tid="random_error"/>)
+                    : NotifyService.Error(<WelcomeText tid="random_error"/>)
             })
-            .catch(() => NotifyService.Error(<HomeText tid="random_error"/>));
+            .catch(() => NotifyService.Error(<WelcomeText tid="random_error"/>));
     };
 
     const getIconByLanguage = () => {
@@ -48,20 +48,20 @@ const Home = () => {
                 <div className="welcome-page">
                     <img alt="Istinara" src="/istinara.svg" className="caption-logo"/>
                     <div className="welcome-block m-auto mb-5">
-                        <h2 className="welcome-header"><HomeText tid="header"/></h2>
+                        <h2 className="welcome-header"><WelcomeText tid="header"/></h2>
                         <button className="btn btn-outline-light btn-home-random" onClick={redirectToRandomArticle}>
-                            <HomeText tid="feeling_lucky"/> <i className={getIconByLanguage()}/>
+                            <WelcomeText tid="feeling_lucky"/> <i className={getIconByLanguage()}/>
                         </button>
                     </div>
                 </div>
             </section>
             <div className="album py-5 bg-light">
                 <div className="container text-center">
-                    <p className="welcome-text"><HomeText tid="main_text"/></p>
+                    <p className="welcome-text"><WelcomeText tid="main_text"/></p>
                 </div>
             </div>
         </main>
     );
 };
 
-export default Home;
+export default WelcomePage;

@@ -1,11 +1,12 @@
 import React, {useContext, useRef, useState} from "react";
 
 import './Navbar.scss'
-import {LanguageContext} from "../../../languages/Language";
 import {HeaderLink} from "../../../containers/Language";
+import {LanguageContext} from "../../../languages/Language";
 
 const Navbar = () => {
     const languageContext = useContext(LanguageContext);
+    const search_placeholder = languageContext.dictionary["header"]["search_placeholder"]
     const iconX = "bi bi-x-lg nav-bi-icon icon-hover", iconS = "bi bi-search nav-bi-icon icon-hover";
 
     const [searchIcon, setSearchIcon] = useState(iconS);
@@ -22,14 +23,13 @@ const Navbar = () => {
 
         return [htmlElRef, setFocus]
     }
+    const [inputRef, setInputFocus] = useFocus()
 
     const submitSearch = () => {
         const form = document.getElementById("search");
         form.action = "/articles?query=" + document.getElementsByName("query")[0].value;
     }
 
-    const [inputRef, setInputFocus] = useFocus()
-    const search_placeholder = languageContext.dictionary["header"]["search_placeholder"]
     return (
         <>
             <nav className="navbar navbar-expand-lg navbar-dark bg-black">

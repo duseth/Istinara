@@ -1,3 +1,5 @@
+import Cookies from 'universal-cookie';
+
 import {
     GeneralForm,
     LoginText,
@@ -6,9 +8,8 @@ import {
     ProfileText,
     RegisterText
 } from "../containers/Language";
-import api from "../services/API"
-import User from "../models/User";
-import Cookies from 'universal-cookie';
+import API from "../services/API"
+import {User} from "../models/User";
 import NotifyService from "./NotifyService";
 
 class AccountService {
@@ -44,7 +45,7 @@ class AccountService {
         formData.append("email", data.email.trim())
         formData.append("password", data.password.trim())
 
-        await api.post("/auth/register", formData, this.GetHeaders(true, false))
+        await API.post("/auth/register", formData, this.GetHeaders(true, false))
             .then(() => {
                 NotifyService.Success(<RegisterText tid="success_notify"/>);
                 changeAuthMode();
@@ -69,12 +70,12 @@ class AccountService {
         formData.append("email", data.email)
         formData.append("password", data.password)
 
-        await api.post("/auth/login", formData, this.GetHeaders(true, false))
+        await API.post("/auth/login", formData, this.GetHeaders(true, false))
             .then(response => {
                 localStorage.setItem("user", JSON.stringify(response.data.user));
 
-                const token = JSON.parse(atob(response.data.token.split(".")[1]));
-                this.cookies.set("token", response.data.token, {path: "/", expires: new Date(token.exp * 1000)});
+                const token = JSON.parse(atob(response.data?.token.split(".")[1]));
+                this.cookies.set("token", response.data?.token, {path: "/", expires: new Date(token.exp * 1000)});
 
                 NotifyService.Success(<LoginText tid="success_notify"/>);
             })
@@ -109,7 +110,7 @@ class AccountService {
         formData.append("username", data.username.trim())
         formData.append("email", data.email.trim())
 
-        await api.post("/user/edit", formData, this.GetHeaders(true, true))
+        await API.post("/user/edit", formData, this.GetHeaders(true, true))
             .then((response) => {
                 localStorage.setItem("user", JSON.stringify(response.data));
                 NotifyService.Success(<ProfileEditForm tid="success_notify"/>);
@@ -144,7 +145,7 @@ class AccountService {
         formData.append("new_password", data.new_password);
         formData.append("accept_new_password", data.accept_new_password);
 
-        await api.post("/user/change_password", formData, this.GetHeaders(true, true))
+        await API.post("/user/change_password", formData, this.GetHeaders(true, true))
             .then(() => {
                 NotifyService.Success(<ProfilePasswordForm tid="success_notify"/>);
             })
@@ -178,9 +179,14 @@ class AccountService {
         NotifyService.Success(<ProfileText tid="logout_notify"/>);
     }
 
+    IsPrivilegedUser() {
+        const token = this.cookies.get("token");
+        if (!token) return;
+
+        return JSON.parse(atob(token.split(".")[1])).is_privileged;
+    }
+
     GetCurrentUser = () => JSON.parse(localStorage.getItem("user"));
-    IsPrivilegedUser = () => JSON.parse(atob(this.cookies.get("token").split(".")[1])).is_privileged;
 }
 
-let service = new AccountService();
-export default service;
+export default new AccountService();

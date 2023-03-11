@@ -2,9 +2,7 @@ package controllers
 
 import (
 	"fmt"
-	"log"
 	"net/http"
-	"os"
 	"path/filepath"
 	"strconv"
 
@@ -94,7 +92,7 @@ func GetAuthor(ctx *gin.Context) {
 func GetWorksByAuthor(ctx *gin.Context) {
 	var works []models.Work
 
-	if err := models.DB.Preload("Author").Where("author_id = ?", ctx.Param("id")).Find(&works).Error; err != nil {
+	if err := models.DB.Where("author_id = ?", ctx.Param("id")).Find(&works).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}
@@ -123,35 +121,33 @@ func GetWorksByAuthor(ctx *gin.Context) {
 //
 //	@Router		/authors/{id} [post]
 func CreateAuthor(ctx *gin.Context) {
-	var authorForm dto.AuthorInputForm
+	var authorForm dto.AuthorDTO
 	if err := ctx.Bind(&authorForm); err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}
 
-	file, err := ctx.FormFile("file")
+	file, err := ctx.FormFile("picture")
 	if err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}
 
-	uid, err := uuid.NewV4()
-	pictureName := uid.String() + filepath.Ext(file.Filename)
-	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	var author models.Author
+	author.ParseForm(authorForm)
+	author.Link = translit.GenerateLinkFromText(author.NameRu)
 
-	picturePath := filepath.Join("/app", "public", "images", "authors", pictureName)
+	rootPath, err := filepath.Abs("./main.go")
+	rootPath = filepath.Dir(filepath.Dir(rootPath))
+
+	pictureName := author.Link + filepath.Ext(file.Filename)
+
+	picturePath := filepath.Join(rootPath, "app", "public", "images", "authors", pictureName)
 	if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
 	}
-
-	var author models.Author
-	author.ParseForm(authorForm)
-	author.PicturePath = picturePath
-	author.Link = translit.GenerateLinkFromText(author.NameRu)
+	author.PicturePath = filepath.Join("/images", "authors", pictureName)
 
 	if err = models.DB.Create(&author).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
@@ -168,7 +164,7 @@ func CreateAuthor(ctx *gin.Context) {
 //	@Accept		multipart/form-data
 //	@Produce	json
 //	@Param		id		path		string				true	"Author ID"
-//	@Param		body	formData	dto.AuthorInputForm	true	"Author fields that needs to update"
+//	@Param		body	formData	dto.AuthorDTO		true	"Author fields that needs to update"
 //	@Param		file	formData	file				true	"Author image that needs update"
 //	@Response	200		{object}	dto.AuthorSingleResult
 //	@Failure	400		{object}	http.BadRequestResponse
@@ -179,60 +175,43 @@ func CreateAuthor(ctx *gin.Context) {
 //	@Router		/authors/{id} [patch]
 func UpdateAuthor(ctx *gin.Context) {
 	var author models.Author
-	if err := models.DB.Where("id = ?", ctx.Param("id")).First(&author).Error; err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+	if err := models.DB.Where("id = ?", ctx.Param("id")).Find(&author).Error; err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	var authorForm dto.AuthorInputForm
+	var authorForm dto.AuthorDTO
 	if err := ctx.Bind(&authorForm); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	var picturePath string
-	if _, received := ctx.Keys["file"]; received {
-		file, err := ctx.FormFile("file")
-		if err != nil {
-			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-
-		uid, err := uuid.NewV4()
-		pictureName := uid.String() + filepath.Ext(file.Filename)
-		if err != nil {
-			ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-
-		picturePath = filepath.Join("/app", "pictures", "authors", pictureName)
-		if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
-			ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-
-		err = os.Remove(author.PicturePath)
-		if err != nil {
-			log.Println(err.Error())
-		}
-	}
-
-	if err := models.DB.Model(&author).Updates(&authorForm).Error; err != nil {
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	if err := models.DB.Model(&author).Update("picture_path", picturePath).Error; err != nil {
-		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
-		return
-	}
-
 	if authorForm.NameRu != "" {
-		link := translit.GenerateLinkFromText(authorForm.NameRu)
-		if err := models.DB.Model(&author).Update("link", link).Error; err != nil {
+		authorForm.Link = translit.GenerateLinkFromText(authorForm.NameRu)
+	}
+
+	if file, err := ctx.FormFile("picture"); err == nil {
+		rootPath, err := filepath.Abs("./main.go")
+		rootPath = filepath.Dir(filepath.Dir(rootPath))
+
+		var pictureName string
+		if authorForm.Link != "" {
+			pictureName = authorForm.Link + filepath.Ext(file.Filename)
+		} else {
+			pictureName = author.Link + filepath.Ext(file.Filename)
+		}
+
+		picturePath := filepath.Join(rootPath, "app", "public", "images", "authors", pictureName)
+		if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
 			httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 			return
 		}
+		authorForm.PicturePath = filepath.Join("/images", "authors", pictureName)
+	}
+
+	if err := models.DB.Model(&author).Updates(authorForm).Error; err != nil {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	httputil.ResponseSuccess(ctx, author.ToDTO())

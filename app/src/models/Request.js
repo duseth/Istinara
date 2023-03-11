@@ -13,4 +13,4 @@ class Request extends BaseModel {
     author_id: number;
 }
 
-export default Request;
+export {Request};

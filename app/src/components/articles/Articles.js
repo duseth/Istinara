@@ -1,38 +1,40 @@
+import Cookies from "universal-cookie";
+import {useForm} from "react-hook-form";
+import {useParams, useSearchParams} from "react-router-dom";
 import React, {useContext, useEffect, useState} from "react";
-import {Article as ArticleDTO} from "../../models/Article";
-import {LanguageContext} from "../../languages/Language";
-import {ArticlesPage, ArticlesPageForm, ArticlesText, GeneralForm} from "../../containers/Language";
-import api from "../../services/API";
 
 import './Articles.scss'
-import AccountService from "../../services/AccountService";
-import {useParams, useSearchParams} from "react-router-dom";
-import ArticleService from "../../services/ArticleService";
-import Cookies from "universal-cookie";
+import API from "../../services/API";
+import {Article} from "../../models/Article";
+import {Feedback} from "../../models/Feedback";
 import NotifyService from "../../services/NotifyService";
-import {useForm} from "react-hook-form";
+import {LanguageContext} from "../../languages/Language";
+import AccountService from "../../services/AccountService";
+import ArticleService from "../../services/ArticleService";
+import {ArticlesPage, ArticlesPageForm, ArticlesText, GeneralForm} from "../../containers/Language";
 
-const articles_per_page = 12;
+const ARTICLES_LIMIT = 12;
 
-const Articles = () => {
-    const languageContext = useContext(LanguageContext);
-    useEffect(() => {
-        document.title = languageContext.dictionary["titles"]["articles"] + " • Istinara";
-    }, [languageContext]);
-
+const ArticlesListPage = () => {
+    const cookies = new Cookies();
     const [searchParams, _] = useSearchParams();
+    const languageContext = useContext(LanguageContext);
+
+    const [count, setCount] = useState(0);
+    const [data: Array<Article>, setData] = useState()
+
     const query = searchParams.get("query") !== null
         ? 'query=' + searchParams.get("query") + "&"
         : "";
 
-    const cookies = new Cookies();
     const configHeader = AccountService.GetHeaders(true, cookies.get("token") !== undefined)
 
-    const [count, setCount] = useState(0);
-    const [data: Array<ArticleDTO>, setData] = useState()
+    useEffect(() => {
+        document.title = languageContext.dictionary["titles"]["articles"] + " • Istinara";
+    }, [languageContext]);
 
     useEffect(() => {
-        api.get(`/articles?${query}offset=0&limit=${articles_per_page}`, configHeader)
+        API.get(`/articles?${query}offset=0&limit=${ARTICLES_LIMIT}`, configHeader)
             .then((response) => {
                 setCount(response.data.count);
                 setData(response.data.data);
@@ -58,7 +60,7 @@ const Articles = () => {
     }
 
     const loadMore = () => {
-        api.get(`/articles?${query}offset=${data.length}&limit=${articles_per_page}`)
+        API.get(`/articles?${query}offset=${data.length}&limit=${ARTICLES_LIMIT}`)
             .then((response) => setData([...data, ...response.data.data]))
     };
 
@@ -92,19 +94,18 @@ const Articles = () => {
     );
 };
 
-const Article = () => {
+const ArticlePage = () => {
+    const cookies = new Cookies();
     const languageContext = useContext(LanguageContext);
 
     const {link} = useParams()
-    const [article: ArticleDTO, setArticle] = useState();
+    const [article: Article, setArticle] = useState();
 
-    const cookies = new Cookies();
     const configHeader = AccountService.GetHeaders(true, cookies.get("token") !== undefined)
-
-    let {register, reset, setError, handleSubmit, formState: {errors}} = useForm();
+    const {register, reset, setError, handleSubmit, formState: {errors}} = useForm();
 
     useEffect(() => {
-        api.get("/articles/" + link, configHeader)
+        API.get("/articles/" + link, configHeader)
             .then((response) => setArticle(response.data))
             .catch(() => setArticle(null));
     }, []);
@@ -140,92 +141,12 @@ const Article = () => {
         );
     }
 
-    const getRussianHighlightedQuote = () => {
-        const re = new RegExp("(?<=[^а-я0-9])[а-я0-9]*" + article.title_ru.toLowerCase() + "[а-я0-9]*(?=([^а-я0-9]))", "gi");
-        const quote = article.quote_ru.toLowerCase();
-        const title = quote.match(re);
-
-        if (title === null) {
-            return <p>{article.quote_ru}</p>
-        }
-
-        const start = quote.indexOf(title[0]);
-        const end = start + title[0].length;
-
-        return (
-            <p>
-                {article.quote_ru.substring(0, start)}
-                <b className="article-quote">{article.quote_ru.substring(start, end)}</b>
-                {article.quote_ru.substring(end, article.quote_ru.length)}
-            </p>
-        )
-    };
-
-    const getArabicHighlightedQuote = () => {
-        const normalize_text = function (str) {
-            const arabicNormChar = {
-                'ك': 'ک',
-                'ﻷ': 'لا',
-                'ؤ': 'و',
-                'ى': 'ی',
-                'ي': 'ی',
-                'ئ': 'ی',
-                'أ': 'ا',
-                'إ': 'ا',
-                'آ': 'ا',
-                'ٱ': 'ا',
-                'ٳ': 'ا',
-                'ة': 'ه',
-                'ء': '',
-                'ِ': '',
-                'ْ': '',
-                'ُ': '',
-                'َ': '',
-                'ّ': '',
-                'ٍ': '',
-                'ً': '',
-                'ٌ': '',
-                'ٓ': '',
-                'ٰ': '',
-                'ٔ': '',
-                '�': ''
-            };
-
-            return str.replace(/[^\u0000-\u007E]/g, function (a) {
-                let retrieval = arabicNormChar[a]
-                if (retrieval === undefined) {
-                    retrieval = a
-                }
-                return retrieval;
-            }).normalize("NFKD").toLowerCase();
-        };
-
-        const re = new RegExp("(?<=[^؀-ۿ0-9])[؀-ۿ0-9]*" + normalize_text(article.title_ar) + "[؀-ۿ0-9]*(?=([^؀-ۿ0-9]))", "gi");
-        const quote = normalize_text(article.quote_ar);
-        const title = quote.match(re);
-
-        if (title === null) {
-            return <p>{article.quote_ar}</p>
-        }
-
-        const start = quote.indexOf(title[0]);
-        const end = start + title[0].length;
-
-        return (
-            <p>
-                {article.quote_ar.substring(0, start)}
-                <b className="article-quote">{article.quote_ar.substring(start, end)}</b>
-                {article.quote_ar.substring(end, article.quote_ar.length)}
-            </p>
-        )
-    };
-
     const likeArticle = (event: Event) => {
         const target = event.target.querySelector("i") || event.target;
         let classList = target.classList;
 
         if (!article.is_liked) {
-            api.post("/user/favourite/" + article.id, null, configHeader)
+            API.post("/user/favourite/" + article.id, null, configHeader)
                 .then(() => {
                     let liked = article;
                     liked.is_liked = true;
@@ -238,7 +159,7 @@ const Article = () => {
                     NotifyService.Error(languageContext.dictionary["articles"]["favourite_error"]);
                 });
         } else {
-            api.delete("/user/favourite/" + article.id, configHeader)
+            API.delete("/user/favourite/" + article.id, configHeader)
                 .then(() => {
                     let liked = article;
                     liked.is_liked = false;
@@ -259,7 +180,7 @@ const Article = () => {
             : "accordion-button article-form-header accordion-button-ar collapsed";
     };
 
-    const sendFeedback = async (data) => {
+    const sendFeedback = async (data: Feedback) => {
         if (data.title.trim().length === 0 || data.description.trim().length === 0) {
             setError("required", {message: <GeneralForm tid="error_required"/>});
             return;
@@ -275,7 +196,7 @@ const Article = () => {
             }
         };
 
-        await api.post(`/articles/${article.id}/feedback`, formData, formDataHeaders)
+        await API.post(`/articles/${article.id}/feedback`, formData, formDataHeaders)
             .then(() => {
                 NotifyService.Success(<ArticlesPageForm tid="success_notify"/>);
                 reset();
@@ -358,7 +279,7 @@ const Article = () => {
                         <div className="article-item">{article.description_ru}</div>
                         <figure className="article-quote-block">
                             <blockquote className="blockquote pb-1">
-                                {getRussianHighlightedQuote()}
+                                {ArticleService.GetRussianHighlightedQuote(article)}
                             </blockquote>
                             <figcaption className="blockquote-footer mb-0">
                                 {article.work.title_ru + ", "}{article.work.author.short_name_ru}
@@ -369,7 +290,7 @@ const Article = () => {
                         <div className="article-item">{article.description_ar}</div>
                         <figure className="article-quote-block">
                             <blockquote className="blockquote pb-1">
-                                {getArabicHighlightedQuote()}
+                                {ArticleService.GetArabicHighlightedQuote(article)}
                             </blockquote>
                             <figcaption className="blockquote-footer mb-0">
                                 {article.work.title_ar + ", "}{article.work.author.short_name_ar}
@@ -445,4 +366,4 @@ const Article = () => {
     )
 }
 
-export {Article, Articles}
+export {ArticlePage, ArticlesListPage}

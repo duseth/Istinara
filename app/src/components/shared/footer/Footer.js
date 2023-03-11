@@ -1,8 +1,8 @@
 import React from 'react';
 
 import './Footer.scss'
-import {FooterLink, FooterText} from "../../../containers/Language";
 import LanguageSelector from "../../../languages/LanguageSelector";
+import {FooterLink, FooterText} from "../../../containers/Language";
 
 const Footer = () => {
     return (

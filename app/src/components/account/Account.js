@@ -1,11 +1,9 @@
-import React, {useContext, useEffect, useState} from "react"
 import Tab from 'react-bootstrap/Tab';
+import Cookies from "universal-cookie";
 import Tabs from 'react-bootstrap/Tabs';
 import {useForm} from "react-hook-form";
+import React, {useContext, useEffect, useState} from "react"
 
-import './Account.scss'
-import AccountService from "../../services/AccountService";
-import {LanguageContext} from "../../languages/Language";
 import {
     AccountText,
     LoginText,
@@ -14,28 +12,27 @@ import {
     ProfileText,
     RegisterText
 } from "../../containers/Language";
+import './Account.scss'
+import API from "../../services/API";
+import {User} from "../../models/User";
 import {Article} from "../../models/Article";
-import api from "../../services/API";
-import Cookies from "universal-cookie";
-import User from "../../models/User";
+import {LanguageContext} from "../../languages/Language";
+import AccountService from "../../services/AccountService";
 import ArticleService from "../../services/ArticleService";
 
-const favourites_per_page = 6;
+const FAVOURITES_LIMIT = 6;
 
-const Account = () => {
-    const languageContext = useContext(LanguageContext);
-
-    useEffect(() => {
-        document.title = languageContext.dictionary["titles"]["profile"] + " • Istinara";
-    }, [languageContext]);
-
+const AccountPage = () => {
     const cookies = new Cookies();
     const user: User = AccountService.GetCurrentUser();
+    const configHeader = AccountService.GetHeaders(true, true)
 
+    const languageContext = useContext(LanguageContext);
     const [rerender, setRerender] = useState(false);
 
     const [count, setCount] = useState(0);
     const [data: Array<Article>, setData] = useState();
+    const [authMode, setAuthMode] = useState("sign-in")
 
     const [loginPasswordShown, setLoginPasswordShown] = useState(false),
         [registerPasswordShown, setRegisterPasswordShown] = useState(false),
@@ -44,26 +41,28 @@ const Account = () => {
         [acceptPasswordShown, setAcceptPasswordShown] = useState(false),
         [acceptNewPasswordShown, setAcceptNewPasswordShown] = useState(false);
 
-    const configHeader = AccountService.GetHeaders(true, true)
+    const {register, reset, setError, handleSubmit, formState: {errors}} = useForm();
+
+    useEffect(() => {
+        document.title = languageContext.dictionary["titles"]["profile"] + " • Istinara";
+    }, [languageContext]);
+
     useEffect(() => {
         if (cookies.get("token") !== undefined) {
-            api.get(`/user/favourites?offset=0&limit=${favourites_per_page}`, configHeader)
+            API.get(`/user/favourites?offset=0&limit=${FAVOURITES_LIMIT}`, configHeader)
                 .then((response) => {
-                    setCount(response.data.count);
-                    setData(response.data.data);
+                    setCount(response.data?.count);
+                    setData(response.data?.data);
                 })
-                .catch(() => {
-                    setData([]);
-                });
+                .catch(() => setData([]));
         }
     }, [cookies.get("token")]);
 
     const loadMore = () => {
-        api.get(`/user/favourites?offset=${data.length}&limit=${favourites_per_page}`, configHeader)
+        API.get(`/user/favourites?offset=${data.length}&limit=${FAVOURITES_LIMIT}`, configHeader)
             .then((response) => setData([...data, ...response.data.data]))
     };
 
-    let [authMode, setAuthMode] = useState("sign-in")
     const changeAuthMode = () => {
         setAuthMode(authMode === "sign-in" ? "sign-up" : "sign-in");
         reset();
@@ -82,13 +81,11 @@ const Account = () => {
         reset();
     };
 
-    const {register, reset, setError, handleSubmit, formState: {errors}} = useForm();
-
     const getShowPwdIcon = () => {
         return languageContext.userLanguage === "ar" ? "show-password-left" : "show-password";
     };
 
-    const Profile = () => {
+    const ProfileSection = () => {
         return (
             <section className="main-container">
                 <div className="container py-3">
@@ -261,7 +258,7 @@ const Account = () => {
         )
     };
 
-    const Login = () => {
+    const LoginSection = () => {
         return (
             <section className="main-container">
                 <div className="container py-5">
@@ -269,7 +266,7 @@ const Account = () => {
                         <form onSubmit={handleSubmit((data) => AccountService.Login(data, setError))}
                               className="auth-form" {...register("login")}>
                             <div className="auth-form-content row">
-                                {cookies.get("tokenExpired") !== undefined && (
+                                {cookies.get("token_expired") !== undefined && (
                                     <div className="alert alert-info" role="alert">
                                         <ProfileText tid="session_expired"/>
                                     </div>
@@ -324,7 +321,7 @@ const Account = () => {
         )
     };
 
-    const Register = () => {
+    const RegisterSection = () => {
         return (
             <section className="main-container">
                 <div className="container py-5">
@@ -412,19 +409,19 @@ const Account = () => {
 
     if (user != null) {
         if (cookies.get("token") !== undefined) {
-            return Profile();
+            return ProfileSection();
         } else {
             localStorage.removeItem("user");
-            cookies.set("tokenExpired", true, {maxAge: 10});
-            return Login();
+            cookies.set("token_expired", true, {maxAge: 10});
+            return LoginSection();
         }
     }
 
     if (authMode === "sign-in") {
-        return Login();
+        return LoginSection();
     }
 
-    return Register();
+    return RegisterSection();
 }
 
-export default Account
+export default AccountPage

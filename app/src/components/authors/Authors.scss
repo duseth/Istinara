@@ -65,7 +65,8 @@
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25);
 }
 
-.author-page-about {
+.author-page-about, .work-page-about {
+  margin: auto auto 20px;
   text-align: justify;
   font-size: 17px;
 }
@@ -116,15 +117,14 @@
   border-radius: 5px;
 }
 
-.jump-author-card {
+.jump-author-card, .jump-work-card {
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   display: flex;
-  margin: 15px;
+  margin: 10px;
   overflow: hidden;
   max-width: 250px;
-  max-height: 50px;
   height: 50px;
   width: 100%;
   position: relative;
@@ -134,13 +134,14 @@
   }
 }
 
-.jump-author-name {
+.jump-author-name, .jump-work-name {
   text-align: center;
   font-size: 18px;
   line-height: 50px
 }
 
 .jump-author-icon {
-  margin: auto;
+  margin: auto 7px;
+  padding: 0 10px;
   font-size: 30px;
 }

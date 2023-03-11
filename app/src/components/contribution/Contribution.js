@@ -1,41 +1,43 @@
+import {useForm} from "react-hook-form";
 import React, {useContext, useEffect, useState} from 'react';
 
 import './Contribution.scss'
-import {LanguageContext} from "../../languages/Language";
-import {ContributionForm, ContributionText, GeneralForm} from "../../containers/Language";
-import {Author} from "../../models/Author";
-import api from "../../services/API";
+import API from "../../services/API";
 import {Work} from "../../models/Work";
-import {useForm} from "react-hook-form";
-import AccountService from "../../services/AccountService";
-import User from "../../models/User";
+import {User} from "../../models/User";
+import {Request} from "../../models/Request";
+import {Author} from "../../models/Author";
+import {LanguageContext} from "../../languages/Language";
 import NotifyService from "../../services/NotifyService";
+import AccountService from "../../services/AccountService";
+import {ContributionForm, ContributionText, GeneralForm} from "../../containers/Language";
 
-const Contribution = () => {
-    let languageContext = useContext(LanguageContext);
+const ContributionPage = () => {
+    const languageContext = useContext(LanguageContext);
+
+    const lang = languageContext.userLanguage;
+    const user: User = AccountService.GetCurrentUser();
+
+    const [works: Array<Work>, setWorks] = useState();
+    const [authors: Array<Author>, setAuthors] = useState();
+
+    const {register, reset, setError, handleSubmit, formState: {errors}} = useForm();
 
     useEffect(() => {
         document.title = languageContext.dictionary["titles"]["contribution"] + " • Istinara";
     }, [languageContext]);
 
-    const [authors: Array<Author>, setAuthors] = useState();
-
     useEffect(() => {
-        api.get("/authors").then((response) => setAuthors(response.data.data));
+        API.get("/authors").then((response) => setAuthors(response.data.data));
     }, []);
-
-    let [works: Array<Work>, setWorks] = useState();
 
     const unlockWorks = (author) => {
         const uuid = author.target.value;
-        api.get(`/authors/${uuid}/works`).then((response) => setWorks(response.data));
+        API.get(`/authors/${uuid}/works`).then((response) => setWorks(response.data));
         document.getElementById("work_id").disabled = false;
     };
 
-    let lang = languageContext.userLanguage;
-    let {register, reset, setError, handleSubmit, formState: {errors}} = useForm();
-
-    const sendRequest = async (data) => {
+    const sendRequest = async (data: Request) => {
         const fields = ["name", "email", "title", "quote", "description"];
 
         if (data.author_id === "null") {
@@ -60,7 +62,7 @@ const Contribution = () => {
             return;
         }
 
-        let emailValidation = new RegExp(".+@.+\\.[A-Za-z]+$");
+        const emailValidation = new RegExp(".+@.+\\.[A-Za-z]+$");
         if (!emailValidation.test(data.email)) {
             setError("email", {message: <GeneralForm tid="error_email"/>});
             return;
@@ -80,7 +82,7 @@ const Contribution = () => {
             }
         };
 
-        await api.post("/requests", formData, formDataHeaders)
+        await API.post("/requests", formData, formDataHeaders)
             .then(() => {
                 NotifyService.Success(<ContributionForm tid="success_notify"/>);
                 reset();
@@ -88,7 +90,6 @@ const Contribution = () => {
             .catch(() => NotifyService.Error(<ContributionForm tid="error_notify"/>))
     };
 
-    const user: User = AccountService.GetCurrentUser();
     return (
         <section className="main-container">
             <div className="container py-5">
@@ -170,4 +171,4 @@ const Contribution = () => {
     );
 };
 
-export default Contribution;
+export default ContributionPage;

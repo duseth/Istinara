@@ -1,8 +1,9 @@
 package models
 
 import (
+	"time"
+
 	"github.com/duseth/istinara/server/dto"
-	"github.com/duseth/istinara/server/utils/datatypes"
 )
 
 type Work struct {
@@ -17,9 +18,9 @@ type Work struct {
 	GenreRu string `gorm:"column:genre_ru" json:"genre_ru"`
 	GenreAr string `gorm:"column:genre_ar" json:"genre_ar"`
 
-	Link            string         `gorm:"column:link" json:"link"`
-	PicturePath     string         `gorm:"column:picture_path" json:"picture_path"`
-	PublicationDate datatypes.Date `gorm:"column:publication_date" json:"publication_date"`
+	Link            string    `gorm:"column:link" json:"link"`
+	PicturePath     string    `gorm:"column:picture_path" json:"picture_path"`
+	PublicationDate time.Time `gorm:"column:publication_date" json:"publication_date"`
 
 	AuthorID string `gorm:"column:author_id" json:"author_id"`
 	Author   Author

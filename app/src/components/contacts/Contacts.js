@@ -1,10 +1,10 @@
 import React, {useContext, useEffect} from 'react';
 
 import './Contacts.scss'
-import {LanguageContext} from "../../languages/Language";
 import {ContactsText} from "../../containers/Language";
+import {LanguageContext} from "../../languages/Language";
 
-const Contacts = () => {
+const ContactsPage = () => {
     const languageContext = useContext(LanguageContext);
 
     useEffect(() => {
@@ -27,4 +27,4 @@ const Contacts = () => {
     );
 };
 
-export default Contacts;
+export default ContactsPage;

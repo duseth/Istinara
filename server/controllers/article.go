@@ -51,7 +51,7 @@ func ListArticles(ctx *gin.Context) {
 		db = db.Limit(limit)
 	}
 
-	err := db.Preload("Group").Find(&articles).Error
+	err := db.Preload("Group").Order("title_ru").Find(&articles).Error
 	if err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return

@@ -5,4 +5,4 @@ class User extends BaseModel {
     email: string;
 }
 
-export default User;
+export {User};

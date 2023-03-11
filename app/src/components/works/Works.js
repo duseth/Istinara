@@ -1,30 +1,30 @@
+import Cookies from "universal-cookie";
+import {useParams} from "react-router-dom";
 import React, {useContext, useEffect, useState} from "react";
-import {LanguageContext} from "../../languages/Language";
-import api from "../../services/API";
 
 import './Works.scss'
-import {WorksPage, WorksText} from "../../containers/Language";
-import {useParams} from "react-router-dom";
-import {Article as ArticleDTO} from "../../models/Article";
-import {Work as WorkDTO, WorkCard} from "../../models/Work";
+import API from "../../services/API";
 import {Author as AuthorDTO} from "../../models/Author";
-import Cookies from "universal-cookie";
+import {LanguageContext} from "../../languages/Language";
+import {Article as ArticleDTO} from "../../models/Article";
+import {Work, WorkCard} from "../../models/Work";
 import ArticleService from "../../services/ArticleService";
 import AccountService from "../../services/AccountService";
+import {WorksPage, WorksText} from "../../containers/Language";
 
-const works_per_page = 6;
+const WORKS_LIMIT = 6;
 
-const Works = () => {
+const WorksListPage = () => {
     const languageContext = useContext(LanguageContext);
     useEffect(() => {
         document.title = languageContext.dictionary["titles"]["works"] + " • Istinara";
     }, [languageContext]);
 
     const [count, setCount] = useState(0);
-    const [data: Array<WorkDTO>, setData] = useState();
+    const [data: Array<Work>, setData] = useState();
 
     useEffect(() => {
-        api.get(`/works?offset=0&limit=${works_per_page}`)
+        API.get(`/works?offset=0&limit=${WORKS_LIMIT}`)
             .then((response) => {
                 setCount(response.data.count);
                 setData(response.data.data);
@@ -50,11 +50,11 @@ const Works = () => {
     }
 
     const loadMore = () => {
-        api.get(`/works?offset=${data.length}&limit=${works_per_page}`)
+        API.get(`/works?offset=${data.length}&limit=${WORKS_LIMIT}`)
             .then((response) => setData([...data, ...response.data.data]))
     };
 
-    const getWorkCard = (work: WorkDTO) => {
+    const getWorkCard = (work: Work) => {
         if (languageContext.userLanguage === "ru") {
             return (
                 <div className="work-card col-md" key={work.id}>
@@ -109,23 +109,23 @@ const Works = () => {
     );
 };
 
-const Work = () => {
+const WorkPage = () => {
     const languageContext = useContext(LanguageContext);
 
     const {link} = useParams()
 
-    const [work: WorkDTO, setWork] = useState();
+    const [work: Work, setWork] = useState();
     const [articles: Array<ArticleDTO>, setArticles] = useState();
 
-    const [prevWork: WorkDTO, setPrevWork] = useState();
-    const [nextWork: WorkDTO, setNextWork] = useState();
+    const [prevWork: Work, setPrevWork] = useState();
+    const [nextWork: Work, setNextWork] = useState();
     const [workCard: WorkCard, setWorkCard] = useState();
 
     const cookies = new Cookies();
     const configHeader = AccountService.GetHeaders(true, cookies.get("token") !== undefined)
 
     useEffect(() => {
-        api.get("/works/" + link)
+        API.get("/works/" + link)
             .then((response) => setWork(response.data))
             .catch(() => setWork(null));
     }, []);
@@ -139,13 +139,13 @@ const Work = () => {
 
     useEffect(() => {
         if (work) {
-            api.get(`/works/${work.id}/articles`, configHeader).then((response) => setArticles(response.data));
+            API.get(`/works/${work.id}/articles`, configHeader).then((response) => setArticles(response.data));
         }
     }, [work]);
 
     useEffect(() => {
         if (work) {
-            api.get("/works").then((response) => {
+            API.get("/works").then((response) => {
                 let works: Array<AuthorDTO> = response.data.data;
                 works.map((item, index) => {
                     if (item.id === work.id) {
@@ -242,7 +242,7 @@ const Work = () => {
                         </p>
                     </div>
                 </div>
-                <div className="col-md-9 m-auto mb-3">
+                <div className="col-md-9 work-page-about">
                     <hr/>
                     {workCard.about}
                 </div>
@@ -273,37 +273,42 @@ const Work = () => {
                         )
                     }
                 </div>
-                <div className="col-md-9 m-auto mb-3">
-                    <hr/>
-                    <div className="row justify-content-center align-items-center my-2">
-                        <div className="jump-work-card col-md-3">
-                            <a className="author-link" href={prevWork.link}/>
-                            <i className={languageContext.userLanguage === "ru"
-                                ? "bi bi-arrow-left jump-author-icon"
-                                : "bi bi-arrow-right jump-author-icon"}></i>
-                            <div className="jump-work-name col">
-                                {languageContext.userLanguage === "ru"
-                                    ? prevWork.title_ru
-                                    : prevWork.title_ar}
+                {
+                    (prevWork || nextWork) && (
+                        <div className="row">
+                            <hr/>
+                            <div className="col-md-6 d-flex flex-row">
+                                <div className="jump-author-card">
+                                    <a className="author-link" href={prevWork.link}/>
+                                    <i className={languageContext.userLanguage === "ru"
+                                        ? "bi bi-arrow-left jump-author-icon"
+                                        : "bi bi-arrow-right jump-author-icon"}></i>
+                                    <div className="jump-author-name col">
+                                        {languageContext.userLanguage === "ru"
+                                            ? prevWork.title_ru
+                                            : prevWork.title_ar}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-md-6 d-flex flex-row-reverse">
+                                <div className="jump-author-card">
+                                    <a className="author-link" href={nextWork.link}/>
+                                    <div className="jump-author-name col">
+                                        {languageContext.userLanguage === "ru"
+                                            ? nextWork.title_ru
+                                            : nextWork.title_ar}
+                                    </div>
+                                    <i className={languageContext.userLanguage === "ru"
+                                        ? "bi bi-arrow-right jump-author-icon"
+                                        : "bi bi-arrow-left jump-author-icon"}></i>
+                                </div>
                             </div>
                         </div>
-                        <div className="col-md-4"/>
-                        <div className="jump-work-card col-md-3">
-                            <a className="author-link" href={nextWork.link}/>
-                            <div className="jump-work-name col">
-                                {languageContext.userLanguage === "ru"
-                                    ? nextWork.title_ru
-                                    : nextWork.title_ar}
-                            </div>
-                            <i className={languageContext.userLanguage === "ru"
-                                ? "bi bi-arrow-right jump-author-icon"
-                                : "bi bi-arrow-left jump-author-icon"}></i>
-                        </div>
-                    </div>
-                </div>
+                    )
+                }
             </div>
         </section>
     )
 }
 
-export {Work, Works};
+export {WorkPage, WorksListPage};

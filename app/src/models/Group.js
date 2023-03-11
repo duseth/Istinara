@@ -7,4 +7,4 @@ class Group extends BaseModel {
     short_name_ar: string;
 }
 
-export default Group;
+export {Group};

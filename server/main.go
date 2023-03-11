@@ -40,9 +40,6 @@ func main() {
 	// Run migrations for updating database state
 	models.RunMigrations()
 
-	// Loading initial database data from JSON file
-	models.LoadInitialDump()
-
 	// Initialise router
 	router := gin.Default()
 

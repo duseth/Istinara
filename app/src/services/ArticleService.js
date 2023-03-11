@@ -1,6 +1,6 @@
 import {Article as ArticleDTO} from "../models/Article";
 import React from "react";
-import api from "./API";
+import API from "./API";
 import Cookies from "universal-cookie";
 import AccountService from "./AccountService";
 import NotifyService from "./NotifyService";
@@ -89,7 +89,7 @@ class ArticleService {
         let classList = target.classList;
 
         if (!article.is_liked) {
-            api.post("/user/favourite/" + article.id, null, this.configHeader)
+            API.post("/user/favourite/" + article.id, null, this.configHeader)
                 .then(() => {
                     data[articleIndex].is_liked = true;
                     classList.remove("like-icon");
@@ -99,7 +99,7 @@ class ArticleService {
                     NotifyService.Error(languageContext.dictionary["articles"]["favourite_error"]);
                 });
         } else {
-            api.delete("/user/favourite/" + article.id, this.configHeader)
+            API.delete("/user/favourite/" + article.id, this.configHeader)
                 .then(() => {
                     data[articleIndex].is_liked = false;
                     classList.remove("liked-icon");
@@ -109,6 +109,86 @@ class ArticleService {
                     NotifyService.Error(languageContext.dictionary["articles"]["favourite_error"]);
                 });
         }
+    };
+
+    GetRussianHighlightedQuote(article: ArticleDTO) {
+        const re = new RegExp("(?<=[^а-я0-9])[а-я0-9]*" + article.title_ru.toLowerCase() + "[а-я0-9]*(?=([^а-я0-9]))", "gi");
+        const quote = article.quote_ru.toLowerCase();
+        const title = quote.match(re);
+
+        if (title === null) {
+            return <p>{article.quote_ru}</p>
+        }
+
+        const start = quote.indexOf(title[0]);
+        const end = start + title[0].length;
+
+        return (
+            <p>
+                {article.quote_ru.substring(0, start)}
+                <b className="article-quote">{article.quote_ru.substring(start, end)}</b>
+                {article.quote_ru.substring(end, article.quote_ru.length)}
+            </p>
+        )
+    };
+
+    GetArabicHighlightedQuote(article: ArticleDTO) {
+        const normalize_text = function (str) {
+            const arabicNormChar = {
+                'ك': 'ک',
+                'ﻷ': 'لا',
+                'ؤ': 'و',
+                'ى': 'ی',
+                'ي': 'ی',
+                'ئ': 'ی',
+                'أ': 'ا',
+                'إ': 'ا',
+                'آ': 'ا',
+                'ٱ': 'ا',
+                'ٳ': 'ا',
+                'ة': 'ه',
+                'ء': '',
+                'ِ': '',
+                'ْ': '',
+                'ُ': '',
+                'َ': '',
+                'ّ': '',
+                'ٍ': '',
+                'ً': '',
+                'ٌ': '',
+                'ٓ': '',
+                'ٰ': '',
+                'ٔ': '',
+                '�': ''
+            };
+
+            return str.replace(/[^\u0000-\u007E]/g, function (a) {
+                let retrieval = arabicNormChar[a]
+                if (retrieval === undefined) {
+                    retrieval = a
+                }
+                return retrieval;
+            }).normalize("NFKD").toLowerCase();
+        };
+
+        const re = new RegExp("(?<=[^؀-ۿ0-9])[؀-ۿ0-9]*" + normalize_text(article.title_ar) + "[؀-ۿ0-9]*(?=([^؀-ۿ0-9]))", "gi");
+        const quote = normalize_text(article.quote_ar);
+        const title = quote.match(re);
+
+        if (title === null) {
+            return <p>{article.quote_ar}</p>
+        }
+
+        const start = quote.indexOf(title[0]);
+        const end = start + title[0].length;
+
+        return (
+            <p>
+                {article.quote_ar.substring(0, start)}
+                <b className="article-quote">{article.quote_ar.substring(start, end)}</b>
+                {article.quote_ar.substring(end, article.quote_ar.length)}
+            </p>
+        )
     };
 }
 

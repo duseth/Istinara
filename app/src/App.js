@@ -1,4 +1,5 @@
 import React from 'react';
+import {Toaster} from "react-hot-toast";
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 
 // Import styles
@@ -9,18 +10,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 
 // Import ReactJS components
-import Account from "./components/account/Account";
-import {Author, Authors} from "./components/authors/Authors";
-import {Work, Works} from "./components/works/Works";
-import {Article, Articles} from "./components/articles/Articles";
-import Home from './components/index/Index';
-import About from './components/about/About';
-import Contacts from './components/contacts/Contacts';
+import AboutPage from './components/about/About';
+import AccountPage from "./components/account/Account";
+import WelcomePage from './components/index/Index';
+import {WorkPage, WorksListPage} from "./components/works/Works";
+import ContactsPage from './components/contacts/Contacts';
+import {LanguageProvider} from "./containers/Language";
 import Footer from './components/shared/footer/Footer';
 import Navbar from './components/shared/navbar/Navbar';
-import Contribution from "./components/contribution/Contribution";
-import {LanguageProvider} from "./containers/Language";
-import {Toaster} from "react-hot-toast";
+import {ArticlePage, ArticlesListPage} from "./components/articles/Articles";
+import ContributionPage from "./components/contribution/Contribution";
+import {AuthorPage, AuthorsListPage} from "./components/authors/Authors";
 
 function App() {
     return (
@@ -29,17 +29,21 @@ function App() {
                 <Toaster/>
                 <Navbar/>
                 <Routes>
-                    <Route exact path='/' element={<Home/>}/>
-                    <Route path='/about' element={<About/>}/>
-                    <Route path='/authors' element={<Authors/>}/>
-                    <Route path='/authors/:link' element={<Author/>}/>
-                    <Route path='/works' element={<Works/>}/>
-                    <Route path='/works/:link' element={<Work/>}/>
-                    <Route path='/articles' element={<Articles/>}/>
-                    <Route path='/articles/:link' element={<Article/>}/>
-                    <Route path='/contacts' element={<Contacts/>}/>
-                    <Route path="/account" element={<Account/>}/>
-                    <Route path="/contribution" element={<Contribution/>}/>
+                    <Route exact path='/' element={<WelcomePage/>}/>
+
+                    <Route path='/authors' element={<AuthorsListPage/>}/>
+                    <Route path='/authors/:link' element={<AuthorPage/>}/>
+
+                    <Route path='/works' element={<WorksListPage/>}/>
+                    <Route path='/works/:link' element={<WorkPage/>}/>
+
+                    <Route path='/articles' element={<ArticlesListPage/>}/>
+                    <Route path='/articles/:link' element={<ArticlePage/>}/>
+
+                    <Route path='/about' element={<AboutPage/>}/>
+                    <Route path="/account" element={<AccountPage/>}/>
+                    <Route path='/contacts' element={<ContactsPage/>}/>
+                    <Route path="/contribution" element={<ContributionPage/>}/>
                 </Routes>
                 <Footer/>
             </LanguageProvider>
