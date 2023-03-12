@@ -8,7 +8,7 @@ cmd = "cd server && go build -buildvcs=false -o ./tmp/main.exe ."
 
 delay = 1000
 
-exclude_dir = ["tmp", "vendor", "app", "pg-data"]
+exclude_dir = ["tmp", "vendor", "app", "pg-data", "pg-admin"]
 exclude_file = []
 
 follow_symlink = false

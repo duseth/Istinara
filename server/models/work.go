@@ -39,11 +39,12 @@ func (work *Work) ToDTO() dto.WorkDTO {
 		PublicationDate: work.PublicationDate,
 		PicturePath:     work.PicturePath,
 		Link:            work.Link,
+		Author:          work.Author.ToDTO(),
 	}
 }
 
-// ParseForm parse Work from models.Work
-func (work *Work) ParseForm(form dto.WorkInputForm) {
+// ParseForm parse Work from dto.WorkDTO
+func (work *Work) ParseForm(form dto.WorkDTO) {
 	work.TitleRu = form.TitleRu
 	work.TitleAr = form.TitleAr
 	work.GenreRu = form.GenreRu

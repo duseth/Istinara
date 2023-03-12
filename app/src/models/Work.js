@@ -18,9 +18,6 @@ class WorkCard {
     title: string;
     about: string;
     genre: string;
-    publication_date: Date;
-    picture_path: string;
-    link: string;
     author: AuthorCard;
 }
 

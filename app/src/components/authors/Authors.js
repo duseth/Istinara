@@ -26,17 +26,18 @@ const AuthorsListPage = () => {
     const languageContext = useContext(LanguageContext);
     const lang = languageContext.userLanguage;
 
+    const [rerender, setRerender] = useState(false);
     const [count, setCount] = useState(0);
     const [data: Array<Author>, setData] = useState()
 
-    const {register, reset, setError, handleSubmit, formState: {errors}} = useForm();
+    const {register, setError, handleSubmit, formState: {errors}} = useForm();
 
     useEffect(() => {
         document.title = languageContext.dictionary["titles"]["authors"] + " • Istinara";
     }, [languageContext]);
 
     useEffect(() => {
-        API.get(`/authors?offset=0&limit=${AUTHORS_LIMIT}`)
+        API.get(`/authors?offset=0&limit=${AUTHORS_LIMIT}&sort_by=${lang === "ru" ? "name_ru" : "name_ar"}`)
             .then((response) => {
                 setCount(response.data.count);
                 setData(response.data.data);
@@ -44,7 +45,7 @@ const AuthorsListPage = () => {
             .catch(() => {
                 setData([]);
             });
-    }, []);
+    }, [languageContext, rerender]);
 
     if (!data) {
         return (
@@ -62,7 +63,7 @@ const AuthorsListPage = () => {
     }
 
     const loadMore = () => {
-        API.get(`/authors?offset=${data.length}&limit=${AUTHORS_LIMIT}`)
+        API.get(`/authors?offset=${data.length}&limit=${AUTHORS_LIMIT}&sort_by=${lang === "ru" ? "name_ru" : "name_ar"}`)
             .then((response) => setData([...data, ...response.data.data]))
     };
 
@@ -122,12 +123,6 @@ const AuthorsListPage = () => {
         )
     };
 
-    const getAuthorFormAccordionButton = () => {
-        return languageContext.userLanguage === "ru"
-            ? "accordion-button article-form-header collapsed"
-            : "accordion-button article-form-header accordion-button-ar collapsed";
-    };
-
     const createAuthor = async (data: Author) => {
         delete data["required"];
 
@@ -143,11 +138,16 @@ const AuthorsListPage = () => {
             delete data["death_date"]
         }
 
+        if (data.picture.length === 0) {
+            setError("required", {message: <GeneralForm tid="error_required"/>});
+            return;
+        }
+
         data.picture = data.picture[0];
         try {
             await AuthorService.Create(data);
             NotifyService.Success(<AuthorsCreateForm tid="success_notify"/>)
-            reset();
+            setRerender(!rerender);
         } catch {
             NotifyService.Error(<AuthorsCreateForm tid="error_notify"/>)
         }
@@ -163,7 +163,8 @@ const AuthorsListPage = () => {
                                 <div className="accordion accordion-flush" id="accordionFlushExample">
                                     <div className="accordion-item">
                                         <h2 className="accordion-header" id="flush-heading">
-                                            <button className={getAuthorFormAccordionButton()} type="button"
+                                            <button className={"accordion-button article-form-header collapsed" +
+                                                (lang === "ar" ? " accordion-button-ar" : "")} type="button"
                                                     data-bs-toggle="collapse" data-bs-target="#flush-collapseAdd"
                                                     aria-expanded="false" aria-controls="flush-collapse">
                                                 <AuthorsCreateForm tid="header"/>
@@ -314,12 +315,6 @@ const AuthorPage = () => {
         )
     };
 
-    const getAuthorFormAccordionButton = () => {
-        return lang === "ru"
-            ? "accordion-button article-form-header collapsed"
-            : "accordion-button article-form-header accordion-button-ar collapsed";
-    };
-
     const updateAuthor = async (data: Author) => {
         delete data["required"];
         const properties = Object.keys(data).filter(x => !["birth_date", "death_date", "picture"].includes(x));
@@ -338,7 +333,7 @@ const AuthorPage = () => {
         }
 
         for (const date of ["birth_date", "death_date"]) {
-            if (data[date] === author[date].slice(0, 10)) {
+            if (data[date] === author[date]?.slice(0, 10)) {
                 delete data[date];
             }
         }
@@ -459,7 +454,8 @@ const AuthorPage = () => {
                                 <div className="accordion accordion-flush" id="accordionFlushExample">
                                     <div className="accordion-item">
                                         <h2 className="accordion-header" id="flush-heading">
-                                            <button className={getAuthorFormAccordionButton()} type="button"
+                                            <button className={"accordion-button article-form-header collapsed" +
+                                                (lang === "ar" ? " accordion-button-ar" : "")} type="button"
                                                     data-bs-toggle="collapse" data-bs-target="#flush-collapse"
                                                     aria-expanded="false" aria-controls="flush-collapse">
                                                 <AuthorsUpdateForm tid="header"/>

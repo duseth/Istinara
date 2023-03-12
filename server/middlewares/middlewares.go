@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/duseth/istinara/server/models"
@@ -36,7 +37,7 @@ func DataManipulationMiddleware() gin.HandlerFunc {
 		}
 
 		if !isPrivileged {
-			httputil.ResponseErrorWithAbort(ctx, http.StatusForbidden, err)
+			httputil.ResponseErrorWithAbort(ctx, http.StatusForbidden, errors.New("no access"))
 			return
 		}
 

@@ -9,34 +9,21 @@ import (
 type WorkDTO struct {
 	ID uuid.UUID `json:"id"`
 
-	TitleRu string `json:"title_ru"`
-	TitleAr string `json:"title_ar"`
+	TitleRu string `json:"title_ru" form:"title_ru"`
+	TitleAr string `json:"title_ar" form:"title_ar"`
 
-	AboutRu string `json:"about_ru"`
-	AboutAr string `json:"about_ar"`
+	AboutRu string `json:"about_ru" form:"about_ru"`
+	AboutAr string `json:"about_ar" form:"about_ar"`
 
-	GenreRu string `json:"genre_ru"`
-	GenreAr string `json:"genre_ar"`
+	GenreRu string `json:"genre_ru" form:"genre_ru"`
+	GenreAr string `json:"genre_ar" form:"genre_ar"`
 
-	Link            string    `json:"link"`
-	PicturePath     string    `json:"picture_path"`
-	PublicationDate time.Time `json:"publication_date"`
+	Link            string    `json:"link" form:"link"`
+	PicturePath     string    `json:"picture_path" form:"picture_path"`
+	PublicationDate time.Time `json:"publication_date" form:"publication_date" time_format:"2006-01-02"`
 
-	Author *AuthorDTO `json:"author"`
-}
-
-type WorkInputForm struct {
-	TitleRu string `form:"title_ru"`
-	TitleAr string `form:"title_ar"`
-
-	AboutRu string `form:"about_ru"`
-	AboutAr string `form:"about_ar"`
-
-	GenreRu string `form:"genre_ru"`
-	GenreAr string `form:"genre_ar"`
-
-	PublicationDate time.Time `form:"publication_date"`
-	AuthorID        string    `form:"author_id" binding:"omitempty,uuid"`
+	AuthorID string    `form:"author_id" binding:"omitempty,uuid"`
+	Author   AuthorDTO `json:"author"`
 }
 
 type WorkSingleResult struct {

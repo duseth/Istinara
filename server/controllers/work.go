@@ -2,11 +2,10 @@ package controllers
 
 import (
 	"fmt"
-	"log"
 	"net/http"
-	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	"github.com/duseth/istinara/server/dto"
 	"github.com/duseth/istinara/server/models"
@@ -41,6 +40,11 @@ func ListWorks(ctx *gin.Context) {
 
 	if limit, err := strconv.Atoi(ctx.Query("limit")); err == nil {
 		db = db.Limit(limit)
+	}
+
+	if ctx.Query("sort_by") != "" {
+		sort := strings.ReplaceAll(ctx.Query("sort_by"), ".", " ")
+		db = db.Order(sort)
 	}
 
 	if err := db.Find(&works).Error; err != nil {
@@ -81,8 +85,7 @@ func GetWork(ctx *gin.Context) {
 	}
 
 	data := work.ToDTO()
-	author := work.Author.ToDTO()
-	data.Author = &author
+	data.Author = work.Author.ToDTO()
 
 	httputil.ResponseSuccess(ctx, data)
 }
@@ -98,9 +101,26 @@ func GetWork(ctx *gin.Context) {
 //	@Failure		400	{object}	http.BadRequestResponse
 //	@Router			/works/{id}/articles [get]
 func GetArticlesByWork(ctx *gin.Context) {
+	var count int64
 	var articles []models.Article
 
-	if err := models.DB.Preload("Group").Where("work_id = ?", ctx.Param("id")).Find(&articles).Error; err != nil {
+	db := models.DB
+	db.Model(&models.Article{}).Count(&count)
+
+	if offset, err := strconv.Atoi(ctx.Query("offset")); err == nil {
+		db = db.Offset(offset)
+	}
+
+	if limit, err := strconv.Atoi(ctx.Query("limit")); err == nil {
+		db = db.Limit(limit)
+	}
+
+	if ctx.Query("sort_by") != "" {
+		sort := strings.ReplaceAll(ctx.Query("sort_by"), ".", " ")
+		db = db.Order(sort)
+	}
+
+	if err := db.Preload("Group").Where("work_id = ?", ctx.Param("id")).Find(&articles).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}
@@ -127,7 +147,7 @@ func GetArticlesByWork(ctx *gin.Context) {
 		}
 	}
 
-	httputil.ResponseSuccess(ctx, data)
+	httputil.ResponseSuccess(ctx, gin.H{"data": data, "count": count})
 }
 
 // CreateWork   		godoc
@@ -146,35 +166,33 @@ func GetArticlesByWork(ctx *gin.Context) {
 //
 //	@Router		/works/{id} [post]
 func CreateWork(ctx *gin.Context) {
-	var workForm dto.WorkInputForm
+	var workForm dto.WorkDTO
 	if err := ctx.Bind(&workForm); err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}
 
-	file, err := ctx.FormFile("file")
+	file, err := ctx.FormFile("picture")
 	if err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}
 
-	uid, err := uuid.NewV4()
-	pictureName := uid.String() + filepath.Ext(file.Filename)
-	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	var work models.Work
+	work.ParseForm(workForm)
+	work.Link = translit.GenerateLinkFromText(work.TitleRu)
 
-	picturePath := filepath.Join("/app", "public", "images", "works", pictureName)
+	rootPath, err := filepath.Abs("./main.go")
+	rootPath = filepath.Dir(filepath.Dir(rootPath))
+
+	pictureName := work.Link + filepath.Ext(file.Filename)
+
+	picturePath := filepath.Join(rootPath, "app", "public", "images", "works", pictureName)
 	if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
 	}
-
-	var work models.Work
-	work.ParseForm(workForm)
-	work.PicturePath = picturePath
-	work.Link = translit.GenerateLinkFromText(work.TitleRu)
+	work.PicturePath = filepath.Join("/images", "works", pictureName)
 
 	if err = models.DB.Create(&work).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
@@ -202,60 +220,43 @@ func CreateWork(ctx *gin.Context) {
 //	@Router		/works/{id} [patch]
 func UpdateWork(ctx *gin.Context) {
 	var work models.Work
-	if err := models.DB.Where("id = ?", ctx.Param("id")).First(&work).Error; err != nil {
-		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
+	if err := models.DB.Where("id = ?", ctx.Param("id")).Find(&work).Error; err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	var workForm dto.WorkInputForm
+	var workForm dto.WorkDTO
 	if err := ctx.Bind(&workForm); err != nil {
-		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
-		return
-	}
-
-	var picturePath string
-	if _, received := ctx.Keys["file"]; received {
-		file, err := ctx.FormFile("file")
-		if err != nil {
-			httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
-			return
-		}
-
-		uid, err := uuid.NewV4()
-		pictureName := uid.String() + filepath.Ext(file.Filename)
-		if err != nil {
-			ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-
-		picturePath = filepath.Join("/app", "public", "images", "works", pictureName)
-		if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
-			httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
-			return
-		}
-
-		err = os.Remove(work.PicturePath)
-		if err != nil {
-			log.Println(err.Error())
-		}
-	}
-
-	if err := models.DB.Model(&work).Updates(&workForm).Error; err != nil {
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	if err := models.DB.Model(&work).Update("picture_path", picturePath).Error; err != nil {
-		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	if workForm.TitleRu != "" {
-		link := translit.GenerateLinkFromText(workForm.TitleRu)
-		if err := models.DB.Model(&work).Update("link", link).Error; err != nil {
+		workForm.Link = translit.GenerateLinkFromText(workForm.TitleRu)
+	}
+
+	if file, err := ctx.FormFile("picture"); err == nil {
+		rootPath, err := filepath.Abs("./main.go")
+		rootPath = filepath.Dir(filepath.Dir(rootPath))
+
+		var pictureName string
+		if workForm.Link != "" {
+			pictureName = workForm.Link + filepath.Ext(file.Filename)
+		} else {
+			pictureName = work.Link + filepath.Ext(file.Filename)
+		}
+
+		picturePath := filepath.Join(rootPath, "app", "public", "images", "works", pictureName)
+		if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
 			httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 			return
 		}
+		workForm.PicturePath = filepath.Join("/images", "works", pictureName)
+	}
+
+	if err := models.DB.Model(&work).Updates(workForm).Error; err != nil {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	httputil.ResponseSuccess(ctx, work.ToDTO())

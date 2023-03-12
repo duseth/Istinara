@@ -1,16 +1,36 @@
 import {Work} from "../models/Work";
+import API from "./API";
+import AccountService from "./AccountService";
 
 class WorkService {
-    Create(work: Work) {
+    async Create(work: Work) {
+        let formData = new FormData();
+        Object.entries(work).map((value) => formData.append(value[0], value[1]));
 
+        return await API.post("/works", formData, AccountService.GetHeaders(true, true))
+            .then(() => true)
+            .catch(() => {
+                throw new Error();
+            })
     }
 
-    Update(work: Work) {
+    async Update(id: number, work: Work) {
+        let formData = new FormData();
+        Object.entries(work).map((value) => formData.append(value[0], value[1]));
 
+        return await API.patch(`/works/${id}`, formData, AccountService.GetHeaders(true, true))
+            .then((response) => response.data?.link)
+            .catch(() => {
+                throw new Error();
+            })
     }
 
-    Delete(author_id: string) {
-
+    async Delete(work_id: string) {
+        return await API.delete(`/works/${work_id}`, AccountService.GetHeaders(true, true))
+            .then(() => true)
+            .catch(() => {
+                throw new Error();
+            })
     }
 }
 

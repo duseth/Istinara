@@ -22,8 +22,8 @@ type ArticleDTO struct {
 	IsLiked       bool   `json:"is_liked"`
 
 	LinkedArticles []ArticleDTO `json:"linked_articles"`
-	Group          *GroupDTO    `json:"group"`
-	Work           *WorkDTO     `json:"work"`
+	Group          GroupDTO     `json:"group"`
+	Work           WorkDTO      `json:"work"`
 }
 
 type ArticleInputForm struct {

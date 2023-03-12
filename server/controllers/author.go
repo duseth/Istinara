@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	"github.com/duseth/istinara/server/dto"
 	"github.com/duseth/istinara/server/models"
@@ -38,6 +39,11 @@ func ListAuthors(ctx *gin.Context) {
 
 	if limit, err := strconv.Atoi(ctx.Query("limit")); err == nil {
 		db = db.Limit(limit)
+	}
+
+	if ctx.Query("sort_by") != "" {
+		sort := strings.ReplaceAll(ctx.Query("sort_by"), ".", " ")
+		db = db.Order(sort)
 	}
 
 	if err := db.Find(&authors).Error; err != nil {

@@ -4,6 +4,7 @@ import API from "./API";
 import Cookies from "universal-cookie";
 import AccountService from "./AccountService";
 import NotifyService from "./NotifyService";
+import {ArticlesText} from "../containers/Language";
 
 class ArticleService {
     cookies = new Cookies();
@@ -17,67 +18,45 @@ class ArticleService {
         "Этнографические и мифологические реалии": "bi-magic",
     };
 
-    GetArticleCard(data: Array<ArticleDTO>, article: ArticleDTO, languageContext) {
+    GetArticleCard(data: Array<ArticleDTO>, article: ArticleDTO, lang: string) {
         const logged = this.cookies.get("token") !== undefined;
 
         const getClassesByGroup = (name: string) => {
             return "bi " + this.articleGroups[name] + " group-icon";
         }
 
-        if (languageContext.userLanguage === "ru") {
-            return (
-                <div className="article-card col-md my-3" key={article.id}>
-                    <a className="article-card-link" href={"/articles/" + article.link}/>
-                    <i className={getClassesByGroup(article.group.name_ru)}/>
-                    <div className="article-body">
-                        {logged && (
-                            <button onClick={(event) => this.LikeArticle(event, data, article, languageContext)}
-                                    className="article-like">
-                                {
-                                    article.is_liked
-                                        ? <i className="bi liked-icon bi-star"/>
-                                        : <i className="bi like-icon"/>
-                                }
-                            </button>
-                        )}
-                        <div className="article-card-title">{article.title_ru}</div>
-                    </div>
-                </div>
-            )
-        } else if (languageContext.userLanguage === "ar") {
-            return (
-                <div className="article-card col-md my-3" key={article.id}>
-                    <a className="article-card-link" href={"/articles/" + article.link}/>
-                    <i className={getClassesByGroup(article.group.name_ru)}/>
-                    <div className="article-body">
-                        {logged && (
-                            <button onClick={(event) => this.LikeArticle(event, data, article, languageContext)}
-                                    className="article-like">
-                                {
-                                    article.is_liked
-                                        ? <i className="bi liked-icon"/>
-                                        : <i className="bi like-icon"/>
-                                }
-                            </button>
-                        )}
-                        <div className="article-card-title">{article.title_ar}</div>
-                    </div>
-                </div>
-            )
-        }
-    }
-
-    GetCarouselArticleCard(data: Array<ArticleDTO>, article: ArticleDTO, is_active: boolean, languageContext) {
         return (
-            <div className={is_active ? "carousel-item active" : "carousel-item"} key={article.id}>
-                <div className="row justify-content-center align-items-center m-2">
-                    {this.GetArticleCard(data, article, languageContext)}
+            <div className="article-card col-md my-3" key={article.id}>
+                <a className="article-card-link" href={"/articles/" + article.link}/>
+                <i className={getClassesByGroup(lang === "ru" ? article.group.name_ru : article.group.name_ar)}/>
+                <div className="article-body">
+                    {logged && (
+                        <button onClick={(event) => this.LikeArticle(event, data, article)}
+                                className="article-like">
+                            {
+                                article.is_liked
+                                    ? <i className="bi liked-icon bi-star"/>
+                                    : <i className="bi like-icon"/>
+                            }
+                        </button>
+                    )}
+                    <div className="article-card-title">{lang === "ru" ? article.title_ru : article.title_ar}</div>
                 </div>
             </div>
         )
     }
 
-    LikeArticle(event: Event, data: Array<ArticleDTO>, article: ArticleDTO, languageContext) {
+    GetCarouselArticleCard(data: Array<ArticleDTO>, article: ArticleDTO, is_active: boolean, lang: string) {
+        return (
+            <div className={is_active ? "carousel-item active" : "carousel-item"} key={article.id}>
+                <div className="row justify-content-center align-items-center m-2">
+                    {this.GetArticleCard(data, article, lang)}
+                </div>
+            </div>
+        )
+    }
+
+    LikeArticle(event: Event, data: Array<ArticleDTO>, article: ArticleDTO) {
         let articleIndex = null;
         data.map((art, index) => {
             if (art.id === article.id) {
@@ -96,7 +75,7 @@ class ArticleService {
                     classList.add("liked-icon");
                 })
                 .catch(() => {
-                    NotifyService.Error(languageContext.dictionary["articles"]["favourite_error"]);
+                    NotifyService.Error(<ArticlesText tid="favourite_error"/>);
                 });
         } else {
             API.delete("/user/favourite/" + article.id, this.configHeader)
@@ -106,13 +85,13 @@ class ArticleService {
                     classList.add("like-icon");
                 })
                 .catch(() => {
-                    NotifyService.Error(languageContext.dictionary["articles"]["favourite_error"]);
+                    NotifyService.Error(<ArticlesText tid="favourite_error"/>);
                 });
         }
     };
 
     GetRussianHighlightedQuote(article: ArticleDTO) {
-        const re = new RegExp("(?<=[^а-я0-9])[а-я0-9]*" + article.title_ru.toLowerCase() + "[а-я0-9]*(?=([^а-я0-9]))", "gi");
+        const re = new RegExp("([^\\s\\.,]*)(" + article.title_ru.toLowerCase() + ")([^\\s\\.,]*)", "gi");
         const quote = article.quote_ru.toLowerCase();
         const title = quote.match(re);
 
@@ -133,46 +112,12 @@ class ArticleService {
     };
 
     GetArabicHighlightedQuote(article: ArticleDTO) {
-        const normalize_text = function (str) {
-            const arabicNormChar = {
-                'ك': 'ک',
-                'ﻷ': 'لا',
-                'ؤ': 'و',
-                'ى': 'ی',
-                'ي': 'ی',
-                'ئ': 'ی',
-                'أ': 'ا',
-                'إ': 'ا',
-                'آ': 'ا',
-                'ٱ': 'ا',
-                'ٳ': 'ا',
-                'ة': 'ه',
-                'ء': '',
-                'ِ': '',
-                'ْ': '',
-                'ُ': '',
-                'َ': '',
-                'ّ': '',
-                'ٍ': '',
-                'ً': '',
-                'ٌ': '',
-                'ٓ': '',
-                'ٰ': '',
-                'ٔ': '',
-                '�': ''
-            };
-
-            return str.replace(/[^\u0000-\u007E]/g, function (a) {
-                let retrieval = arabicNormChar[a]
-                if (retrieval === undefined) {
-                    retrieval = a
-                }
-                return retrieval;
-            }).normalize("NFKD").toLowerCase();
+        const remove_diacritics = (str) => {
+            return str.replace((/[\u064B-\u0652]/g), "");
         };
 
-        const re = new RegExp("(?<=[^؀-ۿ0-9])[؀-ۿ0-9]*" + normalize_text(article.title_ar) + "[؀-ۿ0-9]*(?=([^؀-ۿ0-9]))", "gi");
-        const quote = normalize_text(article.quote_ar);
+        const re = new RegExp("([^\\s\\.,]*)(" + remove_diacritics(article.title_ar) + ")([^\\s\\.,]*)", "gi");
+        const quote = remove_diacritics(article.quote_ar);
         const title = quote.match(re);
 
         if (title === null) {

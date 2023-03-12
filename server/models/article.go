@@ -27,7 +27,6 @@ type Article struct {
 
 // ToDTO map Article to dto.ArticleDTO
 func (article *Article) ToDTO() dto.ArticleDTO {
-	group := article.Group.ToDTO()
 	return dto.ArticleDTO{
 		ID:            article.ID,
 		TitleRu:       article.TitleRu,
@@ -39,7 +38,8 @@ func (article *Article) ToDTO() dto.ArticleDTO {
 		PicturePath:   article.PicturePath,
 		Transcription: article.Transcription,
 		Link:          article.Link,
-		Group:         &group,
+		Group:         article.Group.ToDTO(),
+		Work:          article.Work.ToDTO(),
 	}
 }
 

@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/duseth/istinara/server/dto"
 	"github.com/duseth/istinara/server/models"
@@ -83,16 +84,9 @@ func ChangePassword(ctx *gin.Context) {
 
 func ListFavourite(ctx *gin.Context) {
 	var count int64
-	var articles []models.Article
+	var favourites []models.Favourite
 
-	db := models.DB.Model(&models.Article{})
-	userId, err := token.ExtractTokenID(ctx)
-	if err != nil {
-		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
-		return
-	}
-
-	db.Joins("JOIN favourites f ON f.article_id = articles.id").Where("f.user_id = ?", userId.String()).Count(&count)
+	db := models.DB.Model(&models.Favourite{})
 
 	if offset, err := strconv.Atoi(ctx.Query("offset")); err == nil {
 		db = db.Offset(offset)
@@ -102,15 +96,26 @@ func ListFavourite(ctx *gin.Context) {
 		db = db.Limit(limit)
 	}
 
-	err = db.Preload("Group").Find(&articles).Error
+	if ctx.Query("sort_by") != "" {
+		sort := strings.ReplaceAll(ctx.Query("sort_by"), ".", " ")
+		db = db.Order(sort)
+	}
+
+	userId, err := token.ExtractTokenID(ctx)
+	if err != nil {
+		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
+		return
+	}
+
+	err = db.Preload("Article.Group").Where("user_id = ?", userId).Find(&favourites).Error
 	if err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
 	}
 
-	data := make([]dto.ArticleDTO, 0, len(articles))
-	for _, article := range articles {
-		articleDTO := article.ToDTO()
+	data := make([]dto.ArticleDTO, 0, len(favourites))
+	for _, favourite := range favourites {
+		articleDTO := favourite.Article.ToDTO()
 		articleDTO.IsLiked = true
 		data = append(data, articleDTO)
 	}

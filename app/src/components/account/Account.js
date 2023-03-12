@@ -28,6 +28,7 @@ const AccountPage = () => {
     const configHeader = AccountService.GetHeaders(true, true)
 
     const languageContext = useContext(LanguageContext);
+    const lang = languageContext.userLanguage;
     const [rerender, setRerender] = useState(false);
 
     const [count, setCount] = useState(0);
@@ -49,7 +50,7 @@ const AccountPage = () => {
 
     useEffect(() => {
         if (cookies.get("token") !== undefined) {
-            API.get(`/user/favourites?offset=0&limit=${FAVOURITES_LIMIT}`, configHeader)
+            API.get(`/user/favourites?offset=0&limit=${FAVOURITES_LIMIT}&sort_by=created_at.desc`, configHeader)
                 .then((response) => {
                     setCount(response.data?.count);
                     setData(response.data?.data);
@@ -59,7 +60,7 @@ const AccountPage = () => {
     }, [cookies.get("token")]);
 
     const loadMore = () => {
-        API.get(`/user/favourites?offset=${data.length}&limit=${FAVOURITES_LIMIT}`, configHeader)
+        API.get(`/user/favourites?offset=${data.length}&limit=${FAVOURITES_LIMIT}&sort_by=created_at.desc`, configHeader)
             .then((response) => setData([...data, ...response.data.data]))
     };
 
@@ -232,7 +233,7 @@ const AccountPage = () => {
                                         data !== undefined && data.length > 0 ? (
                                             <div
                                                 className="row row-cols-md-2 justify-content-center align-items-center g-3 m-3">
-                                                {data.map((article) => ArticleService.GetArticleCard(data, article, languageContext))}
+                                                {data.map((article) => ArticleService.GetArticleCard(data, article, lang))}
                                             </div>
                                         ) : (
                                             <div className="information">

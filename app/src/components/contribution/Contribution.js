@@ -104,7 +104,7 @@ const ContributionPage = () => {
                         <div className="col-12 mt-3">
                             <select className="form-select" id="author_id" defaultValue="null" name="author_id"
                                     {...register("author_id")} onChange={unlockWorks}>
-                                <option value="null" disabled><ContributionForm tid="choose-author"/></option>
+                                <option value="null" disabled><ContributionForm tid="choose_author"/></option>
                                 {
                                     authors?.map((author) =>
                                         <option key={author.id} value={author.id}>
@@ -117,7 +117,7 @@ const ContributionPage = () => {
                         <div className="col-12 mt-3">
                             <select className="form-select" id="work_id" defaultValue="null" name="work_id"
                                     {...register("work_id")} disabled>
-                                <option value="null" disabled><ContributionForm tid="choose-work"/></option>
+                                <option value="null" disabled><ContributionForm tid="choose_work"/></option>
                                 {
                                     works?.map((work) =>
                                         <option key={work.id} value={work.id}>

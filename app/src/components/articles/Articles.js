@@ -19,6 +19,7 @@ const ArticlesListPage = () => {
     const cookies = new Cookies();
     const [searchParams, _] = useSearchParams();
     const languageContext = useContext(LanguageContext);
+    const lang = languageContext.userLanguage;
 
     const [count, setCount] = useState(0);
     const [data: Array<Article>, setData] = useState()
@@ -34,7 +35,8 @@ const ArticlesListPage = () => {
     }, [languageContext]);
 
     useEffect(() => {
-        API.get(`/articles?${query}offset=0&limit=${ARTICLES_LIMIT}`, configHeader)
+        const sort = lang === "ru" ? "title_ru" : "title_ar";
+        API.get(`/articles?${query}offset=0&limit=${ARTICLES_LIMIT}&sort_by=${sort}`, configHeader)
             .then((response) => {
                 setCount(response.data.count);
                 setData(response.data.data);
@@ -42,7 +44,7 @@ const ArticlesListPage = () => {
             .catch(() => {
                 setData([]);
             });
-    }, []);
+    }, [languageContext]);
 
     if (!data) {
         return (
@@ -60,7 +62,8 @@ const ArticlesListPage = () => {
     }
 
     const loadMore = () => {
-        API.get(`/articles?${query}offset=${data.length}&limit=${ARTICLES_LIMIT}`)
+        const sort = lang === "ru" ? "title_ru" : "title_ar";
+        API.get(`/articles?${query}offset=${data.length}&limit=${ARTICLES_LIMIT}&sort_by=${sort}`)
             .then((response) => setData([...data, ...response.data.data]))
     };
 
@@ -70,7 +73,7 @@ const ArticlesListPage = () => {
                 {
                     data.length > 0 ? (
                         <div className="row row-cols-md-2 justify-content-center align-items-center g-3 m-3">
-                            {data.map((article) => ArticleService.GetArticleCard(data, article, languageContext))}
+                            {data.map((article) => ArticleService.GetArticleCard(data, article, lang))}
                         </div>
                     ) : (
                         <div className="information">
@@ -97,6 +100,7 @@ const ArticlesListPage = () => {
 const ArticlePage = () => {
     const cookies = new Cookies();
     const languageContext = useContext(LanguageContext);
+    const lang = languageContext.userLanguage;
 
     const {link} = useParams()
     const [article: Article, setArticle] = useState();
@@ -140,45 +144,6 @@ const ArticlePage = () => {
             </div>
         );
     }
-
-    const likeArticle = (event: Event) => {
-        const target = event.target.querySelector("i") || event.target;
-        let classList = target.classList;
-
-        if (!article.is_liked) {
-            API.post("/user/favourite/" + article.id, null, configHeader)
-                .then(() => {
-                    let liked = article;
-                    liked.is_liked = true;
-                    setArticle(liked);
-
-                    classList.remove("like-icon");
-                    classList.add("liked-icon");
-                })
-                .catch(() => {
-                    NotifyService.Error(languageContext.dictionary["articles"]["favourite_error"]);
-                });
-        } else {
-            API.delete("/user/favourite/" + article.id, configHeader)
-                .then(() => {
-                    let liked = article;
-                    liked.is_liked = false;
-                    setArticle(liked);
-
-                    classList.remove("liked-icon");
-                    classList.add("like-icon");
-                })
-                .catch(() => {
-                    NotifyService.Error(languageContext.dictionary["articles"]["favourite_error"]);
-                });
-        }
-    };
-
-    const getArticleFormAccordionButton = () => {
-        return languageContext.userLanguage === "ru"
-            ? "accordion-button article-form-header collapsed"
-            : "accordion-button article-form-header accordion-button-ar collapsed";
-    };
 
     const sendFeedback = async (data: Feedback) => {
         if (data.title.trim().length === 0 || data.description.trim().length === 0) {
@@ -250,7 +215,8 @@ const ArticlePage = () => {
                     <div className={languageContext.userLanguage === "ru"
                         ? "col text-end m-auto" : "col text-start m-auto"}>
                         {cookies.get("token") !== undefined && (
-                            <button onClick={(event) => likeArticle(event)} className="article-page-fav">
+                            <button onClick={(event) => ArticleService.LikeArticle(event, [article], article)}
+                                    className="article-page-fav">
                                 {
                                     article.is_liked
                                         ? <i className="bi liked-icon"/>
@@ -306,7 +272,7 @@ const ArticlePage = () => {
                                 <div className="row row-cols-md-2 justify-content-center align-items-center g-3 m-3">
                                     {
                                         article.linked_articles.map((article) =>
-                                            ArticleService.GetArticleCard(article.linked_articles, article, languageContext))
+                                            ArticleService.GetArticleCard(article.linked_articles, article, lang))
                                     }
                                 </div>
                             </div>
@@ -319,7 +285,9 @@ const ArticlePage = () => {
                             <div className="accordion accordion-flush" id="accordionFlushExample">
                                 <div className="accordion-item">
                                     <h2 className="accordion-header" id="flush-headingFb">
-                                        <button className={getArticleFormAccordionButton()} type="button"
+                                        <button className={"accordion-button article-form-header collapsed" +
+                                            (lang === "ar" ? " accordion-button-ar" : "")}
+                                                type="button"
                                                 data-bs-toggle="collapse" data-bs-target="#flush-collapseFb"
                                                 aria-expanded="false" aria-controls="flush-collapseFb">
                                             <ArticlesPageForm tid="header"/>

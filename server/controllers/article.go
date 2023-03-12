@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	"github.com/duseth/istinara/server/dto"
 	"github.com/duseth/istinara/server/models"
@@ -25,6 +26,7 @@ import (
 //	@Tags			articles
 //	@Produce		json
 //	@Param			query	query		string	false	"Search query"
+//	@Param			sort_by	query		string	false	"Sorting parameters (column.direction, column.direction)"
 //	@Param			offset	query		integer	false	"Count of skipped records"
 //	@Param			limit	query		integer	false	"Limit for take in records"
 //	@Response		200		{object}	dto.ArticleListResult
@@ -51,7 +53,12 @@ func ListArticles(ctx *gin.Context) {
 		db = db.Limit(limit)
 	}
 
-	err := db.Preload("Group").Order("title_ru").Find(&articles).Error
+	if ctx.Query("sort_by") != "" {
+		sort := strings.ReplaceAll(ctx.Query("sort_by"), ".", " ")
+		db = db.Order(sort)
+	}
+
+	err := db.Preload("Group").Find(&articles).Error
 	if err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
@@ -107,15 +114,8 @@ func GetArticle(ctx *gin.Context) {
 	}
 
 	data := article.ToDTO()
-
-	group := article.Group.ToDTO()
-	data.Group = &group
-
-	work := article.Work.ToDTO()
-	data.Work = &work
-
-	author := article.Work.Author.ToDTO()
-	data.Work.Author = &author
+	data.Work = article.Work.ToDTO()
+	data.Group = article.Group.ToDTO()
 
 	var linked []uuid.UUID
 	models.DB.Model(&models.ArticleLink{}).Select("link_id").Where("article_id = ?", data.ID).Find(&linked)

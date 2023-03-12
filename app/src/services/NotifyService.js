@@ -54,7 +54,7 @@ class NotifyService {
                     </button>
                 </div>
             )
-        ), {duration: 20000});
+        ), {duration: Infinity});
     }
 }
 

@@ -128,6 +128,27 @@ export function WorksText({tid}) {
     return languageContext.dictionary["works"][tid] || tid;
 }
 
+export function WorksForm({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["works"]["form"][tid] || tid;
+}
+
+export function WorksCreateForm({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["works"]["form"]["create"][tid] || tid;
+}
+
+export function WorksUpdateForm({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["works"]["form"]["update"][tid] || tid;
+}
+
+export function WorksDeleteForm({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["works"]["form"]["delete"][tid] || tid;
+}
+
+
 export function WorksPage({tid}) {
     const languageContext = useContext(LanguageContext);
     return languageContext.dictionary["works"]["page"][tid] || tid;
