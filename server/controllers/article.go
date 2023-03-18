@@ -2,9 +2,7 @@ package controllers
 
 import (
 	"fmt"
-	"log"
 	"net/http"
-	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -89,6 +87,65 @@ func ListArticles(ctx *gin.Context) {
 	httputil.ResponseSuccess(ctx, gin.H{"data": data, "count": count})
 }
 
+func ListLinked(ctx *gin.Context) {
+	var count int64
+	var articleLinks []models.ArticleLink
+
+	db := models.DB.Model(&models.ArticleLink{}).Where("article_id = ?", ctx.Param("id"))
+	db.Count(&count)
+
+	err := db.Preload("Link").Preload("Link.Group").Find(&articleLinks).Error
+	if err != nil {
+		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	data := make([]dto.ArticleDTO, 0, len(articleLinks))
+	for _, link := range articleLinks {
+		data = append(data, link.Link.ToDTO())
+	}
+
+	if userId, err := token.ExtractTokenID(ctx); err == nil {
+		var favourites []models.Favourite
+		err = models.DB.Where("user_id = ?", userId.String()).Find(&favourites).Error
+		if err != nil {
+			httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
+			return
+		}
+
+		for i := 0; i < len(data); i++ {
+			for _, favourite := range favourites {
+				if data[i].ID == favourite.ArticleID {
+					data[i].IsLiked = true
+				}
+			}
+		}
+	}
+
+	httputil.ResponseSuccess(ctx, gin.H{"data": data, "count": count})
+}
+
+func ListGroups(ctx *gin.Context) {
+	var count int64
+	var groups []models.Group
+
+	db := models.DB.Model(&models.Group{})
+	db.Count(&count)
+
+	err := db.Find(&groups).Error
+	if err != nil {
+		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	data := make([]dto.GroupDTO, 0, len(groups))
+	for _, group := range groups {
+		data = append(data, group.ToDTO())
+	}
+
+	httputil.ResponseSuccess(ctx, gin.H{"data": data, "count": count})
+}
+
 // GetArticle   		godoc
 //
 //	@Summary		Get article by ID
@@ -117,19 +174,6 @@ func GetArticle(ctx *gin.Context) {
 	data.Work = article.Work.ToDTO()
 	data.Group = article.Group.ToDTO()
 
-	var linked []uuid.UUID
-	models.DB.Model(&models.ArticleLink{}).Select("link_id").Where("article_id = ?", data.ID).Find(&linked)
-
-	if len(linked) > 0 {
-		var linkedArticles []models.Article
-		models.DB.Preload("Group").Find(&linkedArticles, linked)
-
-		data.LinkedArticles = make([]dto.ArticleDTO, 0, len(linkedArticles))
-		for _, linkArticle := range linkedArticles {
-			data.LinkedArticles = append(data.LinkedArticles, linkArticle.ToDTO())
-		}
-	}
-
 	if userId, err := token.ExtractTokenID(ctx); err == nil {
 		var favourites []models.Favourite
 		err = models.DB.Where("user_id = ?", userId.String()).Find(&favourites).Error
@@ -142,16 +186,24 @@ func GetArticle(ctx *gin.Context) {
 			if data.ID == favourite.ArticleID {
 				data.IsLiked = true
 			}
-
-			for i := 0; i < len(data.LinkedArticles); i++ {
-				if data.LinkedArticles[i].ID == favourite.ArticleID {
-					data.LinkedArticles[i].IsLiked = true
-				}
-			}
 		}
 	}
 
 	httputil.ResponseSuccess(ctx, data)
+}
+
+func CreateLink(ctx *gin.Context) {
+	link := models.ArticleLink{
+		ArticleID: ctx.Param("id"),
+		LinkID:    ctx.Param("link_id"),
+	}
+
+	if err := models.DB.Create(&link).Error; err != nil {
+		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	httputil.ResponseSuccess(ctx, link)
 }
 
 // CreateArticle   		godoc
@@ -170,35 +222,30 @@ func GetArticle(ctx *gin.Context) {
 //
 //	@Router		/articles/{id} [post]
 func CreateArticle(ctx *gin.Context) {
-	var articleForm dto.ArticleInputForm
+	var articleForm dto.ArticleDTO
 	if err := ctx.Bind(&articleForm); err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}
 
-	file, err := ctx.FormFile("file")
-	if err != nil {
-		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
-		return
-	}
-
-	uid, err := uuid.NewV4()
-	pictureName := uid.String() + filepath.Ext(file.Filename)
-	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	picturePath := filepath.Join("/app", "public", "images", "articles", pictureName)
-	if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
-		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
-		return
-	}
-
 	var article models.Article
 	article.ParseForm(articleForm)
-	article.PicturePath = picturePath
 	article.Link = translit.GenerateLinkFromText(article.TitleRu)
+
+	file, err := ctx.FormFile("picture")
+	if err == nil {
+		rootPath, err := filepath.Abs("./main.exe")
+		rootPath = filepath.Dir(rootPath)
+
+		pictureName := article.Link + filepath.Ext(file.Filename)
+
+		picturePath := filepath.Join(rootPath, "app", "public", "images", "works", pictureName)
+		if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
+			httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
+			return
+		}
+		article.PicturePath = filepath.Join("/images", "works", pictureName)
+	}
 
 	if err = models.DB.Create(&article).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
@@ -226,60 +273,45 @@ func CreateArticle(ctx *gin.Context) {
 //	@Router		/articles/{id} [patch]
 func UpdateArticle(ctx *gin.Context) {
 	var article models.Article
-	if err := models.DB.Where("id = ?", ctx.Param("id")).First(&article).Error; err != nil {
-		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
+	if err := models.DB.Where("id = ?", ctx.Param("id")).Find(&article).Error; err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	var articleForm dto.ArticleInputForm
+	var articleForm dto.ArticleDTO
 	if err := ctx.Bind(&articleForm); err != nil {
-		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
-		return
-	}
-
-	var picturePath string
-	if _, received := ctx.Keys["file"]; received {
-		file, err := ctx.FormFile("file")
-		if err != nil {
-			httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
-			return
-		}
-
-		uid, err := uuid.NewV4()
-		pictureName := uid.String() + filepath.Ext(file.Filename)
-		if err != nil {
-			ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-
-		picturePath = filepath.Join("/app", "public", "images", "articles", pictureName)
-		if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
-			httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
-			return
-		}
-
-		err = os.Remove(article.PicturePath)
-		if err != nil {
-			log.Println(err.Error())
-		}
-	}
-
-	if err := models.DB.Model(&article).Updates(&articleForm).Error; err != nil {
-		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
-		return
-	}
-
-	if err := models.DB.Model(&article).Update("picture_path", picturePath).Error; err != nil {
-		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	if articleForm.TitleRu != "" {
-		link := translit.GenerateLinkFromText(articleForm.TitleRu)
-		if err := models.DB.Model(&article).Update("link", link).Error; err != nil {
+		articleForm.Link = translit.GenerateLinkFromText(articleForm.TitleRu)
+	}
+
+	if file, err := ctx.FormFile("picture"); err == nil {
+		rootPath, err := filepath.Abs("./main.exe")
+		rootPath = filepath.Dir(rootPath)
+
+		var pictureName string
+		if articleForm.Link != "" {
+			pictureName = articleForm.Link + filepath.Ext(file.Filename)
+		} else {
+			pictureName = article.Link + filepath.Ext(file.Filename)
+		}
+
+		picturePath := filepath.Join(rootPath, "app", "public", "images", "works", pictureName)
+		if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
 			httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 			return
 		}
+		articleForm.PicturePath = filepath.Join("/images", "works", pictureName)
+	}
+
+	var updateArticle models.Article
+	updateArticle.ParseForm(articleForm)
+	if err := models.DB.Model(&article).Updates(updateArticle).Error; err != nil {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	httputil.ResponseSuccess(ctx, article.ToDTO())
@@ -300,6 +332,16 @@ func UpdateArticle(ctx *gin.Context) {
 //	@Router		/articles/{id} [delete]
 func DeleteArticle(ctx *gin.Context) {
 	if err := models.DB.Where("id = ?", ctx.Param("id")).Delete(&models.Article{}).Error; err != nil {
+		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
+		return
+	}
+
+	httputil.ResponseSuccess(ctx, true)
+}
+
+func DeleteLink(ctx *gin.Context) {
+	db := models.DB.Where("article_id = ? AND link_id = ?", ctx.Param("id"), ctx.Param("link_id"))
+	if err := db.Delete(&models.ArticleLink{}).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}

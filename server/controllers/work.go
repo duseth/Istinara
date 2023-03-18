@@ -156,8 +156,8 @@ func GetArticlesByWork(ctx *gin.Context) {
 //	@Tags		works
 //	@Accept		multipart/form-data
 //	@Produce	json
-//	@Param		body	formData	dto.WorkInputForm	true	"Work object that needs to be added"
-//	@Param		file	formData	file				true	"Work image"
+//	@Param		body	formData	dto.WorkDTO	true	"Work object that needs to be added"
+//	@Param		file	formData	file		true	"Work image"
 //	@Response	200		{object}	dto.WorkSingleResult
 //	@Failure	400		{object}	http.BadRequestResponse
 //	@Failure	500		{object}	http.InternalServerErrorResponse
@@ -182,8 +182,8 @@ func CreateWork(ctx *gin.Context) {
 	work.ParseForm(workForm)
 	work.Link = translit.GenerateLinkFromText(work.TitleRu)
 
-	rootPath, err := filepath.Abs("./main.go")
-	rootPath = filepath.Dir(filepath.Dir(rootPath))
+	rootPath, err := filepath.Abs("./main.exe")
+	rootPath = filepath.Dir(rootPath)
 
 	pictureName := work.Link + filepath.Ext(file.Filename)
 
@@ -208,9 +208,9 @@ func CreateWork(ctx *gin.Context) {
 //	@Tags		works
 //	@Accept		multipart/form-data
 //	@Produce	json
-//	@Param		id		path		string				true	"Work ID"
-//	@Param		body	formData	dto.WorkInputForm	true	"Work fields that needs to update"
-//	@Param		file	formData	file				true	"Work image that needs update"
+//	@Param		id		path		string		true	"Work ID"
+//	@Param		body	formData	dto.WorkDTO	true	"Work fields that needs to update"
+//	@Param		file	formData	file		true	"Work image that needs update"
 //	@Response	200		{object}	dto.WorkSingleResult
 //	@Failure	400		{object}	http.BadRequestResponse
 //	@Failure	500		{object}	http.InternalServerErrorResponse
@@ -236,8 +236,8 @@ func UpdateWork(ctx *gin.Context) {
 	}
 
 	if file, err := ctx.FormFile("picture"); err == nil {
-		rootPath, err := filepath.Abs("./main.go")
-		rootPath = filepath.Dir(filepath.Dir(rootPath))
+		rootPath, err := filepath.Abs("./main.exe")
+		rootPath = filepath.Dir(rootPath)
 
 		var pictureName string
 		if workForm.Link != "" {

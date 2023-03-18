@@ -117,8 +117,8 @@ func GetWorksByAuthor(ctx *gin.Context) {
 //	@Tags		authors
 //	@Accept		multipart/form-data
 //	@Produce	json
-//	@Param		body	formData	dto.AuthorInputForm	true	"Author object that needs to be added"
-//	@Param		file	formData	file				true	"Author image"
+//	@Param		body	formData	dto.AuthorDTO	true	"Author object that needs to be added"
+//	@Param		file	formData	file			true	"Author image"
 //	@Response	200		{object}	dto.AuthorSingleResult
 //	@Failure	400		{object}	http.BadRequestResponse
 //	@Failure	500		{object}	http.InternalServerErrorResponse
@@ -143,10 +143,10 @@ func CreateAuthor(ctx *gin.Context) {
 	author.ParseForm(authorForm)
 	author.Link = translit.GenerateLinkFromText(author.NameRu)
 
-	rootPath, err := filepath.Abs("./main.go")
-	rootPath = filepath.Dir(filepath.Dir(rootPath))
-
 	pictureName := author.Link + filepath.Ext(file.Filename)
+
+	rootPath, err := filepath.Abs("./main.exe")
+	rootPath = filepath.Dir(rootPath)
 
 	picturePath := filepath.Join(rootPath, "app", "public", "images", "authors", pictureName)
 	if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
@@ -169,9 +169,9 @@ func CreateAuthor(ctx *gin.Context) {
 //	@Tags		authors
 //	@Accept		multipart/form-data
 //	@Produce	json
-//	@Param		id		path		string				true	"Author ID"
-//	@Param		body	formData	dto.AuthorDTO		true	"Author fields that needs to update"
-//	@Param		file	formData	file				true	"Author image that needs update"
+//	@Param		id		path		string			true	"Author ID"
+//	@Param		body	formData	dto.AuthorDTO	true	"Author fields that needs to update"
+//	@Param		file	formData	file			true	"Author image that needs update"
 //	@Response	200		{object}	dto.AuthorSingleResult
 //	@Failure	400		{object}	http.BadRequestResponse
 //	@Failure	500		{object}	http.InternalServerErrorResponse
@@ -198,7 +198,7 @@ func UpdateAuthor(ctx *gin.Context) {
 
 	if file, err := ctx.FormFile("picture"); err == nil {
 		rootPath, err := filepath.Abs("./main.go")
-		rootPath = filepath.Dir(filepath.Dir(rootPath))
+		rootPath = filepath.Dir(rootPath)
 
 		var pictureName string
 		if authorForm.Link != "" {

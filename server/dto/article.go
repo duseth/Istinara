@@ -7,26 +7,6 @@ import (
 type ArticleDTO struct {
 	ID uuid.UUID `json:"id"`
 
-	TitleRu string `json:"title_ru"`
-	TitleAr string `json:"title_ar"`
-
-	QuoteRu string `json:"quote_ru"`
-	QuoteAr string `json:"quote_ar"`
-
-	DescriptionRu string `json:"description_ru"`
-	DescriptionAr string `json:"description_ar"`
-
-	PicturePath   string `json:"picture_path"`
-	Transcription string `json:"transcription"`
-	Link          string `json:"link"`
-	IsLiked       bool   `json:"is_liked"`
-
-	LinkedArticles []ArticleDTO `json:"linked_articles"`
-	Group          GroupDTO     `json:"group"`
-	Work           WorkDTO      `json:"work"`
-}
-
-type ArticleInputForm struct {
 	TitleRu string `json:"title_ru" form:"title_ru"`
 	TitleAr string `json:"title_ar" form:"title_ar"`
 
@@ -36,14 +16,16 @@ type ArticleInputForm struct {
 	DescriptionRu string `json:"description_ru" form:"description_ru"`
 	DescriptionAr string `json:"description_ar" form:"description_ar"`
 
+	Link          string `json:"link"`
+	PicturePath   string `json:"picture_path"`
 	Transcription string `json:"transcription" form:"transcription"`
-	GroupID       string `json:"group_id" binding:"uuid"`
-	WorkID        string `json:"work_id" binding:"uuid"`
-}
+	IsLiked       bool   `json:"is_liked"`
 
-type ArticleLinkInputForm struct {
-	ArticleID string `json:"article_id" binding:"uuid"`
-	LinkID    string `json:"link_id" binding:"uuid"`
+	GroupID string   `form:"group_id"`
+	Group   GroupDTO `json:"group"`
+
+	WorkID string  `form:"work_id"`
+	Work   WorkDTO `json:"work"`
 }
 
 type ArticleSingleResult struct {

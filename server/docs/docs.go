@@ -22,90 +22,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/account/login": {
-            "post": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "account"
-                ],
-                "summary": "Get JWT token for authorization requests",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "name": "email",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "name": "password",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.LoginResult"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/http.BadRequestResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/account/register": {
-            "post": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "account"
-                ],
-                "summary": "Registration new user in the system",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "name": "email",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "name": "password",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "name": "username",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/http.SuccessResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/http.BadRequestResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/articles": {
             "get": {
                 "description": "Returns list of all articles",
@@ -121,6 +37,12 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Search query",
                         "name": "query",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sorting parameters (column.direction, column.direction)",
+                        "name": "sort_by",
                         "in": "query"
                     },
                     {
@@ -419,6 +341,90 @@ const docTemplate = `{
                 }
             }
         },
+        "/auth/login": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "account"
+                ],
+                "summary": "Authorization",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "email",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.LoginResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http.BadRequestResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "account"
+                ],
+                "summary": "Registration",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "email",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "username",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http.BadRequestResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/authors": {
             "get": {
                 "description": "Returns list of all authors",
@@ -522,12 +528,37 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
+                        "name": "birth_date",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "death_date",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "id",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "link",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
                         "name": "name_ar",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "name": "name_ru",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "picture_path",
                         "in": "formData"
                     },
                     {
@@ -648,12 +679,37 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
+                        "name": "birth_date",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "death_date",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "id",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "link",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
                         "name": "name_ar",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "name": "name_ru",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "picture_path",
                         "in": "formData"
                     },
                     {
@@ -824,12 +880,12 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "name": "aboutAr",
+                        "name": "about_ar",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "aboutRu",
+                        "name": "about_ru",
                         "in": "formData"
                     },
                     {
@@ -839,22 +895,42 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "name": "genreAr",
+                        "name": "genre_ar",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "genreRu",
+                        "name": "genre_ru",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "titleAr",
+                        "name": "id",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "titleRu",
+                        "name": "link",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "picture_path",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "publication_date",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "title_ar",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "title_ru",
                         "in": "formData"
                     },
                     {
@@ -955,12 +1031,12 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "name": "aboutAr",
+                        "name": "about_ar",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "aboutRu",
+                        "name": "about_ru",
                         "in": "formData"
                     },
                     {
@@ -970,22 +1046,42 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "name": "genreAr",
+                        "name": "genre_ar",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "genreRu",
+                        "name": "genre_ru",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "titleAr",
+                        "name": "id",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "titleRu",
+                        "name": "link",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "picture_path",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "publication_date",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "title_ar",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "title_ru",
                         "in": "formData"
                     },
                     {
@@ -1055,18 +1151,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "datatypes.Date": {
-            "type": "object",
-            "properties": {
-                "time": {
-                    "type": "string"
-                },
-                "valid": {
-                    "description": "Valid is true if Time is not NULL",
-                    "type": "boolean"
-                }
-            }
-        },
         "dto.ArticleDTO": {
             "type": "object",
             "properties": {
@@ -1146,10 +1230,10 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "birth_date": {
-                    "$ref": "#/definitions/datatypes.Date"
+                    "type": "string"
                 },
                 "death_date": {
-                    "$ref": "#/definitions/datatypes.Date"
+                    "type": "string"
                 },
                 "id": {
                     "type": "string"
@@ -1241,12 +1325,6 @@ const docTemplate = `{
                 "email": {
                     "type": "string"
                 },
-                "id": {
-                    "type": "string"
-                },
-                "is_privileged": {
-                    "type": "boolean"
-                },
                 "username": {
                     "type": "string"
                 }
@@ -1264,6 +1342,9 @@ const docTemplate = `{
                 "author": {
                     "$ref": "#/definitions/dto.AuthorDTO"
                 },
+                "authorID": {
+                    "type": "string"
+                },
                 "genre_ar": {
                     "type": "string"
                 },
@@ -1280,7 +1361,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "publication_date": {
-                    "$ref": "#/definitions/datatypes.Date"
+                    "type": "string"
                 },
                 "title_ar": {
                     "type": "string"
@@ -1365,7 +1446,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "/api",
 	Schemes:          []string{"http", "https"},
 	Title:            "Istinara API",
-	Description:      "Open Dictionary of Culturally Marked Vocabulary of the Russian Language with Arabic Translation",
+	Description:      "Open online dictionary of culturally marked vocabulary of the Russian language with translation into Arabic Language",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

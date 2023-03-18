@@ -7,6 +7,6 @@ type Favourite struct {
 
 	UserID uuid.UUID `gorm:"type:uuid;column:user_id;index:fav_idx,unique" json:"user_id"`
 
-	ArticleID uuid.UUID `gorm:"type:uuid;column:article_id;index:fav_idx,unique" json:"article_id"`
-	Article   Article
+	ArticleID uuid.UUID `gorm:"type:uuid;column:article_id;index:fav_idx,unique;" json:"article_id"`
+	Article   Article   `gorm:"constraint:OnDelete:CASCADE;"`
 }

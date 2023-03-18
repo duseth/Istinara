@@ -1,13 +1,5 @@
 basePath: /api
 definitions:
-  datatypes.Date:
-    properties:
-      time:
-        type: string
-      valid:
-        description: Valid is true if Time is not NULL
-        type: boolean
-    type: object
   dto.ArticleDTO:
     properties:
       description_ar:
@@ -60,9 +52,9 @@ definitions:
       about_ru:
         type: string
       birth_date:
-        $ref: '#/definitions/datatypes.Date'
+        type: string
       death_date:
-        $ref: '#/definitions/datatypes.Date'
+        type: string
       id:
         type: string
       link:
@@ -121,10 +113,6 @@ definitions:
         type: string
       email:
         type: string
-      id:
-        type: string
-      is_privileged:
-        type: boolean
       username:
         type: string
     type: object
@@ -136,6 +124,8 @@ definitions:
         type: string
       author:
         $ref: '#/definitions/dto.AuthorDTO'
+      authorID:
+        type: string
       genre_ar:
         type: string
       genre_ru:
@@ -147,7 +137,7 @@ definitions:
       picture_path:
         type: string
       publication_date:
-        $ref: '#/definitions/datatypes.Date'
+        type: string
       title_ar:
         type: string
       title_ru:
@@ -197,68 +187,14 @@ info:
   contact:
     name: Istinara
     url: https://istinara.ru
-  description: Open Dictionary of Culturally Marked Vocabulary of the Russian Language
-    with Arabic Translation
+  description: Open online dictionary of culturally marked vocabulary of the Russian
+    language with translation into Arabic Language
   license:
     name: MIT License
     url: https://spdx.org/licenses/MIT.html
   title: Istinara API
   version: "1.0"
 paths:
-  /account/login:
-    post:
-      parameters:
-      - in: formData
-        name: email
-        required: true
-        type: string
-      - in: formData
-        name: password
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.LoginResult'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/http.BadRequestResponse'
-      summary: Get JWT token for authorization requests
-      tags:
-      - account
-  /account/register:
-    post:
-      parameters:
-      - in: formData
-        name: email
-        required: true
-        type: string
-      - in: formData
-        name: password
-        required: true
-        type: string
-      - in: formData
-        name: username
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/http.SuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/http.BadRequestResponse'
-      summary: Registration new user in the system
-      tags:
-      - account
   /articles:
     get:
       description: Returns list of all articles
@@ -266,6 +202,10 @@ paths:
       - description: Search query
         in: query
         name: query
+        type: string
+      - description: Sorting parameters (column.direction, column.direction)
+        in: query
+        name: sort_by
         type: string
       - description: Count of skipped records
         in: query
@@ -456,6 +396,60 @@ paths:
       summary: Add a new article
       tags:
       - articles
+  /auth/login:
+    post:
+      parameters:
+      - in: formData
+        name: email
+        required: true
+        type: string
+      - in: formData
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.LoginResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.BadRequestResponse'
+      summary: Authorization
+      tags:
+      - account
+  /auth/register:
+    post:
+      parameters:
+      - in: formData
+        name: email
+        required: true
+        type: string
+      - in: formData
+        name: password
+        required: true
+        type: string
+      - in: formData
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.BadRequestResponse'
+      summary: Registration
+      tags:
+      - account
   /authors:
     get:
       description: Returns list of all authors
@@ -548,10 +542,25 @@ paths:
         name: about_ru
         type: string
       - in: formData
+        name: birth_date
+        type: string
+      - in: formData
+        name: death_date
+        type: string
+      - in: formData
+        name: id
+        type: string
+      - in: formData
+        name: link
+        type: string
+      - in: formData
         name: name_ar
         type: string
       - in: formData
         name: name_ru
+        type: string
+      - in: formData
+        name: picture_path
         type: string
       - in: formData
         name: short_name_ar
@@ -595,10 +604,25 @@ paths:
         name: about_ru
         type: string
       - in: formData
+        name: birth_date
+        type: string
+      - in: formData
+        name: death_date
+        type: string
+      - in: formData
+        name: id
+        type: string
+      - in: formData
+        name: link
+        type: string
+      - in: formData
         name: name_ar
         type: string
       - in: formData
         name: name_ru
+        type: string
+      - in: formData
+        name: picture_path
         type: string
       - in: formData
         name: short_name_ar
@@ -740,25 +764,37 @@ paths:
         required: true
         type: string
       - in: formData
-        name: aboutAr
+        name: about_ar
         type: string
       - in: formData
-        name: aboutRu
+        name: about_ru
         type: string
       - in: formData
         name: authorID
         type: string
       - in: formData
-        name: genreAr
+        name: genre_ar
         type: string
       - in: formData
-        name: genreRu
+        name: genre_ru
         type: string
       - in: formData
-        name: titleAr
+        name: id
         type: string
       - in: formData
-        name: titleRu
+        name: link
+        type: string
+      - in: formData
+        name: picture_path
+        type: string
+      - in: formData
+        name: publication_date
+        type: string
+      - in: formData
+        name: title_ar
+        type: string
+      - in: formData
+        name: title_ru
         type: string
       - description: Work image that needs update
         in: formData
@@ -790,25 +826,37 @@ paths:
       - multipart/form-data
       parameters:
       - in: formData
-        name: aboutAr
+        name: about_ar
         type: string
       - in: formData
-        name: aboutRu
+        name: about_ru
         type: string
       - in: formData
         name: authorID
         type: string
       - in: formData
-        name: genreAr
+        name: genre_ar
         type: string
       - in: formData
-        name: genreRu
+        name: genre_ru
         type: string
       - in: formData
-        name: titleAr
+        name: id
         type: string
       - in: formData
-        name: titleRu
+        name: link
+        type: string
+      - in: formData
+        name: picture_path
+        type: string
+      - in: formData
+        name: publication_date
+        type: string
+      - in: formData
+        name: title_ar
+        type: string
+      - in: formData
+        name: title_ru
         type: string
       - description: Work image
         in: formData

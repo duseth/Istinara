@@ -5,7 +5,7 @@
     ],
     "swagger": "2.0",
     "info": {
-        "description": "Open Dictionary of Culturally Marked Vocabulary of the Russian Language with Arabic Translation",
+        "description": "Open online dictionary of culturally marked vocabulary of the Russian language with translation into Arabic Language",
         "title": "Istinara API",
         "contact": {
             "name": "Istinara",
@@ -20,90 +20,6 @@
     "host": "istinara.ru",
     "basePath": "/api",
     "paths": {
-        "/account/login": {
-            "post": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "account"
-                ],
-                "summary": "Get JWT token for authorization requests",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "name": "email",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "name": "password",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.LoginResult"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/http.BadRequestResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/account/register": {
-            "post": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "account"
-                ],
-                "summary": "Registration new user in the system",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "name": "email",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "name": "password",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "name": "username",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/http.SuccessResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/http.BadRequestResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/articles": {
             "get": {
                 "description": "Returns list of all articles",
@@ -119,6 +35,12 @@
                         "type": "string",
                         "description": "Search query",
                         "name": "query",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sorting parameters (column.direction, column.direction)",
+                        "name": "sort_by",
                         "in": "query"
                     },
                     {
@@ -417,6 +339,90 @@
                 }
             }
         },
+        "/auth/login": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "account"
+                ],
+                "summary": "Authorization",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "email",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.LoginResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http.BadRequestResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "account"
+                ],
+                "summary": "Registration",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "email",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "username",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http.BadRequestResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/authors": {
             "get": {
                 "description": "Returns list of all authors",
@@ -520,12 +526,37 @@
                     },
                     {
                         "type": "string",
+                        "name": "birth_date",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "death_date",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "id",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "link",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
                         "name": "name_ar",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "name": "name_ru",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "picture_path",
                         "in": "formData"
                     },
                     {
@@ -646,12 +677,37 @@
                     },
                     {
                         "type": "string",
+                        "name": "birth_date",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "death_date",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "id",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "link",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
                         "name": "name_ar",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "name": "name_ru",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "picture_path",
                         "in": "formData"
                     },
                     {
@@ -822,12 +878,12 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "name": "aboutAr",
+                        "name": "about_ar",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "aboutRu",
+                        "name": "about_ru",
                         "in": "formData"
                     },
                     {
@@ -837,22 +893,42 @@
                     },
                     {
                         "type": "string",
-                        "name": "genreAr",
+                        "name": "genre_ar",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "genreRu",
+                        "name": "genre_ru",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "titleAr",
+                        "name": "id",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "titleRu",
+                        "name": "link",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "picture_path",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "publication_date",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "title_ar",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "title_ru",
                         "in": "formData"
                     },
                     {
@@ -953,12 +1029,12 @@
                     },
                     {
                         "type": "string",
-                        "name": "aboutAr",
+                        "name": "about_ar",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "aboutRu",
+                        "name": "about_ru",
                         "in": "formData"
                     },
                     {
@@ -968,22 +1044,42 @@
                     },
                     {
                         "type": "string",
-                        "name": "genreAr",
+                        "name": "genre_ar",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "genreRu",
+                        "name": "genre_ru",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "titleAr",
+                        "name": "id",
                         "in": "formData"
                     },
                     {
                         "type": "string",
-                        "name": "titleRu",
+                        "name": "link",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "picture_path",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "publication_date",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "title_ar",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "title_ru",
                         "in": "formData"
                     },
                     {
@@ -1053,18 +1149,6 @@
         }
     },
     "definitions": {
-        "datatypes.Date": {
-            "type": "object",
-            "properties": {
-                "time": {
-                    "type": "string"
-                },
-                "valid": {
-                    "description": "Valid is true if Time is not NULL",
-                    "type": "boolean"
-                }
-            }
-        },
         "dto.ArticleDTO": {
             "type": "object",
             "properties": {
@@ -1144,10 +1228,10 @@
                     "type": "string"
                 },
                 "birth_date": {
-                    "$ref": "#/definitions/datatypes.Date"
+                    "type": "string"
                 },
                 "death_date": {
-                    "$ref": "#/definitions/datatypes.Date"
+                    "type": "string"
                 },
                 "id": {
                     "type": "string"
@@ -1239,12 +1323,6 @@
                 "email": {
                     "type": "string"
                 },
-                "id": {
-                    "type": "string"
-                },
-                "is_privileged": {
-                    "type": "boolean"
-                },
                 "username": {
                     "type": "string"
                 }
@@ -1262,6 +1340,9 @@
                 "author": {
                     "$ref": "#/definitions/dto.AuthorDTO"
                 },
+                "authorID": {
+                    "type": "string"
+                },
                 "genre_ar": {
                     "type": "string"
                 },
@@ -1278,7 +1359,7 @@
                     "type": "string"
                 },
                 "publication_date": {
-                    "$ref": "#/definitions/datatypes.Date"
+                    "type": "string"
                 },
                 "title_ar": {
                     "type": "string"

@@ -14,9 +14,9 @@ type Article struct {
 	DescriptionRu string `gorm:"column:description_ru" json:"description_ru"`
 	DescriptionAr string `gorm:"column:description_ar" json:"description_ar"`
 
-	Transcription string `gorm:"column:transcription" json:"transcription"`
-	PicturePath   string `gorm:"column:picture_path" json:"picture_path"`
 	Link          string `gorm:"column:link" json:"link"`
+	PicturePath   string `gorm:"column:picture_path" json:"picture_path"`
+	Transcription string `gorm:"column:transcription" json:"transcription"`
 
 	GroupID string `gorm:"column:group_id" json:"group_id"`
 	Group   Group
@@ -43,8 +43,8 @@ func (article *Article) ToDTO() dto.ArticleDTO {
 	}
 }
 
-// ParseForm parse Article from dto.ArticleInputForm
-func (article *Article) ParseForm(form dto.ArticleInputForm) {
+// ParseForm parse Article from dto.ArticleDTO
+func (article *Article) ParseForm(form dto.ArticleDTO) {
 	article.TitleRu = form.TitleRu
 	article.TitleAr = form.TitleAr
 	article.QuoteRu = form.QuoteRu

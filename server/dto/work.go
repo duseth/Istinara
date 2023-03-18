@@ -18,11 +18,11 @@ type WorkDTO struct {
 	GenreRu string `json:"genre_ru" form:"genre_ru"`
 	GenreAr string `json:"genre_ar" form:"genre_ar"`
 
-	Link            string    `json:"link" form:"link"`
-	PicturePath     string    `json:"picture_path" form:"picture_path"`
+	Link            string    `json:"link"`
+	PicturePath     string    `json:"picture_path"`
 	PublicationDate time.Time `json:"publication_date" form:"publication_date" time_format:"2006-01-02"`
 
-	AuthorID string    `form:"author_id" binding:"omitempty,uuid"`
+	AuthorID string    `form:"author_id"`
 	Author   AuthorDTO `json:"author"`
 }
 

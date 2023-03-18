@@ -42,7 +42,7 @@ func (author *Author) ToDTO() dto.AuthorDTO {
 	}
 }
 
-// ParseForm parse Author from dto.AuthorInputForm
+// ParseForm parse Author from dto.AuthorDTO
 func (author *Author) ParseForm(form dto.AuthorDTO) {
 	author.NameRu = form.NameRu
 	author.NameAr = form.NameAr
