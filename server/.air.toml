@@ -1,20 +1,17 @@
 root = "."
-tmp_dir = "server/tmp"
 
 [build]
 args_bin = []
-bin = "server/tmp/main.exe"
-cmd = "cd server && go build -buildvcs=false -o ./tmp/main.exe ."
+bin = "main.exe"
+cmd = "go build -buildvcs=false -o main.exe ."
 
 delay = 1000
 
-exclude_dir = ["tmp", "vendor", "app", "pg-data", "pg-admin"]
-exclude_file = []
+exclude_dir = ["app"]
 
 follow_symlink = false
 full_bin = ""
 
-include_dir = []
 include_ext = ["go", "tpl", "tmpl", "html"]
 
 kill_delay = "0s"

@@ -15,7 +15,8 @@ services:
       db:
         condition: service_healthy
     volumes:
-      - ./:/server
+      - ./server:/server
+      - ./app/public:/server/app/public
     networks:
       - local
 
@@ -29,7 +30,6 @@ services:
       - "5432:5432"
     volumes:
       - ./pg-data:/var/lib/postgresql/data
-      - ./postgresql.conf:/etc/postgresql.conf
     networks:
       - local
     healthcheck:
