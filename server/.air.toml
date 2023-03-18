@@ -7,7 +7,7 @@ cmd = "go build -buildvcs=false -o main.exe ."
 
 delay = 1000
 
-exclude_dir = ["app"]
+exclude_dir = ["app", "ssl"]
 
 follow_symlink = false
 full_bin = ""

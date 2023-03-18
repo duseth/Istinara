@@ -15,6 +15,7 @@
 vendor/
 
 # Go workspace file
+server/ssl/*
 go.work
 
 # Go Patch

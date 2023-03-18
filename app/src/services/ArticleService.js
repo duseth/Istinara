@@ -167,7 +167,7 @@ class ArticleService {
     }
 
     async CreateLink(id: number, link: number) {
-        return await API.post(`/articles/${id}/link/${link}`, AccountService.GetHeaders(true, true))
+        return await API.post(`/articles/${id}/link/${link}`, null, AccountService.GetHeaders(true, true))
             .then((response) => response.data?.link)
             .catch(() => {
                 throw new Error();
