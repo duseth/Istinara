@@ -1,10 +1,10 @@
 import React, {useContext, useRef, useState} from "react";
 
-import './Navbar.scss'
+import './Header.scss'
 import {HeaderLink} from "../../../containers/Language";
 import {LanguageContext} from "../../../languages/Language";
 
-const Navbar = () => {
+const Header = () => {
     const languageContext = useContext(LanguageContext);
     const search_placeholder = languageContext.dictionary["header"]["search_placeholder"]
     const iconX = "bi bi-x-lg nav-bi-icon icon-hover", iconS = "bi bi-search nav-bi-icon icon-hover";
@@ -31,7 +31,7 @@ const Navbar = () => {
     }
 
     return (
-        <>
+        <header>
             <nav className="navbar navbar-expand-lg navbar-dark bg-black">
                 <button className="navbar-toggler m-2" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false">
@@ -111,8 +111,8 @@ const Navbar = () => {
                     </button>
                 </div>
             </form>
-        </>
+        </header>
     );
 };
 
-export default Navbar;
+export default Header;

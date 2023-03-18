@@ -42,7 +42,7 @@ const WelcomePage = () => {
     };
 
     return (
-        <main>
+        <>
             <section className="main-container position-relative">
                 <img className="welcome-image" src="/images/index.jpg" alt="culture"/>
                 <div className="welcome-page">
@@ -60,7 +60,7 @@ const WelcomePage = () => {
                     <p className="welcome-text"><WelcomeText tid="main_text"/></p>
                 </div>
             </div>
-        </main>
+        </>
     );
 };
 
