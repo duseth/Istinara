@@ -148,7 +148,6 @@ export function WorksDeleteForm({tid}) {
     return languageContext.dictionary["works"]["form"]["delete"][tid] || tid;
 }
 
-
 export function WorksPage({tid}) {
     const languageContext = useContext(LanguageContext);
     return languageContext.dictionary["works"]["page"][tid] || tid;
@@ -165,10 +164,41 @@ export function ArticlesPage({tid}) {
     return languageContext.dictionary["articles"]["page"][tid] || tid;
 }
 
-export function ArticlesPageForm({tid}) {
+export function ArticlesForm({tid}) {
     const languageContext = useContext(LanguageContext);
-    return languageContext.dictionary["articles"]["page"]["form"][tid] || tid;
+    return languageContext.dictionary["articles"]["form"][tid] || tid;
 }
+
+export function ArticlesCreateForm({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["articles"]["form"]["create"][tid] || tid;
+}
+
+export function ArticlesUpdateForm({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["articles"]["form"]["update"][tid] || tid;
+}
+
+export function ArticlesCreateLinkForm({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["articles"]["form"]["link"]["create"][tid] || tid;
+}
+
+export function ArticlesDeleteLinkForm({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["articles"]["form"]["link"]["delete"][tid] || tid;
+}
+
+export function ArticlesDeleteForm({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["articles"]["form"]["delete"][tid] || tid;
+}
+
+export function ArticlesFeedbackForm({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["articles"]["form"]["feedback"][tid] || tid;
+}
+
 
 // Contribution
 export function ContributionText({tid}) {

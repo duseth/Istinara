@@ -153,9 +153,8 @@ const AccountPage = () => {
                                         </form>
                                     </div>
                                     <div className="row justify-content-center align-items-center">
-                                        <form
-                                            onSubmit={handleSubmit((data) => AccountService.ChangePassword(data, setError))}
-                                            className="auth-form" {...register("change_password")}>
+                                        <form className="auth-form" {...register("change_password")}
+                                            onSubmit={handleSubmit((data) => AccountService.ChangePassword(data, setError))}>
                                             <div className="auth-form-content row">
                                                 <h3 className="auth-form-title">
                                                     <ProfilePasswordForm tid="title"/>
@@ -268,7 +267,7 @@ const AccountPage = () => {
                               className="auth-form" {...register("login")}>
                             <div className="auth-form-content row">
                                 {cookies.get("token_expired") !== undefined && (
-                                    <div className="alert alert-info" role="alert">
+                                    <div className="alert alert-info text-center" role="alert">
                                         <ProfileText tid="session_expired"/>
                                     </div>
                                 )}

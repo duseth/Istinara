@@ -121,7 +121,7 @@ const WorksListPage = () => {
         <div className="album">
             <div className="container">
                 {
-                    AccountService.IsPrivilegedUser() && authors && (
+                    AccountService.IsPrivilegedUser() && authors?.length !== 0 && (
                         <>
                             <div className="col-md-8 m-auto pt-4">
                                 <div className="accordion accordion-flush" id="accordionFlushExample">
@@ -138,8 +138,8 @@ const WorksListPage = () => {
                                              aria-labelledby="flush-heading">
                                             <div className="accordion-body pt-0">
                                                 <form onSubmit={handleSubmit((data) => createWork(data))}
-                                                      id="add-author-form" {...register("required")}>
-                                                    {GetWorkForm(register, errors, authors.map(author => {
+                                                      id="add-work-form" {...register("required")}>
+                                                    {GetWorkForm(register, errors, authors?.map(author => {
                                                         return {
                                                             id: author.id,
                                                             name: lang === "ru" ? author.name_ru : author.name_ar
@@ -350,7 +350,7 @@ const WorkPage = () => {
                 <div className="work-cover-image">
                     <img className="work-page-image" src={work.picture_path} alt={workCard.title}/>
                 </div>
-                <h4 className="text-center my-3">«{workCard.title}»</h4>
+                <h4 className="text-center my-3">{workCard.title}</h4>
                 <div className="col-md-9 text-center m-auto">
                     <hr/>
                     <div className="row">
@@ -427,7 +427,7 @@ const WorkPage = () => {
                     )
                 }
                 {
-                    AccountService.IsPrivilegedUser() && (
+                    AccountService.IsPrivilegedUser() && authors?.length !== 0  && (
                         <div className="row">
                             <div className="col-md-9 m-auto pt-4">
                                 <div className="accordion accordion-flush" id="accordionFlushExample">
@@ -444,7 +444,7 @@ const WorkPage = () => {
                                              aria-labelledby="flush-heading">
                                             <div className="accordion-body pt-0">
                                                 <form onSubmit={handleSubmit((data, event) => updateWork(data, event))}
-                                                      id="add-author-form" {...register("required")}>
+                                                      id="update-work-form" {...register("required")}>
                                                     {GetWorkForm(register, errors, authors.map(author => {
                                                         return {
                                                             id: author.id,
@@ -482,10 +482,9 @@ const GetWorkForm = (register, errors, authors, work) => {
     return (
         <>
             <div className="pt-3">
-                <p className="mb-2"><WorksForm tid="author"/></p>
                 <div className="row">
                     <div className="col-12">
-                        <select className="form-select" id="author_id" defaultValue={work ? work.author.id : "null"}
+                        <select className="form-select" id="author_id" defaultValue={work ? work.author?.id : "null"}
                                 name="author_id" {...register("author_id")}>
                             <option value="null" disabled><WorksForm tid="choose_author"/></option>
                             {

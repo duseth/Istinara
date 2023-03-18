@@ -1,4 +1,4 @@
-import {Article as ArticleDTO} from "../models/Article";
+import {Article} from "../models/Article";
 import React from "react";
 import API from "./API";
 import Cookies from "universal-cookie";
@@ -18,7 +18,7 @@ class ArticleService {
         "Этнографические и мифологические реалии": "bi-magic",
     };
 
-    GetArticleCard(data: Array<ArticleDTO>, article: ArticleDTO, lang: string) {
+    GetArticleCard(data: Array<Article>, article: Article, lang: string) {
         const logged = this.cookies.get("token") !== undefined;
 
         const getClassesByGroup = (name: string) => {
@@ -46,7 +46,7 @@ class ArticleService {
         )
     }
 
-    GetCarouselArticleCard(data: Array<ArticleDTO>, article: ArticleDTO, is_active: boolean, lang: string) {
+    GetCarouselArticleCard(data: Array<Article>, article: Article, is_active: boolean, lang: string) {
         return (
             <div className={is_active ? "carousel-item active" : "carousel-item"} key={article.id}>
                 <div className="row justify-content-center align-items-center m-2">
@@ -56,7 +56,7 @@ class ArticleService {
         )
     }
 
-    LikeArticle(event: Event, data: Array<ArticleDTO>, article: ArticleDTO) {
+    LikeArticle(event: Event, data: Array<Article>, article: Article) {
         let articleIndex = null;
         data.map((art, index) => {
             if (art.id === article.id) {
@@ -90,7 +90,7 @@ class ArticleService {
         }
     };
 
-    GetRussianHighlightedQuote(article: ArticleDTO) {
+    GetRussianHighlightedQuote(article: Article) {
         const re = new RegExp("([^\\s\\.,]*)(" + article.title_ru.toLowerCase() + ")([^\\s\\.,]*)", "gi");
         const quote = article.quote_ru.toLowerCase();
         const title = quote.match(re);
@@ -111,7 +111,7 @@ class ArticleService {
         )
     };
 
-    GetArabicHighlightedQuote(article: ArticleDTO) {
+    GetArabicHighlightedQuote(article: Article) {
         const remove_diacritics = (str) => {
             return str.replace((/[\u064B-\u0652]/g), "");
         };
@@ -135,6 +135,52 @@ class ArticleService {
             </p>
         )
     };
+
+    async Create(article: Article) {
+        let formData = new FormData();
+        Object.entries(article).map((value) => formData.append(value[0], value[1]));
+
+        return await API.post("/articles", formData, AccountService.GetHeaders(true, true))
+            .then(() => true)
+            .catch(() => {
+                throw new Error();
+            })
+    }
+
+    async Update(id: number, article: Article) {
+        let formData = new FormData();
+        Object.entries(article).map((value) => formData.append(value[0], value[1]));
+
+        return await API.patch(`/articles/${id}`, formData, AccountService.GetHeaders(true, true))
+            .then((response) => response.data?.link)
+            .catch(() => {
+                throw new Error();
+            })
+    }
+
+    async Delete(article_id: string) {
+        return await API.delete(`/articles/${article_id}`, AccountService.GetHeaders(true, true))
+            .then(() => true)
+            .catch(() => {
+                throw new Error();
+            })
+    }
+
+    async CreateLink(id: number, link: number) {
+        return await API.post(`/articles/${id}/link/${link}`, AccountService.GetHeaders(true, true))
+            .then((response) => response.data?.link)
+            .catch(() => {
+                throw new Error();
+            })
+    }
+
+    async DeleteLink(id: number, link: number) {
+        return await API.delete(`/articles/${id}/link/${link}`, AccountService.GetHeaders(true, true))
+            .then((response) => response.data?.link)
+            .catch(() => {
+                throw new Error();
+            })
+    }
 }
 
 let service = new ArticleService();
