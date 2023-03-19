@@ -486,7 +486,7 @@ const GetWorkForm = (register, errors, authors, work) => {
                     <div className="col-12">
                         <select className="form-select" id="author_id" defaultValue={work ? work.author?.id : "null"}
                                 name="author_id" {...register("author_id")}>
-                            <option value="null" disabled><WorksForm tid="choose_author"/></option>
+                            <option value="null" disabled><GeneralForm tid="choose_author"/></option>
                             {
                                 authors?.map((author) =>
                                     <option key={author.id} value={author.id}>{author.name}</option>
@@ -501,14 +501,14 @@ const GetWorkForm = (register, errors, authors, work) => {
                 <div className="row">
                     <div className="col-6">
                         <label htmlFor="title_ru" className="form-label">
-                            <WorksForm tid="russian"/>
+                            <GeneralForm tid="russian"/>
                         </label>
                         <input type="text" dir="ltr" className="form-control" id="title_ru"
                                {...register("title_ru")} defaultValue={work?.title_ru}/>
                     </div>
                     <div className="col-6">
                         <label htmlFor="title_ar" className="form-label">
-                            <WorksForm tid="arabic"/>
+                            <GeneralForm tid="arabic"/>
                         </label>
                         <input type="text" dir="rtl" className="form-control" id="title_ar"
                                {...register("title_ar")} defaultValue={work?.title_ar}/>
@@ -520,14 +520,14 @@ const GetWorkForm = (register, errors, authors, work) => {
                 <div className="row">
                     <div className="col-12">
                         <label htmlFor="about_ru" className="form-label">
-                            <WorksForm tid="russian"/>
+                            <GeneralForm tid="russian"/>
                         </label>
                         <textarea rows="4" dir="ltr" className="form-control" id="about_ru"
                                   {...register("about_ru")} defaultValue={work?.about_ru}/>
                     </div>
                     <div className="col-12">
                         <label htmlFor="about_ar" className="form-label">
-                            <WorksForm tid="arabic"/>
+                            <GeneralForm tid="arabic"/>
                         </label>
                         <textarea rows="4" dir="rtl" className="form-control" id="about_ar"
                                   {...register("about_ar")} defaultValue={work?.about_ar}/>
@@ -539,14 +539,14 @@ const GetWorkForm = (register, errors, authors, work) => {
                 <div className="row">
                     <div className="col-6">
                         <label htmlFor="genre_ru" className="form-label">
-                            <WorksForm tid="russian"/>
+                            <GeneralForm tid="russian"/>
                         </label>
                         <input type="text" dir="rtl" className="form-control" id="genre_ru"
                                {...register("genre_ru")} defaultValue={work?.genre_ru}/>
                     </div>
                     <div className="col-6">
                         <label htmlFor="genre_ar" className="form-label">
-                            <WorksForm tid="arabic"/>
+                            <GeneralForm tid="arabic"/>
                         </label>
                         <input type="text" dir="rtl" className="form-control" id="genre_ar"
                                {...register("genre_ar")} defaultValue={work?.genre_ar}/>

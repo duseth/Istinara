@@ -257,7 +257,7 @@ const ArticlesListPage = () => {
         <div className="album">
             <div className="container">
                 {
-                    AccountService.IsPrivilegedUser() && works && groups && (
+                    AccountService.IsPrivilegedUser() && (
                         <>
                             <div className="col-md-8 m-auto pt-4">
                                 <div className="accordion accordion-flush" id="accordionFlushExample">
@@ -375,6 +375,12 @@ const ArticlesListPage = () => {
                                     </div>
                                 </div>
                             </div>
+                        </>
+                    )
+                }
+                {
+                    AccountService.IsPrivilegedUser() && works && groups && (
+                        <>
                             <div className="col-md-8 m-auto pt-4">
                                 <div className="accordion accordion-flush" id="accordionFlushExample">
                                     <div className="accordion-item">
