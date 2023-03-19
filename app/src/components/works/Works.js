@@ -32,7 +32,7 @@ const WorksListPage = () => {
     const [rerender, setRerender] = useState(false);
     const [count, setCount] = useState(0);
     const [data: Array<Work>, setData] = useState();
-    const [authors: Array<Author>, setAuthors] = useState();
+    const [authors: Array<Author>, setAuthors] = useState(null);
 
     const {register, setError, handleSubmit, formState: {errors}} = useForm();
 
@@ -121,7 +121,7 @@ const WorksListPage = () => {
         <div className="album">
             <div className="container">
                 {
-                    AccountService.IsPrivilegedUser() && authors && (
+                    AccountService.IsPrivilegedUser() && authors?.length > 0 && (
                         <>
                             <div className="col-md-8 m-auto pt-4">
                                 <div className="accordion accordion-flush" id="accordionFlushExample">

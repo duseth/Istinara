@@ -42,8 +42,8 @@ const ArticlesListPage = () => {
 
     const [count, setCount] = useState(0);
     const [data: Array<Article>, setData] = useState()
-    const [works: Array<Work>, setWorks] = useState();
-    const [groups: Array<Group>, setGroups] = useState();
+    const [works: Array<Work>, setWorks] = useState(null);
+    const [groups: Array<Group>, setGroups] = useState(null);
 
     const query = searchParams.get("query") !== null
         ? "query=" + searchParams.get("query") + "&"
@@ -379,7 +379,7 @@ const ArticlesListPage = () => {
                     )
                 }
                 {
-                    AccountService.IsPrivilegedUser() && works && groups && (
+                    AccountService.IsPrivilegedUser() && works?.length > 0 && groups?.length > 0 && (
                         <>
                             <div className="col-md-8 m-auto pt-4">
                                 <div className="accordion accordion-flush" id="accordionFlushExample">
