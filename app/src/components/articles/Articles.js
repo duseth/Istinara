@@ -141,7 +141,7 @@ const ArticlesListPage = () => {
         <div className="album">
             <div className="container">
                 {
-                    AccountService.IsPrivilegedUser() && works?.length !== 0 && groups?.length !== 0 && (
+                    AccountService.IsPrivilegedUser() && works && groups && (
                         <>
                             <div className="col-md-8 m-auto pt-4">
                                 <div className="accordion accordion-flush" id="accordionFlushExample">
@@ -623,7 +623,7 @@ const ArticlePage = () => {
                     </div>
                 </div>
                 {
-                    AccountService.IsPrivilegedUser() && works?.length !== 0 && groups?.length !== 0 && (
+                    AccountService.IsPrivilegedUser() && works && groups && (
                         <div className="row">
                             <div className="col-md-9 m-auto pt-4">
                                 <div className="accordion accordion-flush" id="accordionFlushExample">

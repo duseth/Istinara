@@ -5,7 +5,7 @@ import AccountService from "./AccountService";
 class WorkService {
     async Create(work: Work) {
         let formData = new FormData();
-        Object.entries(work).map((value) => formData.append(value[0], value[1]));
+        Object.entries(work).map((value) => formData.append(value[0], value[1].trim()));
 
         return await API.post("/works", formData, AccountService.GetHeaders(true, true))
             .then(() => true)
@@ -16,7 +16,7 @@ class WorkService {
 
     async Update(id: number, work: Work) {
         let formData = new FormData();
-        Object.entries(work).map((value) => formData.append(value[0], value[1]));
+        Object.entries(work).map((value) => formData.append(value[0], value[1].trim()));
 
         return await API.patch(`/works/${id}`, formData, AccountService.GetHeaders(true, true))
             .then((response) => response.data?.link)

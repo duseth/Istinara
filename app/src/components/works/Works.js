@@ -121,7 +121,7 @@ const WorksListPage = () => {
         <div className="album">
             <div className="container">
                 {
-                    AccountService.IsPrivilegedUser() && authors?.length !== 0 && (
+                    AccountService.IsPrivilegedUser() && authors && (
                         <>
                             <div className="col-md-8 m-auto pt-4">
                                 <div className="accordion accordion-flush" id="accordionFlushExample">
@@ -427,7 +427,7 @@ const WorkPage = () => {
                     )
                 }
                 {
-                    AccountService.IsPrivilegedUser() && authors?.length !== 0  && (
+                    AccountService.IsPrivilegedUser() && authors && (
                         <div className="row">
                             <div className="col-md-9 m-auto pt-4">
                                 <div className="accordion accordion-flush" id="accordionFlushExample">
