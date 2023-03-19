@@ -1,6 +1,6 @@
 import BaseModel from "./Base";
 
-class Request extends BaseModel {
+class Contribution extends BaseModel {
     name: string;
     email: string;
     title_ru: string;
@@ -10,7 +10,6 @@ class Request extends BaseModel {
     description_ru: string;
     description_ar: string;
     work_id: number;
-    author_id: number;
 }
 
-export {Request};
+export {Contribution};

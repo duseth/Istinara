@@ -239,12 +239,12 @@ func CreateArticle(ctx *gin.Context) {
 
 		pictureName := article.Link + filepath.Ext(file.Filename)
 
-		picturePath := filepath.Join(rootPath, "app", "public", "images", "works", pictureName)
+		picturePath := filepath.Join(rootPath, "app", "public", "images", "articles", pictureName)
 		if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
 			httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 			return
 		}
-		article.PicturePath = filepath.Join("/images", "works", pictureName)
+		article.PicturePath = filepath.Join("/images", "articles", pictureName)
 	}
 
 	if err = models.DB.Create(&article).Error; err != nil {
@@ -299,12 +299,12 @@ func UpdateArticle(ctx *gin.Context) {
 			pictureName = article.Link + filepath.Ext(file.Filename)
 		}
 
-		picturePath := filepath.Join(rootPath, "app", "public", "images", "works", pictureName)
+		picturePath := filepath.Join(rootPath, "app", "public", "images", "articles", pictureName)
 		if err = ctx.SaveUploadedFile(file, picturePath); err != nil {
 			httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 			return
 		}
-		articleForm.PicturePath = filepath.Join("/images", "works", pictureName)
+		articleForm.PicturePath = filepath.Join("/images", "articles", pictureName)
 	}
 
 	var updateArticle models.Article

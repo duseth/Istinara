@@ -90,48 +90,44 @@ class ArticleService {
         }
     };
 
-    GetRussianHighlightedQuote(article: Article) {
-        const re = new RegExp("([^\\s\\.,]*)(" + article.title_ru.toLowerCase() + ")([^\\s\\.,]*)", "gi");
-        const quote = article.quote_ru.toLowerCase();
-        const title = quote.match(re);
-
-        if (title === null) {
-            return <p>{article.quote_ru}</p>
-        }
-
-        const start = quote.indexOf(title[0]);
-        const end = start + title[0].length;
-
-        return (
-            <p>
-                {article.quote_ru.substring(0, start)}
-                <b className="article-quote">{article.quote_ru.substring(start, end)}</b>
-                {article.quote_ru.substring(end, article.quote_ru.length)}
-            </p>
-        )
-    };
-
-    GetArabicHighlightedQuote(article: Article) {
+    GetHighlightedQuote(input_quote: string, input_title: string) {
         const remove_diacritics = (str) => {
             return str.replace((/[\u064B-\u0652]/g), "");
         };
 
-        const re = new RegExp("([^\\s\\.,]*)(" + remove_diacritics(article.title_ar) + ")([^\\s\\.,]*)", "gi");
-        const quote = remove_diacritics(article.quote_ar);
-        const title = quote.match(re);
+        const titleLength = input_title.length;
+        const quote = remove_diacritics(input_quote);
 
-        if (title === null) {
-            return <p>{article.quote_ar}</p>
+        let title = null;
+        const variables = [
+            input_title,
+            input_title.slice(0, titleLength - 1),
+            input_title.slice(0, titleLength - 2),
+            input_title.slice(1, titleLength),
+            input_title.slice(2, titleLength)
+        ];
+
+        for (const variable of variables) {
+            const re = new RegExp("([^\\s\\.,]*)(" + remove_diacritics(variable) + ")([^\\s\\.,]*)", "gi");
+            title = quote.match(re);
+
+            if (title) {
+                break;
+            }
         }
 
-        const start = quote.indexOf(title[0]);
+        if (title === null) {
+            return <p>{input_quote}</p>
+        }
+
+        const start = input_quote.indexOf(title[0]);
         const end = start + title[0].length;
 
         return (
             <p>
-                {article.quote_ar.substring(0, start)}
-                <b className="article-quote">{article.quote_ar.substring(start, end)}</b>
-                {article.quote_ar.substring(end, article.quote_ar.length)}
+                {input_quote.substring(0, start)}
+                <b className="article-quote">{input_quote.substring(start, end)}</b>
+                {input_quote.substring(end, input_quote.length)}
             </p>
         )
     };

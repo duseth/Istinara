@@ -9,14 +9,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ListRequests(ctx *gin.Context) {
-	var requests []models.Request
-	if err := models.DB.Preload("Author").Preload("Work").Find(&requests).Error; err != nil {
+func ListContributions(ctx *gin.Context) {
+	var requests []models.Contribution
+	if err := models.DB.Preload("Work").Find(&requests).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
 		return
 	}
 
-	data := make([]dto.RequestDTO, 0, len(requests))
+	data := make([]dto.ContributionDTO, 0, len(requests))
 	for _, request := range requests {
 		data = append(data, request.ToDTO())
 	}
@@ -24,10 +24,10 @@ func ListRequests(ctx *gin.Context) {
 	httputil.ResponseSuccess(ctx, data)
 }
 
-func GetRequest(ctx *gin.Context) {
-	var request models.Request
+func GetContribution(ctx *gin.Context) {
+	var request models.Contribution
 
-	err := models.DB.Preload("Author").Preload("Work").Where("id = ?", ctx.Param("id")).First(&request).Error
+	err := models.DB.Preload("Work").Where("id = ?", ctx.Param("id")).First(&request).Error
 	if err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
@@ -36,14 +36,14 @@ func GetRequest(ctx *gin.Context) {
 	httputil.ResponseSuccess(ctx, request.ToDTO())
 }
 
-func CreateRequest(ctx *gin.Context) {
-	var requestForm dto.RequestInputForm
+func CreateContribution(ctx *gin.Context) {
+	var requestForm dto.ContributionDTO
 	if err := ctx.Bind(&requestForm); err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return
 	}
 
-	var request models.Request
+	var request models.Contribution
 	request.ParseForm(requestForm)
 
 	if err := models.DB.Create(&request).Error; err != nil {
@@ -54,8 +54,8 @@ func CreateRequest(ctx *gin.Context) {
 	httputil.ResponseSuccess(ctx, true)
 }
 
-func DeleteRequest(ctx *gin.Context) {
-	var request models.Request
+func DeleteContribution(ctx *gin.Context) {
+	var request models.Contribution
 	if err := models.DB.Where("id = ?", ctx.Param("id")).First(&request).Error; err != nil {
 		httputil.ResponseErrorWithAbort(ctx, http.StatusBadRequest, err)
 		return

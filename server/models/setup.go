@@ -26,7 +26,7 @@ func DatabaseConnect() {
 
 func RunMigrations() {
 	err := DB.AutoMigrate(
-		&User{}, &Author{}, &Work{}, &Article{}, &Request{}, &Group{}, &Favourite{}, &ArticleLink{}, &Feedback{},
+		&User{}, &Author{}, &Work{}, &Article{}, &Contribution{}, &Group{}, &Favourite{}, &ArticleLink{}, &Feedback{},
 	)
 	if err != nil {
 		log.Fatal("Error while running migrations!\n", err)

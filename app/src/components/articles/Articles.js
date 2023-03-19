@@ -538,7 +538,7 @@ const ArticlePage = () => {
                         <div className="article-item">{article.description_ru}</div>
                         <figure className="article-quote-block">
                             <blockquote className="blockquote pb-1">
-                                {ArticleService.GetRussianHighlightedQuote(article)}
+                                {ArticleService.GetHighlightedQuote(article.quote_ru, article.title_ru)}
                             </blockquote>
                             <figcaption className="blockquote-footer mb-0">
                                 {article.work.title_ru + ", "}{article.work.author.short_name_ru}
@@ -549,7 +549,7 @@ const ArticlePage = () => {
                         <div className="article-item">{article.description_ar}</div>
                         <figure className="article-quote-block">
                             <blockquote className="blockquote pb-1">
-                                {ArticleService.GetArabicHighlightedQuote(article)}
+                                {ArticleService.GetHighlightedQuote(article.quote_ar, article.title_ar)}
                             </blockquote>
                             <figcaption className="blockquote-footer mb-0">
                                 {article.work.title_ar + ", "}{article.work.author.short_name_ar}
@@ -871,9 +871,9 @@ const GetArticleForm = (register, errors, works, groups, article) => {
                 </div>
             </div>
             <div className="pt-3">
+                <p className="mb-2"><ArticlesForm tid="picture"/></p>
                 <div className="row">
                     <div className="col-12">
-                        <label htmlFor="picture" className="form-label"><ArticlesForm tid="picture"/></label>
                         <input type="file" className="form-control" id="picture" {...register("picture")}/>
                     </div>
                 </div>
