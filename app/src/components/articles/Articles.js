@@ -286,7 +286,7 @@ const ArticlesListPage = () => {
                     )
                 }
                 {
-                    AccountService.IsPrivilegedUser() && works?.length > 0 && (
+                    AccountService.IsPrivilegedUser() && groups?.length > 0 && (
                         <>
                             <div className="col-md-8 m-auto pt-4">
                                 <div className="accordion accordion-flush" id="accordionFlushExample">
