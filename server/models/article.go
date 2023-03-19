@@ -52,6 +52,7 @@ func (article *Article) ParseForm(form dto.ArticleDTO) {
 	article.DescriptionRu = form.DescriptionRu
 	article.DescriptionAr = form.DescriptionAr
 	article.Transcription = form.Transcription
+	article.PicturePath = form.PicturePath
 	article.GroupID = form.GroupID
 	article.WorkID = form.WorkID
 }
