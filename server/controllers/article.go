@@ -125,27 +125,6 @@ func ListLinked(ctx *gin.Context) {
 	httputil.ResponseSuccess(ctx, gin.H{"data": data, "count": count})
 }
 
-func ListGroups(ctx *gin.Context) {
-	var count int64
-	var groups []models.Group
-
-	db := models.DB.Model(&models.Group{})
-	db.Count(&count)
-
-	err := db.Find(&groups).Error
-	if err != nil {
-		httputil.ResponseErrorWithAbort(ctx, http.StatusInternalServerError, err)
-		return
-	}
-
-	data := make([]dto.GroupDTO, 0, len(groups))
-	for _, group := range groups {
-		data = append(data, group.ToDTO())
-	}
-
-	httputil.ResponseSuccess(ctx, gin.H{"data": data, "count": count})
-}
-
 // GetArticle   		godoc
 //
 //	@Summary		Get article by ID

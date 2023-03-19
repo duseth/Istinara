@@ -112,7 +112,7 @@ const ContributionPage = () => {
                                 <div className="col-12">
                                     <select className="form-select" id="group_id" defaultValue={"null"}
                                             name="group_id" {...register("group_id")}>
-                                        <option value="null" disabled><ArticlesForm tid="choose_group"/></option>
+                                        <option value="null" disabled><GeneralForm tid="choose_group"/></option>
                                         {
                                             groups?.map((group) =>
                                                 <option key={group.id} value={group.id}>
@@ -129,7 +129,7 @@ const ContributionPage = () => {
                                 <div className="col-12">
                                     <select className="form-select" id="work_id" defaultValue={"null"}
                                             name="work_id" {...register("work_id")}>
-                                        <option value="null" disabled><ArticlesForm tid="choose_work"/></option>
+                                        <option value="null" disabled><GeneralForm tid="choose_work"/></option>
                                         {
                                             works?.map((work) =>
                                                 <option key={work.id} value={work.id}>
@@ -145,14 +145,16 @@ const ContributionPage = () => {
                             <p className="m-0"><ArticlesForm tid="title"/></p>
                             <div className="row">
                                 <div className="col-6">
-                                    <label htmlFor="title_ru" className="form-label"><ArticlesForm
-                                        tid="russian"/></label>
+                                    <label htmlFor="title_ru" className="form-label">
+                                        <GeneralForm tid="russian"/>
+                                    </label>
                                     <input type="text" dir="ltr" className="form-control" id="title_ru"
                                            {...register("title_ru")}/>
                                 </div>
                                 <div className="col-6">
-                                    <label htmlFor="title_ar" className="form-label"><ArticlesForm
-                                        tid="arabic"/></label>
+                                    <label htmlFor="title_ar" className="form-label">
+                                        <GeneralForm tid="arabic"/>
+                                    </label>
                                     <input type="text" dir="rtl" className="form-control" id="title_ar"
                                            {...register("title_ar")}/>
                                 </div>
@@ -162,14 +164,16 @@ const ContributionPage = () => {
                             <p className="m-0"><ArticlesForm tid="quote"/></p>
                             <div className="row">
                                 <div className="col-12">
-                                    <label htmlFor="quote_ru" className="form-label"><ArticlesForm
-                                        tid="russian"/></label>
+                                    <label htmlFor="quote_ru" className="form-label">
+                                        <GeneralForm tid="russian"/>
+                                    </label>
                                     <textarea rows="4" dir="ltr" className="form-control" id="quote_ru"
                                               {...register("quote_ru")}/>
                                 </div>
                                 <div className="col-12">
-                                    <label htmlFor="quote_ar" className="form-label"><ArticlesForm
-                                        tid="arabic"/></label>
+                                    <label htmlFor="quote_ar" className="form-label">
+                                        <GeneralForm tid="arabic"/>
+                                    </label>
                                     <textarea rows="4" dir="rtl" className="form-control" id="quote_ar"
                                               {...register("quote_ar")}/>
                                 </div>
@@ -187,7 +191,7 @@ const ContributionPage = () => {
                                 </div>
                                 <div className="col-12">
                                     <label htmlFor="description_ar" className="form-label">
-                                        <ArticlesForm tid="arabic"/>
+                                        <GeneralForm tid="arabic"/>
                                     </label>
                                     <textarea rows="4" dir="rtl" className="form-control" id="description_ar"
                                               {...register("description_ar")}/>

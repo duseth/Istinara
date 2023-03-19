@@ -12,7 +12,7 @@ type Feedback struct {
 	Description string `gorm:"column:description" json:"description"`
 
 	ArticleID uuid.UUID `gorm:"type:uuid;column:article_id" json:"article_id"`
-	Article   Article
+	Article   Article   `gorm:"constraint:OnDelete:CASCADE;"`
 }
 
 // ToDTO map Feedback to dto.FeedbackDTO

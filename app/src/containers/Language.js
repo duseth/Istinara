@@ -159,6 +159,27 @@ export function WorksPage({tid}) {
     return languageContext.dictionary["works"]["page"][tid] || tid;
 }
 
+// Groups
+export function GroupsForm({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["groups"]["form"][tid] || tid;
+}
+
+export function GroupsCreateForm({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["groups"]["form"]["create"][tid] || tid;
+}
+
+export function GroupsUpdateForm({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["groups"]["form"]["update"][tid] || tid;
+}
+
+export function GroupsDeleteForm({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["groups"]["form"]["delete"][tid] || tid;
+}
+
 // Articles
 export function ArticlesText({tid}) {
     const languageContext = useContext(LanguageContext);

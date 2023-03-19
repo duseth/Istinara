@@ -68,6 +68,7 @@ func main() {
 		routes.AuthorPublic(api)
 		routes.WorkPublic(api)
 		routes.ArticlesPublic(api)
+		routes.GroupsPublic(api)
 		routes.ContributionPublic(api)
 
 		// Protected API
@@ -90,6 +91,7 @@ func main() {
 				routes.AuthorPrivate(private)
 				routes.WorkPrivate(private)
 				routes.ArticlesPrivate(private)
+				routes.GroupsPrivate(private)
 				routes.ContributionPrivate(private)
 				routes.FeedbackPrivate(private)
 			}

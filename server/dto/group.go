@@ -7,9 +7,9 @@ import (
 type GroupDTO struct {
 	ID uuid.UUID `json:"id"`
 
-	NameRu string `json:"name_ru"`
-	NameAr string `json:"name_ar"`
+	NameRu string `json:"name_ru" form:"name_ru"`
+	NameAr string `json:"name_ar" form:"name_ar"`
 
-	ShortNameRu string `json:"short_name_ru"`
-	ShortNameAr string `json:"short_name_ar"`
+	ShortNameRu string `json:"short_name_ru" form:"short_name_ru"`
+	ShortNameAr string `json:"short_name_ar" form:"short_name_ar"`
 }

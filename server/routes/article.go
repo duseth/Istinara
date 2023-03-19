@@ -7,7 +7,6 @@ import (
 
 func ArticlesPublic(router *gin.RouterGroup) {
 	router.GET("/articles", controllers.ListArticles)
-	router.GET("/groups", controllers.ListGroups)
 	router.GET("/articles/:id", controllers.GetArticle)
 	router.GET("/articles/:id/links", controllers.ListLinked)
 	router.POST("/articles/:id/feedback", controllers.CreateFeedback)

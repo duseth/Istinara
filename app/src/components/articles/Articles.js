@@ -22,9 +22,14 @@ import {
     ArticlesPage,
     ArticlesText,
     ArticlesUpdateForm,
-    GeneralForm
+    GeneralForm,
+    GroupsCreateForm,
+    GroupsDeleteForm,
+    GroupsForm,
+    GroupsUpdateForm
 } from "../../containers/Language";
 import {Work} from "../../models/Work";
+import GroupService from "../../services/GroupService";
 
 const ARTICLES_LIMIT = 12;
 
@@ -36,7 +41,6 @@ const ArticlesListPage = () => {
     const lang = languageContext.userLanguage;
 
     const [count, setCount] = useState(0);
-    const [rerender, setRerender] = useState(false);
     const [data: Array<Article>, setData] = useState()
     const [works: Array<Work>, setWorks] = useState();
     const [groups: Array<Group>, setGroups] = useState();
@@ -47,6 +51,34 @@ const ArticlesListPage = () => {
 
     const configHeader = AccountService.GetHeaders(true, cookies.get("token") !== undefined)
     const {register, setError, handleSubmit, formState: {errors}} = useForm();
+
+    const {
+        register: createGroupRegister,
+        setError: setCreateGroupError,
+        handleSubmit: createGroupHandler,
+        formState: {
+            errors: createGroupErrors
+        }
+    } = useForm();
+
+    const {
+        register: updateGroupRegister,
+        setError: setUpdateGroupError,
+        handleSubmit: updateGroupHandle,
+        setValue: updateGroupSetValue,
+        formState: {
+            errors: updateGroupErrors
+        }
+    } = useForm();
+
+    const {
+        register: deleteGroupRegister,
+        setError: setDeleteGroupError,
+        handleSubmit: deleteGroupHandle,
+        formState: {
+            errors: deleteGroupErrors
+        }
+    } = useForm();
 
     useEffect(() => {
         document.title = languageContext.dictionary["titles"]["articles"] + " • Istinara";
@@ -116,9 +148,93 @@ const ArticlesListPage = () => {
         try {
             await ArticleService.Create(data);
             NotifyService.Success(<ArticlesCreateForm tid="success_notify"/>);
-            setRerender(!rerender);
         } catch {
             NotifyService.Error(<ArticlesCreateForm tid="error_notify"/>);
+        }
+    };
+
+    const createGroup = async (data: Group) => {
+        delete data["required"];
+
+        const fields = Object.keys(data);
+        for (const field of fields) {
+            if (data[field].trim().length === 0) {
+                setCreateGroupError("required", {message: <GeneralForm tid="error_required"/>});
+                return;
+            }
+        }
+
+        try {
+            await GroupService.Create(data);
+            NotifyService.Success(<GroupsCreateForm tid="success_notify"/>);
+        } catch {
+            NotifyService.Error(<GroupsCreateForm tid="error_notify"/>);
+        }
+    };
+
+    const updateGroup = async (data: Group) => {
+        delete data["required"];
+
+        if (data["group_id"] === undefined || data["group_id"] === "null") {
+            setUpdateGroupError("required", {message: <GeneralForm tid="error_required"/>});
+            return;
+        }
+        const group_id = data["group_id"];
+        delete data["group_id"];
+
+        const properties = Object.keys(data).filter(x => x !== "group_id");
+        for (const property of properties) {
+            if (data[property].trim().length === 0) {
+                setUpdateGroupError("required", {message: <GeneralForm tid="error_required"/>});
+                return;
+            }
+        }
+
+        const group = groups.filter(x => x.id === group_id)[0];
+        for (const property of properties) {
+            if (data[property] === group[property]) {
+                delete data[property];
+            }
+        }
+
+        if (Object.keys(data).length === 0) {
+            setUpdateGroupError("required", {message: <GeneralForm tid="error_no_changes"/>});
+            return;
+        }
+
+        try {
+            await GroupService.Update(group_id, data);
+            NotifyService.Success(<GroupsUpdateForm tid="success_notify"/>);
+        } catch {
+            NotifyService.Error(<GroupsUpdateForm tid="error_notify"/>);
+        }
+    };
+
+    const deleteGroup = async (data) => {
+        delete data["required"];
+        if (data["group_id"] === undefined || data["group_id"] === "null") {
+            setDeleteGroupError("required", {message: <GeneralForm tid="error_required"/>});
+            return;
+        }
+
+        const group = groups.filter(x => x.id === data["group_id"])[0];
+        try {
+            await GroupService.Delete(group.id);
+            NotifyService.Success(<GroupsDeleteForm tid="success_notify"/>)
+        } catch {
+            NotifyService.Error(<GroupsDeleteForm tid="error_notify"/>)
+        }
+    };
+
+    const unlockUpdateGroupForm = event => {
+        const form = document.getElementById("update-group-form");
+        const group = groups.filter(x => x.id === event.target.value)[0];
+
+        for (const property of Object.keys(group).filter(x => !["id", "group_id"].includes(x))) {
+            const inputElement = form.getElementsByTagName("input")[property];
+
+            inputElement.disabled = false;
+            updateGroupSetValue(property, group[property]);
         }
     };
 
@@ -149,6 +265,122 @@ const ArticlesListPage = () => {
                                         <h2 className="accordion-header" id="flush-heading">
                                             <button className={"accordion-button article-form-header collapsed" +
                                                 (lang === "ar" ? " accordion-button-ar" : "")} type="button"
+                                                    data-bs-toggle="collapse" data-bs-target="#flush-collapseGc"
+                                                    aria-expanded="false" aria-controls="flush-collapseGc">
+                                                <GroupsCreateForm tid="header"/>
+                                            </button>
+                                        </h2>
+                                        <div id="flush-collapseGc" className="accordion-collapse collapse"
+                                             aria-labelledby="flush-heading">
+                                            <div className="accordion-body pt-0">
+                                                <form onSubmit={createGroupHandler(data => createGroup(data))}
+                                                      id="create-group-form" {...createGroupRegister("required")}>
+                                                    {
+                                                        GetGroupForm(createGroupRegister, createGroupErrors)
+                                                    }
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-md-8 m-auto pt-4">
+                                <div className="accordion accordion-flush" id="accordionFlushExample">
+                                    <div className="accordion-item">
+                                        <h2 className="accordion-header" id="flush-heading">
+                                            <button className={"accordion-button article-form-header collapsed" +
+                                                (lang === "ar" ? " accordion-button-ar" : "")} type="button"
+                                                    data-bs-toggle="collapse" data-bs-target="#flush-collapseGu"
+                                                    aria-expanded="false" aria-controls="flush-collapseGu">
+                                                <GroupsUpdateForm tid="header"/>
+                                            </button>
+                                        </h2>
+                                        <div id="flush-collapseGu" className="accordion-collapse collapse"
+                                             aria-labelledby="flush-heading">
+                                            <div className="accordion-body pt-0">
+                                                <form onSubmit={updateGroupHandle(data => updateGroup(data))}
+                                                      id="update-group-form" {...updateGroupRegister("required")}>
+                                                    <div className="pt-3">
+                                                        <div className="row">
+                                                            <div className="col-12">
+                                                                <select className="form-select" id="group_id"
+                                                                        defaultValue={"null"} name="group_id"
+                                                                        {...updateGroupRegister("group_id")}
+                                                                        onChange={unlockUpdateGroupForm}>
+                                                                    <option value="null" disabled>
+                                                                        <GeneralForm tid="choose_group"/>
+                                                                    </option>
+                                                                    {
+                                                                        groups?.map((group) => <option key={group.id}
+                                                                                                       value={group.id}>{lang === "ru" ? group.name_ru : group.name_ar}</option>)
+                                                                    }
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {
+                                                        GetGroupForm(updateGroupRegister, updateGroupErrors, true)
+                                                    }
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-md-8 m-auto pt-4">
+                                <div className="accordion accordion-flush" id="accordionFlushExample">
+                                    <div className="accordion-item">
+                                        <h2 className="accordion-header" id="flush-heading">
+                                            <button className={"accordion-button article-form-header collapsed" +
+                                                (lang === "ar" ? " accordion-button-ar" : "")} type="button"
+                                                    data-bs-toggle="collapse" data-bs-target="#flush-collapseGd"
+                                                    aria-expanded="false" aria-controls="flush-collapseGd">
+                                                <GroupsDeleteForm tid="header"/>
+                                            </button>
+                                        </h2>
+                                        <div id="flush-collapseGd" className="accordion-collapse collapse"
+                                             aria-labelledby="flush-heading">
+                                            <div className="accordion-body pt-0">
+                                                <form onSubmit={deleteGroupHandle((data) => deleteGroup(data))}
+                                                      id="update-group-form" {...deleteGroupRegister("required")}>
+                                                    <div className="pt-3">
+                                                        <div className="row">
+                                                            <div className="col-12">
+                                                                <select className="form-select" id="group_id"
+                                                                        defaultValue={"null"} name="group_id"
+                                                                        {...deleteGroupRegister("group_id")}>
+                                                                    <option value="null" disabled>
+                                                                        <GeneralForm tid="choose_group"/>
+                                                                    </option>
+                                                                    {
+                                                                        groups?.map((group) => <option key={group.id}
+                                                                                                       value={group.id}>{lang === "ru" ? group.name_ru : group.name_ar}</option>)
+                                                                    }
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="form-error mt-4 mb-0">
+                                                        {deleteGroupErrors?.required?.message}
+                                                    </div>
+                                                    <div
+                                                        className="col-12 row justify-content-center align-items-center mt-4 m-auto">
+                                                        <button type="submit" className="btn btn-outline-dark w-auto">
+                                                            <GroupsDeleteForm tid="button_text"/>
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-md-8 m-auto pt-4">
+                                <div className="accordion accordion-flush" id="accordionFlushExample">
+                                    <div className="accordion-item">
+                                        <h2 className="accordion-header" id="flush-heading">
+                                            <button className={"accordion-button article-form-header collapsed" +
+                                                (lang === "ar" ? " accordion-button-ar" : "")} type="button"
                                                     data-bs-toggle="collapse" data-bs-target="#flush-collapseAdd"
                                                     aria-expanded="false" aria-controls="flush-collapse">
                                                 <ArticlesCreateForm tid="header"/>
@@ -158,7 +390,7 @@ const ArticlesListPage = () => {
                                              aria-labelledby="flush-heading">
                                             <div className="accordion-body pt-0">
                                                 <form onSubmit={handleSubmit((data) => createArticle(data))}
-                                                      id="add-article-form" {...register("required")}>
+                                                      id="create-article-form" {...register("required")}>
                                                     {
                                                         GetArticleForm(
                                                             register,
@@ -702,7 +934,7 @@ const ArticlePage = () => {
                                                                 <select className="form-select" id="group_id"
                                                                         defaultValue={"null"}
                                                                         name="link_id" {...createLinkRegister("link_id")}>
-                                                                    <option value="null" disabled><ArticlesForm
+                                                                    <option value="null" disabled><GeneralForm
                                                                         tid="choose_link"/></option>
                                                                     {
                                                                         articles?.map((article) => getArticleOption(article))
@@ -749,7 +981,7 @@ const ArticlePage = () => {
                                                                 <select className="form-select" id="group_id"
                                                                         defaultValue={"null"}
                                                                         name="link_id" {...deleteLinkRegister("link_id")}>
-                                                                    <option value="null" disabled><ArticlesForm
+                                                                    <option value="null" disabled><GeneralForm
                                                                         tid="choose_link"/></option>
                                                                     {
                                                                         articleLinks?.map((article) => getArticleOption(article))
@@ -781,6 +1013,55 @@ const ArticlePage = () => {
     )
 };
 
+const GetGroupForm = (register, errors, is_update) => {
+    return (
+        <>
+            <div className="pt-3">
+                <p className="m-0"><GroupsForm tid="short_name"/></p>
+                <div className="row">
+                    <div className="col-6">
+                        <label htmlFor="short_name_ru" className="form-label"><GeneralForm tid="russian"/></label>
+                        <input type="text" dir="ltr" className="form-control" id="short_name_ru"
+                               {...register("short_name_ru")} disabled={is_update}/>
+                    </div>
+                    <div className="col-6">
+                        <label htmlFor="short_name_ar" className="form-label"><GeneralForm tid="arabic"/></label>
+                        <input type="text" dir="rtl" className="form-control" id="short_name_ar"
+                               {...register("short_name_ar")} disabled={is_update}/>
+                    </div>
+                </div>
+            </div>
+            <div className="pt-3">
+                <p className="m-0"><GroupsForm tid="name"/></p>
+                <div className="row">
+                    <div className="col-12">
+                        <label htmlFor="name_ru" className="form-label"><GeneralForm tid="russian"/></label>
+                        <input type="text" dir="ltr" className="form-control" id="name_ru"
+                               {...register("name_ru")} disabled={is_update}/>
+                    </div>
+                    <div className="col-12">
+                        <label htmlFor="name_ar" className="form-label"><GeneralForm tid="arabic"/></label>
+                        <input type="text" dir="rtl" className="form-control" id="name_ar"
+                               {...register("name_ar")} disabled={is_update}/>
+                    </div>
+                </div>
+            </div>
+            <div className="form-error mt-4 mb-0">
+                {errors?.required?.message}
+            </div>
+            <div className="col-12 row justify-content-center align-items-center mt-4 m-auto">
+                <button type="submit" className="btn btn-outline-dark w-auto">
+                    {
+                        !is_update
+                            ? <GroupsCreateForm tid="button_text"/>
+                            : <GroupsUpdateForm tid="button_text"/>
+                    }
+                </button>
+            </div>
+        </>
+    )
+};
+
 const GetArticleForm = (register, errors, works, groups, article) => {
     return (
         <>
@@ -790,7 +1071,7 @@ const GetArticleForm = (register, errors, works, groups, article) => {
                         <select className="form-select" id="group_id"
                                 defaultValue={article ? article.group?.id : "null"}
                                 name="group_id" {...register("group_id")}>
-                            <option value="null" disabled><ArticlesForm tid="choose_group"/></option>
+                            <option value="null" disabled><GeneralForm tid="choose_group"/></option>
                             {
                                 groups?.map((group) => <option key={group.id} value={group.id}>{group.name}</option>)
                             }
@@ -804,7 +1085,7 @@ const GetArticleForm = (register, errors, works, groups, article) => {
                         <select className="form-select" id="work_id"
                                 defaultValue={article ? article.work?.id : "null"}
                                 name="work_id" {...register("work_id")}>
-                            <option value="null" disabled><ArticlesForm tid="choose_work"/></option>
+                            <option value="null" disabled><GeneralForm tid="choose_work"/></option>
                             {
                                 works?.map((work) => <option key={work.id} value={work.id}>{work.title}</option>)
                             }
@@ -816,12 +1097,12 @@ const GetArticleForm = (register, errors, works, groups, article) => {
                 <p className="m-0"><ArticlesForm tid="title"/></p>
                 <div className="row">
                     <div className="col-6">
-                        <label htmlFor="title_ru" className="form-label"><ArticlesForm tid="russian"/></label>
+                        <label htmlFor="title_ru" className="form-label"><GeneralForm tid="russian"/></label>
                         <input type="text" dir="ltr" className="form-control" id="title_ru"
                                {...register("title_ru")} defaultValue={article?.title_ru}/>
                     </div>
                     <div className="col-6">
-                        <label htmlFor="title_ar" className="form-label"><ArticlesForm tid="arabic"/></label>
+                        <label htmlFor="title_ar" className="form-label"><GeneralForm tid="arabic"/></label>
                         <input type="text" dir="rtl" className="form-control" id="title_ar"
                                {...register("title_ar")} defaultValue={article?.title_ar}/>
                     </div>
@@ -831,12 +1112,12 @@ const GetArticleForm = (register, errors, works, groups, article) => {
                 <p className="m-0"><ArticlesForm tid="quote"/></p>
                 <div className="row">
                     <div className="col-12">
-                        <label htmlFor="quote_ru" className="form-label"><ArticlesForm tid="russian"/></label>
+                        <label htmlFor="quote_ru" className="form-label"><GeneralForm tid="russian"/></label>
                         <textarea rows="4" dir="ltr" className="form-control" id="quote_ru"
                                   {...register("quote_ru")} defaultValue={article?.quote_ru}/>
                     </div>
                     <div className="col-12">
-                        <label htmlFor="quote_ar" className="form-label"><ArticlesForm tid="arabic"/></label>
+                        <label htmlFor="quote_ar" className="form-label"><GeneralForm tid="arabic"/></label>
                         <textarea rows="4" dir="rtl" className="form-control" id="quote_ar"
                                   {...register("quote_ar")} defaultValue={article?.quote_ar}/>
                     </div>
@@ -847,14 +1128,14 @@ const GetArticleForm = (register, errors, works, groups, article) => {
                 <div className="row">
                     <div className="col-12">
                         <label htmlFor="description_ru" className="form-label">
-                            <ArticlesForm tid="russian"/>
+                            <GeneralForm tid="russian"/>
                         </label>
                         <textarea rows="4" dir="ltr" className="form-control" id="description_ru"
                                   {...register("description_ru")} defaultValue={article?.description_ru}/>
                     </div>
                     <div className="col-12">
                         <label htmlFor="description_ar" className="form-label">
-                            <ArticlesForm tid="arabic"/>
+                            <GeneralForm tid="arabic"/>
                         </label>
                         <textarea rows="4" dir="rtl" className="form-control" id="description_ar"
                                   {...register("description_ar")} defaultValue={article?.description_ar}/>

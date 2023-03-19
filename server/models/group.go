@@ -24,3 +24,11 @@ func (group *Group) ToDTO() dto.GroupDTO {
 		ShortNameAr: group.ShortNameAr,
 	}
 }
+
+// ParseForm parse Group from dto.GroupDTO
+func (group *Group) ParseForm(form dto.GroupDTO) {
+	group.NameRu = form.NameRu
+	group.NameAr = form.NameAr
+	group.ShortNameRu = form.ShortNameRu
+	group.ShortNameAr = form.ShortNameAr
+}

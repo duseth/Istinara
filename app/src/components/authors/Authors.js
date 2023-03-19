@@ -502,14 +502,14 @@ const GetAuthorForm = (register, errors, author) => {
                 <div className="row">
                     <div className="col-6">
                         <label htmlFor="name_ru" className="form-label">
-                            <AuthorsForm tid="russian"/>
+                            <GeneralForm tid="russian"/>
                         </label>
                         <input type="text" dir="ltr" className="form-control"
                                id="name_ru" {...register("name_ru")} defaultValue={author?.name_ru}/>
                     </div>
                     <div className="col-6">
                         <label htmlFor="name_ar" className="form-label">
-                            <AuthorsForm tid="arabic"/>
+                            <GeneralForm tid="arabic"/>
                         </label>
                         <input type="text" dir="rtl" className="form-control"
                                id="name_ar" {...register("name_ar")} defaultValue={author?.name_ar}/>
@@ -521,14 +521,14 @@ const GetAuthorForm = (register, errors, author) => {
                 <div className="row">
                     <div className="col-6">
                         <label htmlFor="short_name_ru" className="form-label">
-                            <AuthorsForm tid="russian"/>
+                            <GeneralForm tid="russian"/>
                         </label>
                         <input type="text" dir="ltr" className="form-control"
                                id="short_name_ru" {...register("short_name_ru")} defaultValue={author?.short_name_ru}/>
                     </div>
                     <div className="col-6">
                         <label htmlFor="short_name_ar" className="form-label">
-                            <AuthorsForm tid="arabic"/>
+                            <GeneralForm tid="arabic"/>
                         </label>
                         <input type="text" dir="rtl" className="form-control"
                                id="short_name_ar" {...register("short_name_ar")} defaultValue={author?.short_name_ar}/>
@@ -540,14 +540,14 @@ const GetAuthorForm = (register, errors, author) => {
                 <div className="row">
                     <div className="col-12">
                         <label htmlFor="about_ru" className="form-label">
-                            <AuthorsForm tid="russian"/>
+                            <GeneralForm tid="russian"/>
                         </label>
                         <textarea rows="4" dir="ltr" className="form-control"
                                   id="about_ru" {...register("about_ru")} defaultValue={author?.about_ru}/>
                     </div>
                     <div className="col-12">
                         <label htmlFor="about_ar" className="form-label">
-                            <AuthorsForm tid="arabic"/>
+                            <GeneralForm tid="arabic"/>
                         </label>
                         <textarea rows="4" dir="rtl" className="form-control"
                                   id="about_ar" {...register("about_ar")} defaultValue={author?.about_ar}/>
