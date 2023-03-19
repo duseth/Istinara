@@ -17,7 +17,7 @@ import (
 
 //	@title			Istinara API
 //	@version		1.0
-//	@description	Open Dictionary of Culturally Marked Vocabulary of the Russian Language with Arabic Translation
+//	@description	Open online dictionary of culturally marked vocabulary of the Russian language with translation into Arabic Language
 
 //	@contact.name	Istinara
 //	@contact.url	https://istinara.ru
@@ -68,7 +68,7 @@ func main() {
 		routes.AuthorPublic(api)
 		routes.WorkPublic(api)
 		routes.ArticlesPublic(api)
-		routes.RequestPublic(api)
+		routes.ContributionPublic(api)
 
 		// Protected API
 		protected := api.Group("")
@@ -90,7 +90,7 @@ func main() {
 				routes.AuthorPrivate(private)
 				routes.WorkPrivate(private)
 				routes.ArticlesPrivate(private)
-				routes.RequestPrivate(private)
+				routes.ContributionPrivate(private)
 				routes.FeedbackPrivate(private)
 			}
 		}
