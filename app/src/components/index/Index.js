@@ -45,8 +45,9 @@ const WelcomePage = () => {
         <>
             <section className="main-container position-relative">
                 <img className="welcome-image" src="/images/index.jpg" alt="culture"/>
+                <div className="welcome-image-filter"/>
                 <div className="welcome-page">
-                    <img alt="Istinara" src="/istinara.svg" className="caption-logo"/>
+                    <img alt="Istinara" src="/images/istinara.svg" className="caption-logo"/>
                     <div className="welcome-block m-auto mb-5">
                         <h2 className="welcome-header"><WelcomeText tid="header"/></h2>
                         <button className="btn btn-outline-light btn-home-random" onClick={redirectToRandomArticle}>

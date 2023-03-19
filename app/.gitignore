@@ -4,7 +4,9 @@
 .pnp.js
 
 # assets
-/public/images
+/public/images/authors
+/public/images/works
+/public/images/articles
 
 # ssl
 /nginx/ssl

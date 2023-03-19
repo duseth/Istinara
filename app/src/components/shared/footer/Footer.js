@@ -8,19 +8,22 @@ const Footer = () => {
     return (
         <footer className="site-footer text-center">
             <div className="container p-4 my-2">
-                <img src={`${window.location.protocol}//${window.location.host}/footer.svg`} alt="Istinara"/>
+                <a className="col-md-4 m-auto" href="/">
+                    <img src={`${window.location.protocol}//${window.location.host}/images/footer.svg`} alt="Istinara"/>
+                </a>
                 <ul className="nav justify-content-center border-bottom mb-3 py-1">
                     <li className="nav-item p-0">
-                        <a href="/" className="nav-link footer-text px-2"><FooterLink tid="home"/></a>
+                        <a href="/about" className="nav-link footer-text px-2"><FooterLink tid="about"/></a>
                     </li>
                     <li className="nav-item p-0">
-                        <a href="/about" className="nav-link footer-text px-2"><FooterLink tid="about"/></a>
+                        <a href="/team" className="nav-link footer-text px-2"><FooterLink tid="team"/></a>
                     </li>
                     <li className="nav-item p-0">
                         <a href="/contacts" className="nav-link footer-text px-2"><FooterLink tid="contacts"/></a>
                     </li>
                     <li className="nav-item p-0">
-                        <a target="_blank" href="//istinara.ru/api/docs/index.html" className="nav-link footer-text px-2">
+                        <a target="_blank" href="//istinara.ru/api/docs/index.html"
+                           className="nav-link footer-text px-2">
                             <FooterLink tid="docs"/>
                         </a>
                     </li>

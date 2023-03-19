@@ -21,6 +21,7 @@ import Header from './components/shared/header/Header';
 import {ArticlePage, ArticlesListPage} from "./components/articles/Articles";
 import ContributionPage from "./components/contribution/Contribution";
 import {AuthorPage, AuthorsListPage} from "./components/authors/Authors";
+import TeamPage from "./components/team/Team";
 
 function App() {
     return (
@@ -42,6 +43,7 @@ function App() {
                         <Route path='/articles/:link' element={<ArticlePage/>}/>
 
                         <Route path='/about' element={<AboutPage/>}/>
+                        <Route path='/team' element={<TeamPage/>}/>
                         <Route path="/account" element={<AccountPage/>}/>
                         <Route path='/contacts' element={<ContactsPage/>}/>
                         <Route path="/contribution" element={<ContributionPage/>}/>

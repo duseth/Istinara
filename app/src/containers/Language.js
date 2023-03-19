@@ -91,6 +91,12 @@ export function AboutText({tid}) {
     return languageContext.dictionary["about"][tid] || tid;
 }
 
+// Team
+export function TeamText({tid}) {
+    const languageContext = useContext(LanguageContext);
+    return languageContext.dictionary["team"][tid] || tid;
+}
+
 // Authors
 export function AuthorsText({tid}) {
     const languageContext = useContext(LanguageContext);
