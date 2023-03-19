@@ -258,32 +258,36 @@ const ArticlesListPage = () => {
             <div className="container">
                 {
                     AccountService.IsPrivilegedUser() && (
-                        <>
-                            <div className="col-md-8 m-auto pt-4">
-                                <div className="accordion accordion-flush" id="accordionFlushExample">
-                                    <div className="accordion-item">
-                                        <h2 className="accordion-header" id="flush-heading">
-                                            <button className={"accordion-button article-form-header collapsed" +
-                                                (lang === "ar" ? " accordion-button-ar" : "")} type="button"
-                                                    data-bs-toggle="collapse" data-bs-target="#flush-collapseGc"
-                                                    aria-expanded="false" aria-controls="flush-collapseGc">
-                                                <GroupsCreateForm tid="header"/>
-                                            </button>
-                                        </h2>
-                                        <div id="flush-collapseGc" className="accordion-collapse collapse"
-                                             aria-labelledby="flush-heading">
-                                            <div className="accordion-body pt-0">
-                                                <form onSubmit={createGroupHandler(data => createGroup(data))}
-                                                      id="create-group-form" {...createGroupRegister("required")}>
-                                                    {
-                                                        GetGroupForm(createGroupRegister, createGroupErrors)
-                                                    }
-                                                </form>
-                                            </div>
+                        <div className="col-md-8 m-auto pt-4">
+                            <div className="accordion accordion-flush" id="accordionFlushExample">
+                                <div className="accordion-item">
+                                    <h2 className="accordion-header" id="flush-heading">
+                                        <button className={"accordion-button article-form-header collapsed" +
+                                            (lang === "ar" ? " accordion-button-ar" : "")} type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#flush-collapseGc"
+                                                aria-expanded="false" aria-controls="flush-collapseGc">
+                                            <GroupsCreateForm tid="header"/>
+                                        </button>
+                                    </h2>
+                                    <div id="flush-collapseGc" className="accordion-collapse collapse"
+                                         aria-labelledby="flush-heading">
+                                        <div className="accordion-body pt-0">
+                                            <form onSubmit={createGroupHandler(data => createGroup(data))}
+                                                  id="create-group-form" {...createGroupRegister("required")}>
+                                                {
+                                                    GetGroupForm(createGroupRegister, createGroupErrors)
+                                                }
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    )
+                }
+                {
+                    AccountService.IsPrivilegedUser() && works?.length > 0 && (
+                        <>
                             <div className="col-md-8 m-auto pt-4">
                                 <div className="accordion accordion-flush" id="accordionFlushExample">
                                     <div className="accordion-item">
