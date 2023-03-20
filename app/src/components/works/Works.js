@@ -94,9 +94,10 @@ const WorksListPage = () => {
     const createWork = async (data: Author) => {
         delete data["required"];
 
-        const fields = Object.keys(data).filter(x => x !== "picture");
-        for (const field of fields) {
-            if (data[field].trim().length === 0) {
+        const properties = Object.keys(data).filter(x => x !== "picture");
+        for (const property of properties) {
+            data[property] = data[property].trim();
+            if (data[property].length === 0) {
                 setError("required", {message: <GeneralForm tid="error_required"/>});
                 return;
             }
@@ -280,7 +281,8 @@ const WorkPage = () => {
         const properties = Object.keys(data).filter(x => !["picture", "author_id", "publication_date"].includes(x));
 
         for (const property of properties) {
-            if (data[property].trim().length === 0) {
+            data[property] = data[property].trim();
+            if (data[property].length === 0) {
                 setError("required", {message: <GeneralForm tid="error_required"/>});
                 return;
             }

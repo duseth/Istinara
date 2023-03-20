@@ -134,7 +134,7 @@ class ArticleService {
 
     async Create(article: Article) {
         let formData = new FormData();
-        Object.entries(article).map((value) => formData.append(value[0], value[1].trim()));
+        Object.entries(article).map((value) => formData.append(value[0], value[1]));
 
         return await API.post("/articles", formData, AccountService.GetHeaders(true, true))
             .then(() => true)
@@ -145,7 +145,7 @@ class ArticleService {
 
     async Update(id: number, article: Article) {
         let formData = new FormData();
-        Object.entries(article).map((value) => formData.append(value[0], value[1].trim()));
+        Object.entries(article).map((value) => formData.append(value[0], value[1]));
 
         return await API.patch(`/articles/${id}`, formData, AccountService.GetHeaders(true, true))
             .then((response) => response.data?.link)

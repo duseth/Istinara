@@ -127,9 +127,10 @@ const ArticlesListPage = () => {
             return;
         }
 
-        const fields = Object.keys(data).filter(x => !["picture", "group_id", "work_id", "transcription"].includes(x));
-        for (const field of fields) {
-            if (data[field].trim().length === 0) {
+        const properties = Object.keys(data).filter(x => !["picture", "group_id", "work_id", "transcription"].includes(x));
+        for (const property of properties) {
+            data[property] = data[property].trim();
+            if (data[property].length === 0) {
                 setError("required", {message: <GeneralForm tid="error_required"/>});
                 return;
             }
@@ -619,7 +620,8 @@ const ArticlePage = () => {
         }
 
         for (const property of properties) {
-            if (data[property].trim().length === 0) {
+            data[property] = data[property].trim();
+            if (data[property].length === 0) {
                 setUpdateArticleError("required", {message: <GeneralForm tid="error_required"/>});
                 return;
             }

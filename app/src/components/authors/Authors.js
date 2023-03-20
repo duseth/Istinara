@@ -126,9 +126,10 @@ const AuthorsListPage = () => {
     const createAuthor = async (data: Author) => {
         delete data["required"];
 
-        const fields = Object.keys(data).filter(x => !["death_date", "picture"].includes(x));
-        for (const field of fields) {
-            if (data[field].trim().length === 0) {
+        const properties = Object.keys(data).filter(x => !["death_date", "picture"].includes(x));
+        for (const property of properties) {
+            data[property] = data[property].trim();
+            if (data[property].length === 0) {
                 setError("required", {message: <GeneralForm tid="error_required"/>});
                 return;
             }
@@ -320,7 +321,8 @@ const AuthorPage = () => {
         const properties = Object.keys(data).filter(x => !["birth_date", "death_date", "picture"].includes(x));
 
         for (const property of properties) {
-            if (data[property].trim().length === 0) {
+            data[property] = data[property].trim();
+            if (data[property].length === 0) {
                 setError("required", {message: <GeneralForm tid="error_required"/>});
                 return;
             }

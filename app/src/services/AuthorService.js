@@ -6,7 +6,7 @@ import AccountService from "./AccountService";
 class AuthorService {
     async Create(author: Author) {
         let formData = new FormData();
-        Object.entries(author).map((value) => formData.append(value[0], value[1].trim()));
+        Object.entries(author).map((value) => formData.append(value[0], value[1]));
 
         return await API.post("/authors", formData, AccountService.GetHeaders(true, true))
             .then(() => true)
@@ -17,7 +17,7 @@ class AuthorService {
 
     async Update(id: number, author: Author) {
         let formData = new FormData();
-        Object.entries(author).map((value) => formData.append(value[0], value[1].trim()));
+        Object.entries(author).map((value) => formData.append(value[0], value[1]));
 
         return await API.patch(`/authors/${id}`, formData, AccountService.GetHeaders(true, true))
             .then((response) => response.data?.link)
