@@ -1,0 +1,149 @@
+.author-card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  margin: 15px;
+  overflow: hidden;
+  max-width: 600px;
+  max-height: 600px;
+  width: 100%;
+  position: relative;
+
+  &:hover {
+    filter: brightness(90%);
+  }
+}
+
+.author-link {
+  position: absolute;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border-bottom: none !important;
+}
+
+.author-image {
+  max-height: 275px;
+  max-width: 195px;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 5px;
+}
+
+.author-body {
+  position: relative;
+  width: 100%;
+}
+
+.author-name {
+  text-align: center;
+  font-size: 20px;
+  margin: 15px;
+}
+
+.author-life {
+  text-align: center;
+  font-size: 14px;
+  margin: 0;
+}
+
+.author-biography {
+  text-align: center;
+  font-size: 15px;
+  margin: 10px;
+}
+
+.author-page-image {
+  max-height: 350px;
+  max-width: 250px;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 10px;
+  filter: brightness(97%);
+}
+
+.author-page-about, .work-page-about {
+  margin: auto auto 20px;
+  text-align: justify;
+  font-size: 17px;
+}
+
+.author-date {
+  color: #999999;
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.author-work-card {
+  width: 100%;
+  height: 225px;
+  position: relative;
+  border-radius: 10px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  margin: 15px;
+  max-width: 450px;
+  max-height: 300px;
+
+  &:hover {
+    filter: sepia(40%);
+  }
+}
+
+.author-work-card-title {
+  position: absolute;
+  right: 20px;
+  top: 15px;
+  color: white;
+  font-size: 17px;
+  border-radius: 5px;
+  overflow: hidden;
+  padding: 0 10px 0 10px;
+  width: fit-content;
+  backdrop-filter: brightness(40%);
+}
+
+.author-work-card-about {
+  position: absolute;
+  width: fit-content;
+  max-width: 90%;
+  padding: 0 10px 0 10px;
+  bottom: 15px;
+  color: black;
+  font-size: 94%;
+  background-color: white;
+  border-radius: 5px;
+}
+
+.jump-author-card, .jump-work-card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  margin: 10px;
+  overflow: hidden;
+  max-width: 300px;
+  height: 50px;
+  width: 100%;
+  position: relative;
+
+  &:hover {
+    filter: brightness(90%);
+  }
+}
+
+.jump-author-name, .jump-work-name {
+  text-align: center;
+  font-size: 18px;
+  line-height: 50px;
+  margin: 0 5px;
+}
+
+.jump-author-icon {
+  margin: auto 7px;
+  padding: 0 10px;
+  font-size: 30px;
+}

@@ -10,18 +10,28 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 
 // Import ReactJS components
-import AboutPage from './components/about/About';
-import AccountPage from "./components/account/Account";
-import WelcomePage from './components/index/Index';
-import {WorkPage, WorksListPage} from "./components/works/Works";
-import ContactsPage from './components/contacts/Contacts';
-import {LanguageProvider} from "./containers/Language";
-import Footer from './components/shared/footer/Footer';
-import Header from './components/shared/header/Header';
-import {ArticlePage, ArticlesListPage} from "./components/articles/Articles";
-import ContributionPage from "./components/contribution/Contribution";
-import {AuthorPage, AuthorsListPage} from "./components/authors/Authors";
-import TeamPage from "./components/team/Team";
+import WelcomePage from './lib/pages/index/Index';
+
+import Footer from './lib/components/footer/Footer';
+import Header from './lib/components/header/Header';
+
+import TeamPage from "./lib/pages/team/Page";
+import AboutPage from './lib/pages/about/Page';
+import ContactsPage from './lib/pages/contacts/Page';
+import AccountPage from "./lib/pages/account/Account";
+import ContributionPage from "./lib/pages/contribution/Page";
+
+import AuthorPage from "./lib/pages/authors/Page";
+import AuthorsListPage from "./lib/pages/authors/List";
+
+import WorkPage from "./lib/pages/works/Page";
+import WorksListPage from "./lib/pages/works/List";
+
+import ArticlePage from "./lib/pages/articles/Page";
+import ArticlesListPage from "./lib/pages/articles/List";
+
+import {LanguageProvider} from "./lib/containers/Language";
+
 
 function App() {
     return (

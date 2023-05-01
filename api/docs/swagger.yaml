@@ -1,0 +1,596 @@
+basePath: /api
+definitions:
+  dto.ArticleDTO:
+    properties:
+      article_type:
+        $ref: '#/definitions/dto.ArticleTypeDTO'
+      description_ar:
+        type: string
+      description_ru:
+        type: string
+      id:
+        type: string
+      is_liked:
+        type: boolean
+      link:
+        type: string
+      picture_path:
+        type: string
+      quote_ar:
+        type: string
+      quote_ar_highlight:
+        type: string
+      quote_ru:
+        type: string
+      quote_ru_highlight:
+        type: string
+      title_ar:
+        type: string
+      title_ru:
+        type: string
+      transcription:
+        type: string
+    type: object
+  dto.ArticleTypeDTO:
+    properties:
+      id:
+        type: string
+      name_ar:
+        type: string
+      name_ru:
+        type: string
+      picture_path:
+        type: string
+    type: object
+  dto.AuthorDTO:
+    properties:
+      about_ar:
+        type: string
+      about_ru:
+        type: string
+      birth_date:
+        type: string
+      death_date:
+        type: string
+      id:
+        type: string
+      link:
+        type: string
+      name_ar:
+        type: string
+      name_ru:
+        type: string
+      picture_path:
+        type: string
+      short_name_ar:
+        type: string
+      short_name_ru:
+        type: string
+    type: object
+  dto.CompleteArticleDTO:
+    properties:
+      article_type:
+        $ref: '#/definitions/dto.ArticleTypeDTO'
+      description_ar:
+        type: string
+      description_ru:
+        type: string
+      id:
+        type: string
+      is_liked:
+        type: boolean
+      link:
+        type: string
+      picture_path:
+        type: string
+      quote_ar:
+        type: string
+      quote_ar_highlight:
+        type: string
+      quote_ru:
+        type: string
+      quote_ru_highlight:
+        type: string
+      title_ar:
+        type: string
+      title_ru:
+        type: string
+      transcription:
+        type: string
+      work:
+        $ref: '#/definitions/dto.CompleteWorkDTO'
+    type: object
+  dto.CompleteWorkDTO:
+    properties:
+      about_ar:
+        type: string
+      about_ru:
+        type: string
+      author:
+        $ref: '#/definitions/dto.AuthorDTO'
+      genre_ar:
+        type: string
+      genre_ru:
+        type: string
+      id:
+        type: string
+      link:
+        type: string
+      picture_path:
+        type: string
+      publication_date:
+        type: string
+      title_ar:
+        type: string
+      title_ru:
+        type: string
+    type: object
+  dto.ListArticleDTO:
+    properties:
+      count:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/dto.ArticleDTO'
+        type: array
+    type: object
+  dto.ListAuthorDTO:
+    properties:
+      count:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/dto.AuthorDTO'
+        type: array
+    type: object
+  dto.ListWorkDTO:
+    properties:
+      count:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/dto.WorkDTO'
+        type: array
+    type: object
+  dto.UserDTO:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      is_privileged:
+        type: boolean
+      username:
+        type: string
+    type: object
+  dto.WorkDTO:
+    properties:
+      about_ar:
+        type: string
+      about_ru:
+        type: string
+      genre_ar:
+        type: string
+      genre_ru:
+        type: string
+      id:
+        type: string
+      link:
+        type: string
+      picture_path:
+        type: string
+      publication_date:
+        type: string
+      title_ar:
+        type: string
+      title_ru:
+        type: string
+    type: object
+  errors.Error:
+    properties:
+      message:
+        type: string
+    type: object
+host: istinara.ru
+info:
+  contact:
+    name: Istinara
+    url: https://istinara.ru
+  description: Open online dictionary of culturally marked vocabulary of the Russian
+    language with translation into Arabic Language
+  license:
+    name: MIT License
+    url: https://spdx.org/licenses/MIT.html
+  title: Istinara API
+  version: "1.0"
+paths:
+  /articles:
+    get:
+      parameters:
+      - description: Record limit
+        example: 5
+        in: query
+        name: limit
+        type: integer
+      - description: Number of records skipped
+        example: 5
+        in: query
+        name: offset
+        type: integer
+      - description: Search query
+        in: query
+        name: query
+        type: string
+      - description: Sort options
+        example: name_ru.asc
+        in: query
+        name: sort_by
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ListArticleDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.Error'
+      summary: Gets list of articles
+      tags:
+      - Articles
+  /articles/{id}:
+    get:
+      parameters:
+      - description: Article 'id' or 'link'
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CompleteArticleDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.Error'
+      summary: Get article
+      tags:
+      - Articles
+  /articles/types:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.ArticleTypeDTO'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.Error'
+      summary: Gets list of article types
+      tags:
+      - Articles
+  /authors:
+    get:
+      parameters:
+      - description: Record limit
+        example: 5
+        in: query
+        name: limit
+        type: integer
+      - description: Number of records skipped
+        example: 5
+        in: query
+        name: offset
+        type: integer
+      - description: Search query
+        in: query
+        name: query
+        type: string
+      - description: Sort options
+        example: name_ru.asc
+        in: query
+        name: sort_by
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ListAuthorDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.Error'
+      summary: Gets list of authors
+      tags:
+      - Authors
+  /authors/{id}:
+    get:
+      parameters:
+      - description: Author 'id' or 'link'
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.AuthorDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.Error'
+      summary: Get author
+      tags:
+      - Authors
+  /authors/{id}/works:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.WorkDTO'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.Error'
+      summary: Gets list of works by author
+      tags:
+      - Authors
+  /login:
+    post:
+      parameters:
+      - in: formData
+        name: email
+        required: true
+        type: string
+      - in: formData
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.Error'
+      summary: Authorization
+      tags:
+      - Auth
+  /register:
+    post:
+      parameters:
+      - in: formData
+        name: email
+        required: true
+        type: string
+      - in: formData
+        name: password
+        required: true
+        type: string
+      - in: formData
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: boolean
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.Error'
+      summary: Registration
+      tags:
+      - Auth
+  /user/password:
+    post:
+      parameters:
+      - in: formData
+        name: new_password
+        type: string
+      - in: formData
+        name: password
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: boolean
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.Error'
+      security:
+      - token: []
+      summary: Change user password
+      tags:
+      - Users
+  /user/update:
+    post:
+      parameters:
+      - in: formData
+        name: email
+        type: string
+      - in: formData
+        name: username
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.Error'
+      security:
+      - token: []
+      summary: Update user information
+      tags:
+      - Users
+  /works:
+    get:
+      parameters:
+      - description: Record limit
+        example: 5
+        in: query
+        name: limit
+        type: integer
+      - description: Number of records skipped
+        example: 5
+        in: query
+        name: offset
+        type: integer
+      - description: Search query
+        in: query
+        name: query
+        type: string
+      - description: Sort options
+        example: name_ru.asc
+        in: query
+        name: sort_by
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ListWorkDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.Error'
+      summary: Gets list of works
+      tags:
+      - Works
+  /works/{id}:
+    get:
+      parameters:
+      - description: Work 'id' or 'link'
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CompleteWorkDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.Error'
+      summary: Get work
+      tags:
+      - Works
+  /works/{id}/articles:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.ArticleDTO'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.Error'
+      summary: Gets list of articles by work
+      tags:
+      - Works
+schemes:
+- https
+securityDefinitions:
+  token:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
