@@ -22,6 +22,7 @@ class ArticleService {
                     data[articleIndex].is_liked = true;
                     classList.remove("like-icon");
                     classList.add("liked-icon");
+                    NotifyService.Success(<ArticlesText tid="favourite_add"/>);
                 })
                 .catch(() => {
                     NotifyService.Error(<ArticlesText tid="favourite_error"/>);
@@ -32,6 +33,7 @@ class ArticleService {
                     data[articleIndex].is_liked = false;
                     classList.remove("liked-icon");
                     classList.add("like-icon");
+                    NotifyService.Warning(<ArticlesText tid="favourite_remove"/>);
                 })
                 .catch(() => {
                     NotifyService.Error(<ArticlesText tid="favourite_error"/>);
