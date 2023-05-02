@@ -83,7 +83,8 @@ func (usecase ArticleUsecase) Get(ctx context.Context, id string) (model.Article
 	}
 
 	if userID := ctx.Value("user_id").(string); userID != "" {
-		if _, err = usecase.favouritesStorage.Get(userID, article.ID.String()); err == nil {
+		favourite, err := usecase.favouritesStorage.Get(userID, article.ID.String())
+		if err == nil && favourite.ArticleID == article.ID {
 			article.IsLiked = true
 		}
 	}

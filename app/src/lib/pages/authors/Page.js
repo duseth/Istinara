@@ -50,7 +50,7 @@ const AuthorPage = () => {
 
     useEffect(() => {
         if (author) {
-            api.get("/authors").then((response) => {
+            api.get(`/authors?sort_by=${lang === "ru" ? "name_ru" : "name_ar"}`).then((response) => {
                 const authors: Array<Author> = response.data?.data;
                 authors?.map((item, index) => {
                     if (item.id === author.id) {
