@@ -8,7 +8,7 @@ const UpdateArticleForm = (register, errors, works, groups, article) => {
                 <div className="row">
                     <div className="col-12">
                         <select className="form-select" id="article_type_id"
-                                defaultValue={article ? article.group?.id : "null"}
+                                defaultValue={article ? article.article_type?.id : "null"}
                                 name="article_type_id" {...register("article_type_id")}>
                             <option value="null" disabled><GeneralForm tid="choose_article_type"/></option>
                             {

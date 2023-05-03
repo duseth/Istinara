@@ -34,8 +34,8 @@ const AboutPage = () => {
                                     sources.map((source) => {
                                         return (
                                             <li key={source.ru} className="list-group-item bg-transparent py-4">
-                                                <p className="source-item">{source.ru}</p>
-                                                <p className="source-item">{source.ar}</p>
+                                                <p className="source-item" dir="ltr">{source.ru}</p>
+                                                <p className="source-item" dir="rtl">{source.ar}</p>
                                             </li>
                                         )
                                     })

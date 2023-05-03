@@ -31,7 +31,6 @@ func (storage FavouriteStorage) ListArticles(ctx context.Context, userID string)
 	var articles []model.Article
 
 	db := storage.db.Joins("JOIN favourites ON articles.id = favourites.article_id AND favourites.user_id = ?", userID)
-	db = db.Where("favourites.deleted_at IS NULL")
 
 	db.Model(&model.Article{}).Count(&count)
 	db = helper.New(db, ctx, model.Article{}).Paging().DB

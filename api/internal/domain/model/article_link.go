@@ -1,8 +1,6 @@
 package model
 
 type ArticleLink struct {
-	Base
-
 	ArticleID string  `gorm:"type:uuid;column:article_id;index:link_idx,unique;" json:"article_id"`
 	Article   Article `gorm:"constraint:OnDelete:CASCADE;"`
 
