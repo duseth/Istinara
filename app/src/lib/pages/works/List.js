@@ -36,7 +36,12 @@ const WorksListPage = () => {
     }, []);
 
     useEffect(() => {
-        api.get(`/works?offset=0&limit=${WORKS_LIMIT}&sort_by=${lang === "ru" ? "title_ru" : "title_ar"}`)
+        const queryParams = {
+            "limit": WORKS_LIMIT,
+            "sort_by": lang === "ru" ? "title_ru" : "title_ar"
+        }
+
+        api.get(`/works?${new URLSearchParams(queryParams).toString()}`)
             .then((response) => {
                 setCount(response.data.count);
                 setData(response.data.data);
@@ -62,7 +67,13 @@ const WorksListPage = () => {
     }
 
     const loadMore = () => {
-        api.get(`/works?offset=${data.length}&limit=${WORKS_LIMIT}&sort_by=${lang === "ru" ? "title_ru" : "title_ar"}`)
+        const queryParams = {
+            "limit": WORKS_LIMIT,
+            "offset": data.length,
+            "sort_by": lang === "ru" ? "title_ru" : "title_ar"
+        }
+
+        api.get(`/works?${new URLSearchParams(queryParams).toString()}`)
             .then((response) => setData([...data, ...response.data.data]))
     };
 

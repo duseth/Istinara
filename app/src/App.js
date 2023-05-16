@@ -15,11 +15,11 @@ import WelcomePage from './lib/pages/index/Index';
 import Footer from './lib/components/footer/Footer';
 import Header from './lib/components/header/Header';
 
-import TeamPage from "./lib/pages/team/Page";
+import TeamPage from "./lib/pages/team/Team";
 import AboutPage from './lib/pages/about/Page';
-import ContactsPage from './lib/pages/contacts/Page';
+import ContactsPage from './lib/pages/contacts/Contacts';
 import AccountPage from "./lib/pages/account/Account";
-import ContributionPage from "./lib/pages/contribution/Page";
+import ContributionPage from "./lib/pages/contribution/Contribution";
 
 import AuthorPage from "./lib/pages/authors/Page";
 import AuthorsListPage from "./lib/pages/authors/List";

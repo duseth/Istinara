@@ -30,8 +30,12 @@ const WelcomePage = () => {
             return;
         }
 
-        const randomNum = Math.floor(Math.random() * Math.floor(scores.articles_count));
-        api.get(`/articles?offset=${randomNum}&limit=1`)
+        const queryParams = {
+            "limit": 1,
+            "offset": Math.floor(Math.random() * Math.floor(scores.articles_count))
+        }
+
+        api.get(`/articles?${new URLSearchParams(queryParams).toString()}`)
             .then((response) => {
                 response.data.data.length > 0
                     ? window.location.href += "articles/" + response.data.data[0].link

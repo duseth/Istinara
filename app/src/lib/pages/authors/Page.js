@@ -181,7 +181,7 @@ const AuthorPage = () => {
         <section className="main-container">
             <div className="container py-5 px-3">
                 <div className="row">
-                    <div className="text-center col-md-4 p-4">
+                    <div className="text-center col-lg-4 p-4">
                         <img className="author-page-image m-2 me-3" src={author.picture_path}
                              alt={authorCard.name}/>
                         <h6 className="mt-0">{authorCard.short_name}</h6>
@@ -198,7 +198,7 @@ const AuthorPage = () => {
                             }
                         </div>
                     </div>
-                    <div className="text-center col-md-8 p-3">
+                    <div className="text-center col-lg-8 p-3">
                         <h4>{authorCard.name}</h4>
                         <div className="author-page-about">
                             {authorCard.about}

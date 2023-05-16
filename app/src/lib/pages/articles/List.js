@@ -26,6 +26,16 @@ import UpdateArticleTypeForm from "../../components/articles/UpdateArticleTypeFo
 
 const ARTICLES_LIMIT = 12;
 
+const RUSSIAN_ALPHABET = [
+    "А", "Б", "В", "Г", "Д", "Е", "Ж", "З", "И", "Й", "К", "Л", "М", "Н", "О", "П",
+    "Р", "С", "Т", "У", "Ф", "Х", "Ц", "Ч", "Ш", "Щ", "Э", "Ю", "Я"
+];
+
+const ARABIC_ALPHABET = [
+    "ا", "ب", "ت", "ث", "ج", "ح", "خ", "د", "ذ", "ر", "ز", "س", "ش", "ص", "ض", "ط", "ظ",
+    "ع", "غ", "ف", "ق", "ك", "ل", "م", "ن", "ه", "و", "ي"
+];
+
 const ArticlesListPage = () => {
     const [searchParams] = useSearchParams();
 
@@ -36,10 +46,6 @@ const ArticlesListPage = () => {
     const [data: Array<Article>, setData] = useState()
     const [works: Array<Work>, setWorks] = useState(null);
     const [articleTypes: Array<ArticleType>, setArticleTypes] = useState(null);
-
-    const query = searchParams.get("query") !== null
-        ? "query=" + searchParams.get("query") + "&"
-        : "";
 
     const {register, setError, handleSubmit, formState: {errors}} = useForm();
 
@@ -88,8 +94,16 @@ const ArticlesListPage = () => {
     }, []);
 
     useEffect(() => {
-        const sort = lang === "ru" ? "title_ru" : "title_ar";
-        api.get(`/articles?${query}offset=0&limit=${ARTICLES_LIMIT}&sort_by=${sort}`)
+        const queryParams = {
+            "limit": ARTICLES_LIMIT,
+            "sort_by": lang === "ru" ? "title_ru" : "title_ar"
+        }
+
+        if (searchParams.get("query")) {
+            queryParams.query = searchParams.get("query");
+        }
+
+        api.get(`/articles?${new URLSearchParams(queryParams).toString()}`)
             .then((response) => {
                 setCount(response.data.count);
                 setData(response.data.data);
@@ -97,11 +111,20 @@ const ArticlesListPage = () => {
             .catch(() => {
                 setData([]);
             });
-    }, [lang, query]);
+    }, [lang]);
 
     const loadMore = () => {
-        const sort = lang === "ru" ? "title_ru" : "title_ar";
-        api.get(`/articles?${query}offset=${data.length}&limit=${ARTICLES_LIMIT}&sort_by=${sort}`)
+        const queryParams = {
+            "limit": ARTICLES_LIMIT,
+            "offset": data.length,
+            "sort_by": lang === "ru" ? "title_ru" : "title_ar"
+        }
+
+        if (searchParams.get("query")) {
+            queryParams.query = searchParams.get("query");
+        }
+
+        api.get(`/articles?${new URLSearchParams(queryParams).toString()}`)
             .then((response) => setData([...data, ...response.data.data]))
     };
 
@@ -462,7 +485,9 @@ const ArticlesListPage = () => {
                         <div className="information">
                             <i className="bi bi-folder-x information-icon"></i>
                             <p className="mt-3">
-                                {query === "" ? <ArticlesText tid="no_data"/> : <ArticlesText tid="not_found"/>}
+                                {searchParams.get("query")
+                                    ? <ArticlesText tid="no_data"/>
+                                    : <ArticlesText tid="not_found"/>}
                             </p>
                         </div>
                     )

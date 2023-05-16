@@ -2,7 +2,7 @@ package dto
 
 import "github.com/gofrs/uuid"
 
-type ArticleDTO struct {
+type ArticleDto struct {
 	ID uuid.UUID `json:"id"`
 
 	TitleRu string `json:"title_ru" form:"title_ru"`
@@ -26,17 +26,17 @@ type ArticleDTO struct {
 	IsLiked bool `json:"is_liked"`
 }
 
-type ListArticleDTO struct {
+type ListArticleDto struct {
 	Count int64        `json:"count"`
-	Data  []ArticleDTO `json:"data"`
+	Data  []ArticleDto `json:"data"`
 }
 
-type CompleteArticleDTO struct {
-	ArticleDTO
+type CompleteArticleDto struct {
+	ArticleDto
 	Work CompleteWorkDTO `json:"work"`
 }
 
-type ArticleSignatureDTO struct {
+type ArticleSignatureDto struct {
 	ID uuid.UUID `json:"id"`
 
 	TitleRu string `json:"title_ru"`
@@ -45,7 +45,7 @@ type ArticleSignatureDTO struct {
 	Link string `json:"link"`
 }
 
-type ArticleFormDTO struct {
+type ArticleFormDto struct {
 	TitleRu string `json:"title_ru" form:"title_ru"`
 	TitleAr string `json:"title_ar" form:"title_ar"`
 

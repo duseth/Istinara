@@ -6,6 +6,7 @@ import {HeaderLink} from "../../containers/Language";
 
 const Header = () => {
     const languageContext = useContext(LanguageContext);
+    const lang = languageContext.userLanguage;
     const search_placeholder = languageContext.dictionary["header"]["search_placeholder"]
     const iconX = "bi bi-x-lg nav-bi-icon", iconS = "bi bi-search nav-bi-icon";
 
@@ -32,36 +33,17 @@ const Header = () => {
 
     return (
         <header>
-            <nav className="navbar navbar-expand-md navbar-dark bg-black flex-row-reverse py-1">
-                <div className="d-flex">
-                    <div className="nav-item">
-                        <a className="nav-link nav-icon" href="/contribution">
-                            <i className="bi bi-exclude nav-bi-icon"></i>
-                        </a>
-                    </div>
-                    <div className="navbar-vertical-separator"/>
-                    <div className="nav-item">
-                        <a className="nav-link nav-icon" href="/account">
-                            <i className="bi bi-person-circle nav-bi-icon"></i>
-                        </a>
-                    </div>
-                    <div className="navbar-vertical-separator"/>
-                    <div className="nav-item">
-                        <a className="nav-link nav-icon" data-bs-toggle="collapse" href={"#search"} role="button"
-                           onClick={setInputFocus} aria-expanded="false" aria-controls="search">
-                            <i className={searchIcon + " nav-bi-icon"}/>
-                        </a>
-                    </div>
-                </div>
+            <nav className="navbar navbar-expand-md navbar-dark bg-black py-1">
                 <button className="navbar-toggler m-2" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false">
                     <i className="bi bi-list"/>
                 </button>
-                <div className="collapse navbar-collapse text-center" id="navbarCollapse">
-                    <a className="mx-lg-3" href="/">
-                        <img className="header-logo" src="/logo.svg" alt="Istinara"></img>
-                    </a>
-                    <ul className="col-md-6 navbar-nav">
+                <a className="mx-2 text-center" href="/">
+                    <img className="header-logo" src="/logo.svg" alt="Istinara"></img>
+                </a>
+                <div className={lang === "ru" ? "collapse navbar-collapse text-start"
+                    : "collapse navbar-collapse text-end"} id="navbarCollapse">
+                    <ul className="navbar-nav col mx-2">
                         <li className="nav-item">
                             <a className="nav-link nav-header-link" href="/authors"><HeaderLink tid="authors"/></a>
                         </li>
@@ -72,6 +54,26 @@ const Header = () => {
                             <a className="nav-link nav-header-link" href="/articles"><HeaderLink tid="articles"/></a>
                         </li>
                     </ul>
+                    <div className="d-flex mx-auto">
+                        <div className="nav-item">
+                            <a className="nav-link nav-icon" href="/contribution">
+                                <i className="bi bi-exclude nav-bi-icon"></i>
+                            </a>
+                        </div>
+                        <div className="navbar-vertical-separator"/>
+                        <div className="nav-item">
+                            <a className="nav-link nav-icon" href="/account">
+                                <i className="bi bi-person-circle nav-bi-icon"></i>
+                            </a>
+                        </div>
+                        <div className="navbar-vertical-separator"/>
+                        <div className="nav-item">
+                            <a className="nav-link nav-icon" data-bs-toggle="collapse" href={"#search"} role="button"
+                               onClick={setInputFocus} aria-expanded="false" aria-controls="search">
+                                <i className={searchIcon + " nav-bi-icon"}/>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </nav>
             <form className="collapse container-fluid p-0 shadow-lg bg-light" id="search">

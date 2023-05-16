@@ -1,4 +1,4 @@
-package v1
+package web
 
 import (
 	"context"
@@ -153,10 +153,10 @@ func (handler UserHandler) ListFavourites(ctx *gin.Context) {
 		return
 	}
 
-	var data []dto.ArticleDTO
+	var data []dto.ArticleDto
 	automapper.MapLoose(favourites, &data)
 
-	ctx.JSON(http.StatusOK, dto.ListArticleDTO{Count: count, Data: data})
+	ctx.JSON(http.StatusOK, dto.ListArticleDto{Count: count, Data: data})
 }
 
 func (handler UserHandler) CreateFavourite(ctx *gin.Context) {

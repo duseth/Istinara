@@ -74,7 +74,7 @@ func (storage ArticleStorage) ListByWork(ctx context.Context, workID string) ([]
 	db := helper.New(storage.db, ctx, model.Article{}).Paging().Order().DB
 
 	db = db.Where("work_id = ?", workID)
-	if err := db.Find(&articles).Error; err != nil {
+	if err := db.Preload("ArticleType").Find(&articles).Error; err != nil {
 		return nil, err
 	}
 

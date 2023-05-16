@@ -309,15 +309,15 @@ const ArticlePage = () => {
                 <hr className="mb-1"/>
                 <div className="row mx-1">
                     <div className={languageContext.userLanguage === "ru"
-                        ? "col text-start m-auto" : "col text-end m-auto"}>
-                        <span className="badge text-bg-secondary">
+                        ? "col-10 text-start m-auto" : "col-10 text-end m-auto"}>
+                        <span className="badge text-bg-secondary text-wrap">
                             {languageContext.userLanguage === "ru"
                                 ? article.article_type.name_ru
                                 : article.article_type.name_ar}
                         </span>
                     </div>
                     <div className={languageContext.userLanguage === "ru"
-                        ? "col text-end m-auto" : "col text-start m-auto"}>
+                        ? "col-2 text-end m-auto" : "col-2 text-start m-auto"}>
                         {cookies.get("token") !== undefined && (
                             <button onClick={(event) => ArticleService.LikeArticle(event, [article], article)}
                                     className="article-page-fav">

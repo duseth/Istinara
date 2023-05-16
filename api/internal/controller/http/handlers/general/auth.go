@@ -1,4 +1,4 @@
-package v1
+package general
 
 import (
 	"net/http"

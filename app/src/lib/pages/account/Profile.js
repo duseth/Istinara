@@ -29,7 +29,7 @@ const ProfilePage = () => {
 
     useEffect(() => {
         if (AccountService.IsAuthorized()) {
-            api.get(`/users/favourites?offset=0&limit=${FAVOURITES_LIMIT}`)
+            api.get(`/users/favourites?limit=${FAVOURITES_LIMIT}`)
                 .then((response) => {
                     setCount(response.data?.count);
                     setData(response.data?.data);

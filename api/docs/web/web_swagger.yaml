@@ -1,0 +1,99 @@
+basePath: /api
+definitions:
+  dto.UserDTO:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      is_privileged:
+        type: boolean
+      username:
+        type: string
+    type: object
+  errors.Error:
+    properties:
+      message:
+        type: string
+    type: object
+host: istinara.ru
+info:
+  contact:
+    name: Istinara
+    url: https://istinara.ru
+  description: Open online dictionary of culturally marked vocabulary of the Russian
+    language with translation into Arabic Language
+  license:
+    name: MIT License
+    url: https://spdx.org/licenses/MIT.html
+  title: Istinara API (web-specific)
+  version: "1.0"
+paths:
+  /user/password:
+    post:
+      parameters:
+      - in: formData
+        name: new_password
+        type: string
+      - in: formData
+        name: password
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: boolean
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.Error'
+      security:
+      - token: []
+      summary: Change user password
+      tags:
+      - Users
+  /user/update:
+    post:
+      parameters:
+      - in: formData
+        name: email
+        type: string
+      - in: formData
+        name: username
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.Error'
+      security:
+      - token: []
+      summary: Update user information
+      tags:
+      - Users
+schemes:
+- https
+securityDefinitions:
+  token:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

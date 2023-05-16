@@ -152,19 +152,6 @@ definitions:
           $ref: '#/definitions/dto.WorkDTO'
         type: array
     type: object
-  dto.UserDTO:
-    properties:
-      created_at:
-        type: string
-      email:
-        type: string
-      id:
-        type: string
-      is_privileged:
-        type: boolean
-      username:
-        type: string
-    type: object
   dto.WorkDTO:
     properties:
       about_ar:
@@ -440,64 +427,6 @@ paths:
       summary: Registration
       tags:
       - Auth
-  /user/password:
-    post:
-      parameters:
-      - in: formData
-        name: new_password
-        type: string
-      - in: formData
-        name: password
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: boolean
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/errors.Error'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/errors.Error'
-      security:
-      - token: []
-      summary: Change user password
-      tags:
-      - Users
-  /user/update:
-    post:
-      parameters:
-      - in: formData
-        name: email
-        type: string
-      - in: formData
-        name: username
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.UserDTO'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/errors.Error'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/errors.Error'
-      security:
-      - token: []
-      summary: Update user information
-      tags:
-      - Users
   /works:
     get:
       parameters:

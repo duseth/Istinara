@@ -16,6 +16,18 @@ type ListQuery struct {
 
 	// Sort options
 	SortBy *string `json:"sort_by" form:"sort_by" example:"name_ru.asc"`
+
+	// Sort options
+	Filter QueryFilter `json:"filter" form:"filter" example:"{'field': 'name_ru', 'value': 'A', 'option': 'starts_with'}"`
+
+	// Search query
+	Query *string `json:"query" form:"query"`
+}
+
+type QueryFilter struct {
+	Field  *string `json:"field" form:"field"`
+	Value  *string `json:"value" form:"value"`
+	Option *string `json:"option" form:"option"`
 }
 
 func (query ListQuery) ToContext() context.Context {
@@ -24,25 +36,11 @@ func (query ListQuery) ToContext() context.Context {
 	ctx = context.WithValue(ctx, "offset", query.Offset)
 	ctx = context.WithValue(ctx, "limit", query.Limit)
 	ctx = context.WithValue(ctx, "sort_by", query.SortBy)
-
-	return ctx
-}
-
-// ListQueryWithSearch parameters values with search query
-//
-//	@Description	Query parameters for getting entities
-type ListQueryWithSearch struct {
-	ListQuery
-
-	// Search query
-	Query *string `json:"query" form:"query"`
-}
-
-func (query ListQueryWithSearch) ToContext() context.Context {
-	ctx := context.Background()
-
-	ctx = query.ListQuery.ToContext()
 	ctx = context.WithValue(ctx, "query", query.Query)
+
+	ctx = context.WithValue(ctx, "filter_field", query.Filter.Field)
+	ctx = context.WithValue(ctx, "filter_value", query.Filter.Value)
+	ctx = context.WithValue(ctx, "filter_option", query.Filter.Option)
 
 	return ctx
 }

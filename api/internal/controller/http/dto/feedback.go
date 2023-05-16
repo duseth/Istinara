@@ -9,7 +9,7 @@ type FeedbackDTO struct {
 	Description string `json:"description"`
 
 	ArticleID uuid.UUID `json:"article_id"`
-	Article   ArticleDTO
+	Article   ArticleDto
 }
 
 type FeedbackFormDTO struct {

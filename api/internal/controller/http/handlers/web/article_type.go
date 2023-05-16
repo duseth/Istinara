@@ -1,4 +1,4 @@
-package v1
+package web
 
 import (
 	"net/http"
@@ -29,33 +29,10 @@ func NewArticleTypeHandler(usecase ArticleTypeUsecase) *ArticleTypeHandler {
 	return &ArticleTypeHandler{usecase: usecase}
 }
 
-func (handler ArticleTypeHandler) Register(router *gin.RouterGroup, _ *gin.RouterGroup, private *gin.RouterGroup) {
-	router.GET("/articles/types", handler.List)
-
+func (handler ArticleTypeHandler) Register(_ *gin.RouterGroup, _ *gin.RouterGroup, private *gin.RouterGroup) {
 	private.POST("/articles/types", handler.Create)
 	private.PATCH("/articles/types/:id", handler.Update)
 	private.DELETE("/articles/types/:id", handler.Delete)
-}
-
-// List
-//
-//	@Summary	Gets list of article types
-//	@Tags		Articles
-//	@Produce	json
-//	@Success	200	{object}	[]dto.ArticleTypeDTO
-//	@Failure	500	{object}	errors.Error
-//	@Router		/articles/types [get]
-func (handler ArticleTypeHandler) List(ctx *gin.Context) {
-	articleTypes, err := handler.usecase.List()
-	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, errors.New("Error getting list of article types"))
-		return
-	}
-
-	var data []dto.ArticleTypeDTO
-	automapper.Map(articleTypes, &data)
-
-	ctx.JSON(http.StatusOK, data)
 }
 
 func (handler ArticleTypeHandler) Create(ctx *gin.Context) {

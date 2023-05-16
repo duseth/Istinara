@@ -3,33 +3,19 @@ package main
 import (
 	"log"
 	"os"
+	"time"
 
-	"github.com/duseth/istinara/api/internal/adapter/db/postgres"
-	"github.com/duseth/istinara/api/internal/controller/http"
-	"github.com/duseth/istinara/api/internal/controller/http/v1"
+	storage "github.com/duseth/istinara/api/internal/adapter/db/postgres"
+	http "github.com/duseth/istinara/api/internal/controller/http/handlers"
+	"github.com/duseth/istinara/api/internal/controller/http/handlers/general"
+	"github.com/duseth/istinara/api/internal/controller/http/handlers/web"
 	"github.com/duseth/istinara/api/internal/usecase"
 	"github.com/duseth/istinara/api/migrations"
 	"github.com/duseth/istinara/api/pkg/client/postgres"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 )
 
-//	@title			Istinara API
-//	@version		1.0
-//	@description	Open online dictionary of culturally marked vocabulary of the Russian language with translation into Arabic Language
-
-//	@contact.name	Istinara
-//	@contact.url	https://istinara.ru
-
-//	@license.name	MIT License
-//	@license.url	https://spdx.org/licenses/MIT.html
-
-//	@host		istinara.ru
-//	@BasePath	/api
-
-//	@schemes	https
-
-// @securityDefinitions.apikey	token
-// @in							header
-// @name						Authorization
 func main() {
 	var db, err = postgres.NewClient()
 	if err != nil {
@@ -38,6 +24,16 @@ func main() {
 
 	// Run migrations
 	migrations.RunMigrations(db)
+
+	// Initialize HTTP server engine
+	engine := gin.New()
+	engine.Use(cors.New(cors.Config{
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"GET", "POST", "PATCH", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"},
+		MaxAge:           24 * time.Hour,
+		AllowCredentials: true,
+	}))
 
 	// Storages
 	userStorage := storage.NewUserStorage(db)
@@ -60,17 +56,27 @@ func main() {
 	articleUsecase := usecase.NewArticleUsecase(articleStorage, favouritesStorage)
 	statisticsUsecase := usecase.NewStatisticsUsecase(statisticsStorage)
 
-	// Registration handlers and get HTTP server engine
-	engine := http.NewRouter([]http.IHandler{
-		v1.NewAuthHandler(userUsecase),
-		v1.NewUserHandler(userUsecase),
-		v1.NewArticleTypeHandler(articleTypeUsecase),
-		v1.NewAuthorHandler(authorUsecase, workUsecase),
-		v1.NewArticleHandler(articleUsecase),
-		v1.NewFeedbackHandler(feedbackUsecase),
-		v1.NewContributionHandler(contributionUsecase),
-		v1.NewWorkHandler(workUsecase, articleUsecase),
-		v1.NewStatisticsHandler(statisticsUsecase),
+	router := engine.Group("/api")
+
+	// Register general API
+	general.Register(router, []http.IHandler{
+		general.NewAuthHandler(userUsecase),
+		general.NewArticleTypeHandler(articleTypeUsecase),
+		general.NewAuthorHandler(authorUsecase, workUsecase),
+		general.NewArticleHandler(articleUsecase),
+		general.NewWorkHandler(workUsecase, articleUsecase),
+	})
+
+	// Register web-specific API
+	web.Register(router, []http.IHandler{
+		web.NewUserHandler(userUsecase),
+		web.NewArticleTypeHandler(articleTypeUsecase),
+		web.NewAuthorHandler(authorUsecase, workUsecase),
+		web.NewArticleHandler(articleUsecase),
+		web.NewFeedbackHandler(feedbackUsecase),
+		web.NewContributionHandler(contributionUsecase),
+		web.NewWorkHandler(workUsecase, articleUsecase),
+		web.NewStatisticsHandler(statisticsUsecase),
 	})
 
 	// Run HTTP server

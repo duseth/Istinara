@@ -1,5 +1,5 @@
 .header-logo {
-  max-height: 70px;
+  max-height: 65px;
 
   &:hover {
     filter: brightness(70%);
@@ -55,12 +55,12 @@
   display: block;
   background: rgba(255, 255, 255, 0.2);
   transition: all 0.2s ease;
-  margin: 0 2px;
+  margin: 5px 0 2px 0;
 }
 
 .navbar-toggler {
   border: none;
-  font-size: 28px;
+  font-size: 32px;
 
   &:hover {
     background-color: transparent;

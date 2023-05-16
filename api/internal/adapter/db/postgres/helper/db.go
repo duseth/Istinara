@@ -10,13 +10,27 @@ import (
 )
 
 type Helper struct {
-	DB    *gorm.DB
-	ctx   context.Context
-	model interface{}
+	DB            *gorm.DB
+	ctx           context.Context
+	fields        []string
+	filterOptions map[string]string
 }
 
 func New(db *gorm.DB, ctx context.Context, model interface{}) *Helper {
-	return &Helper{DB: db, ctx: ctx, model: model}
+	var fields []string
+	modelType := reflect.TypeOf(model)
+	for i := 0; i < modelType.NumField(); i++ {
+		fields = append(fields, modelType.Field(i).Tag.Get("json"))
+	}
+
+	filterOptions := map[string]string{
+		"starts_with": "%s%%",
+		"ends_with":   "%%s%",
+		"contains":    "%%%s%%",
+		"equal":       "%s",
+	}
+
+	return &Helper{DB: db, ctx: ctx, fields: fields, filterOptions: filterOptions}
 }
 
 func (helper *Helper) Paging() *Helper {
@@ -40,12 +54,6 @@ func (helper *Helper) Order() *Helper {
 	if sort := helper.ctx.Value("sort_by").(*string); sort != nil {
 		var resultSort []string
 
-		var fields []string
-		modelType := reflect.TypeOf(helper.model)
-		for i := 0; i < modelType.NumField(); i++ {
-			fields = append(fields, modelType.Field(i).Tag.Get("json"))
-		}
-
 		sorts := strings.Split(*sort, ",")
 		for _, s := range sorts {
 			order := strings.Split(s, ".")
@@ -64,7 +72,7 @@ func (helper *Helper) Order() *Helper {
 			}
 
 			valid := false
-			for _, field := range fields {
+			for _, field := range helper.fields {
 				if strings.ToLower(order[0]) == strings.ToLower(field) {
 					valid = true
 				}
@@ -88,8 +96,25 @@ func (helper *Helper) Filter(args ...string) *Helper {
 	db := helper.DB
 
 	if query := helper.ctx.Value("query").(*string); query != nil {
-		for _, property := range args {
-			db = db.Or(fmt.Sprintf("%s ILIKE '%%%s%%'", property, *query))
+		db = db.Where(fmt.Sprintf("%s ILIKE '%%%s%%'", strings.Join(args, " || ' ' || "), *query))
+	}
+
+	helper.DB = db
+
+	if filterField := helper.ctx.Value("filter_field").(*string); filterField != nil {
+		validField := false
+		for _, field := range helper.fields {
+			if strings.ToLower(*filterField) == strings.ToLower(field) {
+				validField = true
+			}
+		}
+
+		if filterOption := helper.ctx.Value("filter_option").(*string); filterOption != nil && validField {
+			if option, ok := helper.filterOptions[*filterOption]; ok {
+				if filterValue := helper.ctx.Value("filter_value").(*string); filterValue != nil && validField {
+					db = db.Where(fmt.Sprintf(fmt.Sprintf("%s ILIKE '%s'", *filterField, option), *filterValue))
+				}
+			}
 		}
 	}
 

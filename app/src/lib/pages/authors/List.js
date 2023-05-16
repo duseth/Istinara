@@ -28,7 +28,12 @@ const AuthorsListPage = () => {
     }, [languageContext]);
 
     useEffect(() => {
-        api.get(`/authors?offset=0&limit=${AUTHORS_LIMIT}&sort_by=${lang === "ru" ? "name_ru" : "name_ar"}`)
+        const queryParams = {
+            "limit": AUTHORS_LIMIT,
+            "sort_by": lang === "ru" ? "name_ru" : "name_ar"
+        }
+
+        api.get(`/authors?${new URLSearchParams(queryParams).toString()}`)
             .then((response) => {
                 setCount(response.data.count);
                 setData(response.data.data);
@@ -54,7 +59,13 @@ const AuthorsListPage = () => {
     }
 
     const loadMore = () => {
-        api.get(`/authors?offset=${data.length}&limit=${AUTHORS_LIMIT}&sort_by=${lang === "ru" ? "name_ru" : "name_ar"}`)
+        const queryParams = {
+            "limit": AUTHORS_LIMIT,
+            "offset": data.length,
+            "sort_by": lang === "ru" ? "name_ru" : "name_ar"
+        }
+
+        api.get(`/authors?${new URLSearchParams(queryParams).toString()}`)
             .then((response) => setData([...data, ...response.data.data]))
     };
 

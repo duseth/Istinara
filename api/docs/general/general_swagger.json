@@ -377,102 +377,6 @@
                 }
             }
         },
-        "/user/password": {
-            "post": {
-                "security": [
-                    {
-                        "token": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Change user password",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "name": "new_password",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "name": "password",
-                        "in": "formData"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/errors.Error"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/errors.Error"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/update": {
-            "post": {
-                "security": [
-                    {
-                        "token": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Update user information",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "name": "email",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "name": "username",
-                        "in": "formData"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.UserDTO"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/errors.Error"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/errors.Error"
-                        }
-                    }
-                }
-            }
-        },
         "/works": {
             "get": {
                 "produces": [
@@ -838,26 +742,6 @@
                     "items": {
                         "$ref": "#/definitions/dto.WorkDTO"
                     }
-                }
-            }
-        },
-        "dto.UserDTO": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "is_privileged": {
-                    "type": "boolean"
-                },
-                "username": {
-                    "type": "string"
                 }
             }
         },

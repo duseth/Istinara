@@ -1,4 +1,4 @@
-package v1
+package web
 
 import (
 	"context"
@@ -38,52 +38,14 @@ func NewArticleHandler(usecase ArticleUsecase) *ArticleHandler {
 }
 
 func (handler ArticleHandler) Register(router *gin.RouterGroup, _ *gin.RouterGroup, private *gin.RouterGroup) {
-	router.GET("/articles", handler.List)
-	router.GET("/articles/:id", handler.Get)
 	router.GET("/articles/signatures", handler.ListSignatures)
 
-	router.GET("/articles/:id/links", handler.ListLinks)
 	router.POST("/articles/:id/links", handler.CreateLink)
 	router.DELETE("/articles/:id/links", handler.DeleteLink)
 
 	private.POST("/articles", handler.Create)
 	private.PATCH("/articles/:id", handler.Update)
 	private.DELETE("/articles/:id", handler.Delete)
-}
-
-// List
-//
-//	@Summary	Gets list of articles
-//	@Tags		Articles
-//	@Produce	json
-//	@Param		_	query		param.ListQueryWithSearch	false	"Query parameters"
-//	@Success	200	{object}	dto.ListArticleDTO
-//	@Failure	400	{object}	errors.Error
-//	@Failure	500	{object}	errors.Error
-//	@Router		/articles [get]
-func (handler ArticleHandler) List(ctx *gin.Context) {
-	var params param.ListQueryWithSearch
-	if ctx.BindQuery(&params) != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, errors.New("Invalid request query values"))
-		return
-	}
-
-	var userID string
-	if user, err := utils.ExtractData(ctx); err == nil {
-		userID = user.ID.String()
-	}
-	nativeCtx := context.WithValue(params.ToContext(), "user_id", userID)
-
-	articles, count, err := handler.usecase.List(nativeCtx)
-	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, errors.New("Error getting list of articles"))
-		return
-	}
-
-	var data []dto.ArticleDTO
-	automapper.MapLoose(articles, &data)
-
-	ctx.JSON(http.StatusOK, dto.ListArticleDTO{Count: count, Data: data})
 }
 
 func (handler ArticleHandler) ListSignatures(ctx *gin.Context) {
@@ -99,74 +61,8 @@ func (handler ArticleHandler) ListSignatures(ctx *gin.Context) {
 		return
 	}
 
-	var data []dto.ArticleSignatureDTO
+	var data []dto.ArticleSignatureDto
 	automapper.Map(articles, &data)
-
-	ctx.JSON(http.StatusOK, data)
-}
-
-// Get
-//
-//	@Summary	Get article
-//	@Tags		Articles
-//	@Produce	json
-//	@Param		id	query		string	true	"Article 'id' or 'link'"
-//	@Success	200	{object}	dto.CompleteArticleDTO
-//	@Failure	400	{object}	errors.Error
-//	@Failure	500	{object}	errors.Error
-//	@Router		/articles/{id} [get]
-func (handler ArticleHandler) Get(ctx *gin.Context) {
-	id := ctx.Param("id")
-	if id == "" {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, errors.New("Invalid article 'id' value"))
-		return
-	}
-
-	var userID string
-	if user, err := utils.ExtractData(ctx); err == nil {
-		userID = user.ID.String()
-	}
-	nativeCtx := context.WithValue(context.Background(), "user_id", userID)
-
-	article, err := handler.usecase.Get(nativeCtx, id)
-	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, errors.New("Error getting article"))
-		return
-	}
-
-	var data dto.CompleteArticleDTO
-	automapper.MapLoose(article, &data)
-
-	ctx.JSON(http.StatusOK, data)
-}
-
-func (handler ArticleHandler) ListLinks(ctx *gin.Context) {
-	id := ctx.Param("id")
-	if id == "" {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, errors.New("Invalid article 'id' value"))
-		return
-	}
-
-	var params param.ListQuery
-	if ctx.BindQuery(&params) != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, errors.New("Invalid request query values"))
-		return
-	}
-
-	var userID string
-	if user, err := utils.ExtractData(ctx); err == nil {
-		userID = user.ID.String()
-	}
-	nativeCtx := context.WithValue(params.ToContext(), "user_id", userID)
-
-	articles, err := handler.usecase.ListLinked(nativeCtx, id)
-	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, errors.New("Error getting linked articles"))
-		return
-	}
-
-	var data []dto.ArticleDTO
-	automapper.MapLoose(articles, &data)
 
 	ctx.JSON(http.StatusOK, data)
 }
@@ -214,7 +110,7 @@ func (handler ArticleHandler) DeleteLink(ctx *gin.Context) {
 }
 
 func (handler ArticleHandler) Create(ctx *gin.Context) {
-	var form dto.ArticleFormDTO
+	var form dto.ArticleFormDto
 	if ctx.Bind(&form) != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, errors.New("Invalid request form data"))
 		return
@@ -234,7 +130,7 @@ func (handler ArticleHandler) Create(ctx *gin.Context) {
 		return
 	}
 
-	var data dto.ArticleDTO
+	var data dto.ArticleDto
 	automapper.Map(article, &data)
 
 	ctx.JSON(http.StatusCreated, data)
@@ -247,7 +143,7 @@ func (handler ArticleHandler) Update(ctx *gin.Context) {
 		return
 	}
 
-	var form dto.ArticleFormDTO
+	var form dto.ArticleFormDto
 	if ctx.Bind(&form) != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, errors.New("Invalid request form data"))
 		return
@@ -278,7 +174,7 @@ func (handler ArticleHandler) Update(ctx *gin.Context) {
 		return
 	}
 
-	var data dto.ArticleDTO
+	var data dto.ArticleDto
 	automapper.Map(work, &data)
 
 	ctx.JSON(http.StatusOK, data)
